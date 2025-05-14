@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import SaltSparkle from "@/components/SaltSparkle";
 import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import p1 from "../assets/p1.jpg"
+import p2 from "../assets/p2.jpg"
+import p3 from "../assets/p3.jpg"
 
 const Index = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -44,7 +47,7 @@ const Index = () => {
             <div className={`col-span-2 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.3s'}}>
               <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
                 <img 
-                  src="/placeholder.svg" 
+                  src={p2} 
                   alt="Premium Epsom Salts" 
                   className="w-full h-full object-cover"
                 />
@@ -57,7 +60,7 @@ const Index = () => {
             <div className={`${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.4s'}}>
               <div className="relative aspect-square overflow-hidden rounded-lg">
                 <img 
-                  src="/placeholder.svg" 
+                  src={p3} 
                   alt="Epsom Salt Texture" 
                   className="w-full h-full object-cover"
                 />
@@ -70,7 +73,7 @@ const Index = () => {
             <div className={`${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.5s'}}>
               <div className="relative aspect-square overflow-hidden rounded-lg">
                 <img 
-                  src="/placeholder.svg" 
+                  src={p1} 
                   alt="Himalayan Pink Salt" 
                   className="w-full h-full object-cover"
                 />

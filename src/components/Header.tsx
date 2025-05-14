@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Search, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
+import logo from "../assets/ritvlpng.png"
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
@@ -16,10 +16,8 @@ const Header = () => {
       <div className="container max-w-7xl mx-auto">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center text-white font-serif">
-              R
-            </div>
-            <span className="text-xl font-serif italic">rive</span>
+          <img src={logo} className="h-12 w-12"/>
+            <span className="text-xl font-serif italic">ritvl</span>
           </Link>
           
           <nav className="hidden md:flex items-center gap-8">
