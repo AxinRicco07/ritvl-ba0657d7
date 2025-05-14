@@ -27,7 +27,7 @@ const Index = () => {
               Rise.
             </h1>
             <p className="mt-4 text-lg text-muted-foreground max-w-lg">
-              Premium epsom salts crafted for your ultimate bath experience.
+              Let Epsom salts melt away stress, soothe tired muscles, and rejuvenate your spirit—one soak at a time
             </p>
             <div className="mt-6">
               <Button asChild size="lg" className="rounded-md">
