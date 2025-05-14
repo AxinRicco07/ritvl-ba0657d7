@@ -2,30 +2,49 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Minus, Plus, Star, Package, Heart, ChevronLeft } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { ArrowLeft, Star, Truck, Shield, ShoppingCart } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Checkbox } from "@/components/ui/checkbox";
 
-const ProductDetail = () => {
-  const { id } = useParams<{ id: string }>();
-  const { toast } = useToast();
-  const product = products.find((p) => p.id === Number(id));
-  
+// Mock product data
+const product = {
+  id: "1",
+  name: "Relaxing Lavender Bath Salt",
+  price: 24.99,
+  originalPrice: 29.99,
+  description: "Our premium lavender bath salt provides deep relaxation and stress relief. Made with pure essential oils and natural sea salt, it transforms your bath into a luxurious spa experience.",
+  longDescription: "Immerse yourself in the soothing properties of our carefully crafted lavender bath salt. This therapeutic blend combines premium Dead Sea salts with organic lavender essential oil to create the ultimate relaxation experience. The fine-grain texture dissolves quickly in warm water, releasing aromatic compounds that calm your mind and ease muscle tension. Regular use helps improve sleep quality, reduce stress, and leave your skin feeling soft and nourished.",
+  ingredients: "Sea Salt, Epsom Salt (Magnesium Sulfate), Sodium Bicarbonate, Lavender Essential Oil, Dried Lavender Flowers, Vitamin E",
+  rating: 4.8,
+  reviewCount: 126,
+  images: [
+    "/placeholder.svg",
+    "/placeholder.svg",
+    "/placeholder.svg",
+    "/placeholder.svg"
+  ],
+  options: {
+    size: ["250g", "500g", "1kg"],
+    fragranceStrength: ["Light", "Medium", "Strong"]
+  },
+  benefits: [
+    "Relieves muscle tension",
+    "Improves sleep quality",
+    "Soothes skin irritation",
+    "Reduces stress & anxiety"
+  ],
+  featured: true,
+  new: false,
+  inStock: true
+};
+
+export default function ProductDetail() {
+  const { id } = useParams();
+  const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState("8 oz");
-  const [selectedColor, setSelectedColor] = useState(product?.colors[0] || "");
-  
-  if (!product) {
-    return (
-      <div className="container max-w-7xl mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-medium mb-4">Product not found</h1>
-        <p className="text-muted-foreground mb-6">The product you're looking for doesn't exist or has been removed.</p>
-        <Button asChild>
-          <Link to="/products">Back to Products</Link>
-        </Button>
-      </div>
-    );
-  }
+  const [selectedSize, setSelectedSize] = useState("500g");
+  const [selectedStrength, setSelectedStrength] = useState("Medium");
   
   const decreaseQuantity = () => {
     if (quantity > 1) {
@@ -37,86 +56,79 @@ const ProductDetail = () => {
     setQuantity(quantity + 1);
   };
   
-  const addToCart = () => {
-    toast({
-      title: "Added to cart",
-      description: `${quantity} × ${product.name} (${selectedSize}) added to your cart`,
-    });
-  };
-  
-  const addToWishlist = () => {
-    toast({
-      title: "Added to wishlist",
-      description: `${product.name} has been added to your wishlist`,
-    });
-  };
-  
   return (
-    <div className="container max-w-7xl mx-auto px-4 py-8 md:py-12">
-      <Link 
-        to="/products" 
-        className="inline-flex items-center text-sm text-muted-foreground mb-8 hover:text-primary transition-colors"
-      >
-        <ChevronLeft className="h-4 w-4 mr-1" />
-        Back to Products
+    <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
+      <Link to="/products" className="flex items-center text-sm mb-6 hover:underline">
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Back to products
       </Link>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-        {/* Product images */}
-        <div className="space-y-4">
-          <div className="aspect-square rounded-lg overflow-hidden bg-white">
-            <img 
-              src={product.image} 
-              alt={product.name}
-              className="w-full h-full object-cover"
-            />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
+        {/* Product Images */}
+        <div>
+          <div className="bg-secondary/30 rounded-lg overflow-hidden mb-4">
+            <AspectRatio ratio={1} className="bg-secondary/20">
+              <img 
+                src={product.images[selectedImage]} 
+                alt={product.name} 
+                className="w-full h-full object-cover"
+              />
+            </AspectRatio>
           </div>
           
-          <div className="grid grid-cols-4 gap-4">
-            {[...Array(4)].map((_, index) => (
-              <div key={index} className="aspect-square rounded-lg overflow-hidden bg-white">
-                <img 
-                  src={product.image}
-                  alt={`${product.name} - Angle ${index + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+          <div className="grid grid-cols-4 gap-2">
+            {product.images.map((image, index) => (
+              <button 
+                key={index}
+                onClick={() => setSelectedImage(index)}
+                className={`rounded-md overflow-hidden border ${selectedImage === index ? 'border-black' : 'border-border'}`}
+              >
+                <AspectRatio ratio={1}>
+                  <img src={image} alt={`Product view ${index+1}`} className="w-full h-full object-cover" />
+                </AspectRatio>
+              </button>
             ))}
           </div>
         </div>
         
-        {/* Product details */}
+        {/* Product Info */}
         <div>
-          <h1 className="text-2xl md:text-3xl font-medium mb-2">{product.name}</h1>
+          <h1 className="text-3xl font-serif mb-2">{product.name}</h1>
           
-          <div className="flex items-center gap-1 mb-3">
-            {[...Array(5)].map((_, index) => (
-              <Star 
-                key={index} 
-                className={`h-4 w-4 ${index < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
-              />
-            ))}
-            <span className="text-sm text-muted-foreground ml-1">(24 reviews)</span>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="flex">
+              {[...Array(5)].map((_, i) => (
+                <Star 
+                  key={i} 
+                  className={`h-4 w-4 ${i < Math.floor(product.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
+                />
+              ))}
+            </div>
+            <span className="text-sm text-muted-foreground">{product.rating} ({product.reviewCount} reviews)</span>
           </div>
           
-          <p className="text-xl text-primary font-medium mb-6">${product.price.toFixed(2)}</p>
+          <div className="flex items-baseline gap-2 mb-6">
+            <span className="text-2xl font-medium">${product.price.toFixed(2)}</span>
+            {product.originalPrice && (
+              <span className="text-sm text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</span>
+            )}
+          </div>
           
-          <p className="text-muted-foreground mb-6">
-            Our premium {product.name} is hand-harvested and carefully processed to preserve all natural minerals. 
-            Perfect for a relaxing bath experience that helps soothe muscles and calm the mind.
-          </p>
+          <p className="text-muted-foreground mb-8">{product.description}</p>
           
-          <div className="space-y-6 mb-8">
-            {/* Size selection */}
+          {/* Product Options */}
+          <div className="space-y-8">
+            {/* Size Selection */}
             <div>
               <h3 className="font-medium mb-3">Size</h3>
-              <div className="flex flex-wrap gap-3">
-                {["4 oz", "8 oz", "16 oz", "32 oz"].map((size) => (
+              <div className="flex flex-wrap gap-2">
+                {product.options.size.map((size) => (
                   <Button
                     key={size}
+                    type="button"
                     variant={selectedSize === size ? "default" : "outline"}
                     onClick={() => setSelectedSize(size)}
-                    className="rounded-md"
+                    className="rounded-full"
                   >
                     {size}
                   </Button>
@@ -124,340 +136,145 @@ const ProductDetail = () => {
               </div>
             </div>
             
-            {/* Color selection */}
+            {/* Fragrance Strength */}
             <div>
-              <h3 className="font-medium mb-3">Color</h3>
-              <div className="flex flex-wrap gap-3">
-                {product.colors.map((color, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedColor(color)}
-                    className={`w-8 h-8 rounded-full border-2 transition-all ${selectedColor === color ? 'ring-2 ring-primary ring-offset-2' : 'hover:scale-110'}`}
-                    style={{ backgroundColor: color }}
-                    aria-label={`Select color ${index + 1}`}
-                  />
+              <h3 className="font-medium mb-3">Fragrance Strength</h3>
+              <div className="flex flex-wrap gap-2">
+                {product.options.fragranceStrength.map((strength) => (
+                  <Button
+                    key={strength}
+                    type="button"
+                    variant={selectedStrength === strength ? "default" : "outline"}
+                    onClick={() => setSelectedStrength(strength)}
+                    className="rounded-full"
+                  >
+                    {strength}
+                  </Button>
                 ))}
               </div>
             </div>
             
-            {/* Quantity */}
+            {/* Quantity and Add to Cart */}
             <div>
               <h3 className="font-medium mb-3">Quantity</h3>
-              <div className="flex items-center w-32 h-12">
-                <Button 
-                  variant="outline" 
-                  size="icon"
-                  onClick={decreaseQuantity}
-                  disabled={quantity <= 1}
-                  className="rounded-l-md rounded-r-none h-full"
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <div className="flex-1 h-full flex items-center justify-center border-y border-input text-center">
-                  {quantity}
+              <div className="flex gap-4">
+                <div className="flex items-center border border-input rounded-md overflow-hidden">
+                  <button 
+                    onClick={decreaseQuantity}
+                    className="px-3 py-2 hover:bg-secondary transition-colors"
+                  >
+                    -
+                  </button>
+                  <span className="px-4 py-2 border-x border-input">{quantity}</span>
+                  <button 
+                    onClick={increaseQuantity}
+                    className="px-3 py-2 hover:bg-secondary transition-colors"
+                  >
+                    +
+                  </button>
                 </div>
-                <Button 
-                  variant="outline" 
-                  size="icon"
-                  onClick={increaseQuantity}
-                  className="rounded-r-md rounded-l-none h-full"
-                >
-                  <Plus className="h-4 w-4" />
+                
+                <Button className="gap-2 flex-1" size="lg">
+                  <ShoppingCart className="h-5 w-5" />
+                  Add to Cart
                 </Button>
               </div>
             </div>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 mb-8">
-            <Button onClick={addToCart} className="flex-1">Add to Cart</Button>
-            <Button variant="outline" onClick={addToWishlist} className="flex items-center gap-2">
-              <Heart className="h-4 w-4" /> Add to Wishlist
-            </Button>
-          </div>
-          
-          <div className="bg-secondary/50 rounded-lg p-4 flex items-start gap-3">
-            <Package className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-            <p className="text-sm text-muted-foreground">
-              <span className="font-medium text-foreground">Free shipping</span> on orders over $35. 
-              30-day returns. Eco-friendly packaging made from recycled materials.
-            </p>
+            
+            {/* Shipping & Returns */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <Card className="bg-secondary/30 border-none">
+                <CardContent className="p-4 flex gap-3 items-start">
+                  <Truck className="h-5 w-5 text-primary mt-1" />
+                  <div>
+                    <h4 className="font-medium text-sm">Free Shipping</h4>
+                    <p className="text-sm text-muted-foreground">On orders over $50</p>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-secondary/30 border-none">
+                <CardContent className="p-4 flex gap-3 items-start">
+                  <Shield className="h-5 w-5 text-primary mt-1" />
+                  <div>
+                    <h4 className="font-medium text-sm">30-Day Returns</h4>
+                    <p className="text-sm text-muted-foreground">Money back guarantee</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            {/* Gift Option */}
+            <div className="flex items-start gap-2">
+              <Checkbox id="gift-option" />
+              <div className="grid gap-1.5 leading-none">
+                <label
+                  htmlFor="gift-option"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Add gift wrapping (+$5.00)
+                </label>
+                <p className="text-sm text-muted-foreground">
+                  Includes premium packaging and a handwritten note
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       
-      {/* Product details tabs */}
+      {/* Product Details Tabs */}
       <div className="mt-16">
-        <Tabs defaultValue="description">
-          <TabsList className="grid grid-cols-3 mb-8">
-            <TabsTrigger value="description">Description</TabsTrigger>
-            <TabsTrigger value="ingredients">Ingredients</TabsTrigger>
-            <TabsTrigger value="reviews">Reviews (24)</TabsTrigger>
-          </TabsList>
+        <div className="border-b border-border">
+          <div className="flex overflow-x-auto space-x-8">
+            <button className="border-b-2 border-black py-4 px-1 font-medium text-sm">Product Details</button>
+            <button className="text-muted-foreground py-4 px-1 text-sm">Ingredients</button>
+            <button className="text-muted-foreground py-4 px-1 text-sm">How to Use</button>
+            <button className="text-muted-foreground py-4 px-1 text-sm">Reviews</button>
+          </div>
+        </div>
+        
+        <div className="py-8">
+          <p className="text-muted-foreground mb-4">
+            {product.longDescription}
+          </p>
           
-          <TabsContent value="description" className="space-y-4">
-            <h2 className="text-xl font-medium">About {product.name}</h2>
-            <p className="text-muted-foreground">
-              Our premium {product.name} is hand-harvested from ancient sea deposits, where it has been naturally enriched 
-              with minerals over millions of years. Each batch is carefully processed to preserve the full spectrum of 
-              beneficial minerals and trace elements that make our salt exceptional.
-            </p>
-            <p className="text-muted-foreground">
-              Perfect for a relaxing bath experience that helps soothe muscles, detoxify the body, and calm the mind. 
-              The unique mineral composition helps draw out impurities while replenishing the skin with essential nutrients.
-            </p>
-            <div>
-              <h3 className="font-medium mt-6 mb-3">Benefits</h3>
-              <ul className="list-disc pl-5 text-muted-foreground space-y-1">
-                <li>Helps relieve muscle tension and soreness</li>
-                <li>Promotes relaxation and better sleep</li>
-                <li>Supports natural detoxification</li>
-                <li>Improves skin hydration and appearance</li>
-                <li>Enhances mineral absorption</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-medium mt-6 mb-3">How to Use</h3>
-              <p className="text-muted-foreground">
-                Add 1-2 cups to warm bath water and soak for 20-30 minutes. For best results, use 2-3 times weekly. 
-                Can also be used as a foot soak by adding 1/2 cup to a basin of warm water.
-              </p>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="ingredients" className="space-y-4">
-            <h2 className="text-xl font-medium">Pure & Natural Ingredients</h2>
-            <p className="text-muted-foreground mb-6">
-              We believe in total transparency. Our products contain only pure, natural ingredients with no artificial
-              additives, fillers, or harmful chemicals.
-            </p>
-            
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="bg-white p-5 rounded-lg">
-                <h3 className="font-medium mb-2">Key Minerals</h3>
-                <ul className="text-muted-foreground space-y-2">
-                  <li className="flex justify-between">
-                    <span>Magnesium</span>
-                    <span>High</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span>Calcium</span>
-                    <span>Medium</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span>Potassium</span>
-                    <span>Medium</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span>Sodium</span>
-                    <span>High</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span>Trace Minerals</span>
-                    <span>Yes (80+ types)</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="bg-white p-5 rounded-lg">
-                <h3 className="font-medium mb-2">Full Ingredients List</h3>
-                <p className="text-muted-foreground">
-                  Pure Epsom Salt (Magnesium Sulfate), Sea Salt (Sodium Chloride), 
-                  {product.scents.includes("Lavender") && " Lavender Essential Oil,"}
-                  {product.scents.includes("Rose") && " Rose Essential Oil,"}
-                  {product.scents.includes("Eucalyptus") && " Eucalyptus Essential Oil,"}
-                  {product.scents.includes("Mint") && " Peppermint Essential Oil,"}
-                  {product.scents.includes("Citrus") && " Orange Essential Oil, Lemon Essential Oil,"}
-                  {product.scents.includes("Vanilla") && " Vanilla Extract,"}
-                  {" Natural Mineral Color (from plant extracts)."}
-                </p>
-              </div>
-            </div>
-            
-            <div className="mt-6">
-              <h3 className="font-medium mb-2">Our Commitment</h3>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1 bg-secondary/50 p-4 rounded-lg">
-                  <p className="font-medium mb-1">No Harsh Chemicals</p>
-                  <p className="text-sm text-muted-foreground">Free from parabens, sulfates, phthalates, and synthetic fragrances.</p>
-                </div>
-                <div className="flex-1 bg-secondary/50 p-4 rounded-lg">
-                  <p className="font-medium mb-1">Cruelty-Free</p>
-                  <p className="text-sm text-muted-foreground">Never tested on animals and contains no animal-derived ingredients.</p>
-                </div>
-                <div className="flex-1 bg-secondary/50 p-4 rounded-lg">
-                  <p className="font-medium mb-1">Eco-Friendly</p>
-                  <p className="text-sm text-muted-foreground">Sustainable sourcing and recyclable packaging.</p>
-                </div>
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="reviews">
-            <h2 className="text-xl font-medium mb-6">Customer Reviews</h2>
-            
-            <div className="mb-8">
-              <div className="flex items-center gap-4 mb-6">
-                <div>
-                  <div className="flex items-center">
-                    {[...Array(5)].map((_, index) => (
-                      <Star 
-                        key={index} 
-                        className={`h-5 w-5 ${index < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
-                      />
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground mt-1">Based on 24 reviews</p>
-                </div>
-                
-                <div className="ml-auto">
-                  <Button>Write a Review</Button>
-                </div>
-              </div>
-              
-              <div className="space-y-6">
-                {[...Array(3)].map((_, index) => (
-                  <div key={index} className="border-b border-border pb-6">
-                    <div className="flex justify-between mb-2">
-                      <span className="font-medium">Jane D.</span>
-                      <span className="text-sm text-muted-foreground">3 days ago</span>
-                    </div>
-                    <div className="flex items-center gap-1 mb-3">
-                      {[...Array(5)].map((_, i) => (
-                        <Star 
-                          key={i} 
-                          className={`h-4 w-4 ${i < 5 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
-                        />
-                      ))}
-                    </div>
-                    <p className="text-muted-foreground">
-                      I love this bath salt! It has a wonderful scent that's not overpowering, and it 
-                      really helps me relax after a long day. My skin feels so soft after using it. 
-                      Will definitely purchase again.
-                    </p>
-                  </div>
-                ))}
-                
-                <Button variant="outline" className="w-full">Load More Reviews</Button>
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
+          <h3 className="font-medium mb-3 mt-6">Benefits</h3>
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-4">
+            {product.benefits.map((benefit, index) => (
+              <li key={index} className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-black"></div>
+                {benefit}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
       
-      {/* Related products */}
+      {/* Related Products */}
       <div className="mt-16">
-        <h2 className="text-2xl font-serif mb-8">You might also like</h2>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products
-            .filter(p => p.id !== product.id)
-            .slice(0, 4)
-            .map((relatedProduct) => (
-              <Link to={`/product/${relatedProduct.id}`} key={relatedProduct.id} className="product-card bg-white rounded-lg overflow-hidden">
-                <div className="aspect-square overflow-hidden">
-                  <img 
-                    src={relatedProduct.image} 
-                    alt={relatedProduct.name} 
-                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                  />
+        <h2 className="text-2xl font-serif mb-8">You May Also Like</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((item) => (
+            <div key={item} className="product-card bg-white rounded-lg overflow-hidden">
+              <div className="aspect-square bg-secondary/30 relative overflow-hidden">
+                <img 
+                  src="/placeholder.svg" 
+                  alt="Related product" 
+                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                />
+              </div>
+              <div className="p-3">
+                <h3 className="font-medium text-sm mb-1">Related Product {item}</h3>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">$24.99</span>
+                  <Button size="sm" variant="outline">Add</Button>
                 </div>
-                
-                <div className="p-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-medium">{relatedProduct.name}</h3>
-                    <span className="text-primary">${relatedProduct.price.toFixed(2)}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-1">
-                    {relatedProduct.colors.map((color, index) => (
-                      <span 
-                        key={index} 
-                        className="w-3 h-3 rounded-full border border-gray-200" 
-                        style={{ backgroundColor: color }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </Link>
-            ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
-};
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  colors: string[];
-  category: string;
-  collection: string;
-  scents: string[];
 }
-
-const products: Product[] = [
-  {
-    id: 1,
-    name: "Dreamer's Galaxy Bath Salt",
-    price: 25,
-    image: "/placeholder.svg",
-    colors: ["#E8D5B5", "#8AACB9", "#E2C1B3"],
-    category: "Bath Salt",
-    collection: "Relaxation",
-    scents: ["Lavender", "Vanilla"]
-  },
-  {
-    id: 2,
-    name: "Rose's Mist Bath Salt",
-    price: 34,
-    image: "/placeholder.svg",
-    colors: ["#E7A4B7", "#EDE3DE", "#CEA997"],
-    category: "Bath Salt",
-    collection: "Aromatherapy",
-    scents: ["Rose"]
-  },
-  {
-    id: 3,
-    name: "Large Mystic Palm Salt",
-    price: 33,
-    image: "/placeholder.svg",
-    colors: ["#99B898", "#FECEA8", "#FF847C"],
-    category: "Himalayan Salt",
-    collection: "Detox",
-    scents: ["Mint", "Eucalyptus"]
-  },
-  {
-    id: 4,
-    name: "Pair Serenity Salt",
-    price: 30,
-    image: "/placeholder.svg",
-    colors: ["#2A363B", "#E8B4BC", "#99B898"],
-    category: "Epsom Salt",
-    collection: "Relaxation",
-    scents: ["Lavender"]
-  },
-  {
-    id: 5,
-    name: "Himalayan Pink Salt",
-    price: 18,
-    image: "/placeholder.svg",
-    colors: ["#E8B4BC", "#F4DFDF", "#EFC7C7"],
-    category: "Himalayan Salt",
-    collection: "Gift Sets",
-    scents: ["Unscented"]
-  },
-  {
-    id: 6,
-    name: "Dead Sea Salt",
-    price: 22,
-    image: "/placeholder.svg",
-    colors: ["#8AACB9", "#A9C6CF", "#C1DAE3"],
-    category: "Sea Salt",
-    collection: "Detox",
-    scents: ["Unscented"]
-  }
-];
-
-export default ProductDetail;
