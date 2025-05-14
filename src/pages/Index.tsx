@@ -3,6 +3,7 @@ import { ArrowRight, Check, Package, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import SaltSparkle from "@/components/SaltSparkle";
 
 const Index = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -12,27 +13,30 @@ const Index = () => {
   }, []);
 
   return (
-    <main>
+    <main className="overflow-x-hidden">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="container max-w-7xl mx-auto py-16 md:py-24 px-4 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className={`${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.2s'}}>
-            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-tight">
+        <div className="container max-w-7xl mx-auto py-12 md:py-20 px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div className={`relative ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.2s'}}>
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight">
               Relax. Recharge.<br />
               Renew.<br />
               Rise.
             </h1>
-            <p className="mt-6 text-lg text-muted-foreground">
+            <p className="mt-4 text-lg text-muted-foreground">
               Premium epsom salts crafted for your ultimate bath experience.
             </p>
-            <div className="mt-8">
+            <div className="mt-6">
               <Button asChild size="lg" className="rounded-md">
                 <Link to="/products">Shop now</Link>
               </Button>
             </div>
+            
+            {/* Salt Sparkle Animation */}
+            <SaltSparkle />
           </div>
           
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3 w-full">
             <div className={`col-span-2 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.3s'}}>
               <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
                 <img 
@@ -41,7 +45,7 @@ const Index = () => {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 flex items-end p-4">
-                  <span className="text-white text-sm font-medium bg-mint-500/80 px-3 py-1 rounded-md">Featured</span>
+                  <span className="text-white text-sm font-medium bg-white/20 backdrop-blur-sm px-3 py-1 rounded-md">Featured</span>
                 </div>
               </div>
             </div>
@@ -79,16 +83,16 @@ const Index = () => {
       </section>
       
       {/* Featured Products */}
-      <section className="section-padding bg-secondary/50">
+      <section className="py-12 px-4 md:py-16 bg-secondary/20">
         <div className="container max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-serif">Featured</h2>
+            <h2 className="text-2xl md:text-3xl font-display">Featured</h2>
             <Link to="/products" className="text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors">
               View all <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -97,10 +101,10 @@ const Index = () => {
       </section>
       
       {/* Why Choose Us */}
-      <section className="section-padding">
+      <section className="py-12 px-4 md:py-16">
         <div className="container max-w-7xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-serif text-center mb-4">WHY RIVE?</h2>
-          <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-16">
+          <h2 className="text-2xl md:text-3xl font-display text-center mb-4">WHY RIVE?</h2>
+          <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">
             Our mission is to bring the world's finest salts and spices to your kitchen, focusing on quality, sustainability, and exceptional flavor.
           </p>
           
@@ -116,37 +120,37 @@ const Index = () => {
               title="100% PURE" 
               description="No additives, fillers, or artificial ingredients. Just pure, natural goodness."
             >
-              <Check className="w-8 h-8 mb-4 text-mint-500" />
+              <Check className="w-8 h-8 mb-4 text-gray-700" />
             </FeatureCard>
             
             <FeatureCard 
               title="SHIPS WORLDWIDE" 
               description="We deliver our premium spices to customers across the globe."
             >
-              <Package className="w-8 h-8 mb-4 text-mint-500" />
+              <Package className="w-8 h-8 mb-4 text-gray-700" />
             </FeatureCard>
             
             <FeatureCard 
               title="LAB-TESTED FOR QUALITY" 
               description="Every batch is tested to ensure the highest standards of purity and quality."
             >
-              <Star className="w-8 h-8 mb-4 text-mint-500" />
+              <Star className="w-8 h-8 mb-4 text-gray-700" />
             </FeatureCard>
           </div>
         </div>
       </section>
       
       {/* New Arrivals */}
-      <section className="section-padding bg-secondary/50">
+      <section className="py-12 px-4 md:py-16 bg-secondary/20">
         <div className="container max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-serif">Colorful New Arrivals</h2>
+            <h2 className="text-2xl md:text-3xl font-display">Colorful New Arrivals</h2>
             <Link to="/new-arrivals" className="text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors">
               View all <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {newArrivals.map((item) => (
               <div key={item.id} className="relative rounded-lg overflow-hidden aspect-[3/4] group">
                 <img
@@ -168,11 +172,11 @@ const Index = () => {
       </section>
       
       {/* Collections */}
-      <section className="section-padding">
+      <section className="py-12 px-4 md:py-16">
         <div className="container max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-secondary/30 p-8 rounded-lg">
-              <h3 className="text-xl font-serif uppercase mb-4">PREMIUM SALT COLLECTION</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-secondary/10 p-6 md:p-8 rounded-lg">
+              <h3 className="text-xl font-display uppercase mb-4">PREMIUM SALT COLLECTION</h3>
               <p className="text-muted-foreground mb-6">
                 Discover our range of premium salts sourced from the world's finest mines and flats, perfect for finishing dishes or as thoughtful gifts.
               </p>
@@ -181,8 +185,8 @@ const Index = () => {
               </Button>
             </div>
             
-            <div className="bg-secondary/30 p-8 rounded-lg">
-              <h3 className="text-xl font-serif uppercase mb-4">EXOTIC SPICE BLENDS</h3>
+            <div className="bg-secondary/10 p-6 md:p-8 rounded-lg">
+              <h3 className="text-xl font-display uppercase mb-4">EXOTIC SPICE BLENDS</h3>
               <p className="text-muted-foreground mb-6">
                 Hand-crafted spice blends inspired by global cultures. Elevate your cooking with our aromatic spice mixes.
               </p>
@@ -195,11 +199,11 @@ const Index = () => {
       </section>
       
       {/* Testimonials */}
-      <section className="section-padding bg-secondary/50">
+      <section className="py-12 px-4 md:py-16 bg-secondary/20">
         <div className="container max-w-7xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-serif text-center mb-12">What Our Customers Say</h2>
+          <h2 className="text-2xl md:text-3xl font-display text-center mb-12">What Our Customers Say</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((testimonial, index) => (
               <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
                 <div className="flex items-center gap-1 mb-2">
@@ -227,9 +231,9 @@ const Index = () => {
       </section>
       
       {/* Newsletter */}
-      <section className="section-padding bg-mint-100">
+      <section className="py-12 px-4 md:py-16 bg-gray-50">
         <div className="container max-w-7xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-serif mb-4">Join Our Community</h2>
+          <h2 className="text-2xl md:text-3xl font-display mb-4">Join Our Community</h2>
           <p className="text-muted-foreground max-w-xl mx-auto mb-8">
             Subscribe to our newsletter for exclusive offers, recipes, and self-care tips.
           </p>

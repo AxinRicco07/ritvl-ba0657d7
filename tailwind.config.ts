@@ -91,8 +91,8 @@ export default {
 				'fade-in': 'fade-in 0.5s ease-out forwards',
 			},
 			fontFamily: {
-				sans: ['Inter', 'sans-serif'],
-				serif: ['Playfair Display', 'serif'],
+				sans: ['Montserrat', 'sans-serif'],
+				display: ['Cormorant Garamond', 'serif'],
 			}
 		}
 	},
