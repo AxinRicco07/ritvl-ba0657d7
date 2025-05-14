@@ -1,0 +1,102 @@
+
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { ShoppingCart, Search, User, Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  return (
+    <header className="py-4 px-4 md:px-8 border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
+      <div className="container max-w-7xl mx-auto">
+        <div className="flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-mint-500 flex items-center justify-center text-white font-serif">
+              R
+            </div>
+            <span className="text-xl font-serif italic">rive</span>
+          </Link>
+          
+          <nav className="hidden md:flex items-center gap-8">
+            <NavLink to="/">Shop</NavLink>
+            <NavLink to="/products">Products</NavLink>
+            <NavLink to="/bestseller">Bestseller</NavLink>
+            <NavLink to="/sale">Sale</NavLink>
+          </nav>
+          
+          <div className="hidden md:flex items-center gap-4">
+            <Button variant="ghost" size="icon" aria-label="Search">
+              <Search className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon" aria-label="Account">
+              <User className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon" aria-label="Cart">
+              <ShoppingCart className="h-5 w-5" />
+            </Button>
+          </div>
+          
+          <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleMenu} aria-label="Menu">
+            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>
+      </div>
+      
+      {/* Mobile menu */}
+      {isMenuOpen && (
+        <div className="md:hidden absolute top-full left-0 right-0 bg-background border-b border-border animate-fade-in">
+          <div className="container max-w-7xl mx-auto py-4 px-4">
+            <nav className="flex flex-col space-y-4">
+              <MobileNavLink to="/" onClick={toggleMenu}>Shop</MobileNavLink>
+              <MobileNavLink to="/products" onClick={toggleMenu}>Products</MobileNavLink>
+              <MobileNavLink to="/bestseller" onClick={toggleMenu}>Bestseller</MobileNavLink>
+              <MobileNavLink to="/sale" onClick={toggleMenu}>Sale</MobileNavLink>
+            </nav>
+            <div className="flex items-center gap-6 mt-6 pt-4 border-t border-border">
+              <Button variant="ghost" size="sm" className="flex items-center gap-2" aria-label="Search">
+                <Search className="h-4 w-4" /> Search
+              </Button>
+              <Button variant="ghost" size="sm" className="flex items-center gap-2" aria-label="Account">
+                <User className="h-4 w-4" /> Account
+              </Button>
+              <Button variant="ghost" size="sm" className="flex items-center gap-2" aria-label="Cart">
+                <ShoppingCart className="h-4 w-4" /> Cart
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+};
+
+const NavLink = ({ to, children }: { to: string; children: React.ReactNode }) => (
+  <Link to={to} className="text-foreground hover:text-primary transition-colors">
+    {children}
+  </Link>
+);
+
+const MobileNavLink = ({ 
+  to, 
+  children,
+  onClick
+}: { 
+  to: string; 
+  children: React.ReactNode;
+  onClick: () => void;
+}) => (
+  <Link 
+    to={to} 
+    className="text-foreground hover:text-primary transition-colors py-2"
+    onClick={onClick}
+  >
+    {children}
+  </Link>
+);
+
+export default Header;
