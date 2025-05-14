@@ -1,9 +1,7 @@
-
 import { ArrowRight, Check, Package, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import SaltSparkle from "@/components/SaltSparkle";
 import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import p1 from "../assets/p1.jpg"
@@ -19,7 +17,7 @@ const Index = () => {
 
   return (
     <main className="overflow-x-hidden">
-      {/* Hero Section - Updated to fit viewport better */}
+      {/* Hero Section */}
       <section className="relative min-h-[80vh] overflow-hidden flex items-center">
         <div className="container max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-8">
           <div className={`relative z-10 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.2s'}}>
@@ -35,11 +33,6 @@ const Index = () => {
               <Button asChild size="lg" className="rounded-md">
                 <Link to="/products">Shop now</Link>
               </Button>
-            </div>
-            
-            {/* Enhanced Salt Sparkle Animation with higher visibility */}
-            <div className="relative w-full h-full">
-              <SaltSparkle />
             </div>
           </div>
           
@@ -80,7 +73,7 @@ const Index = () => {
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 flex items-end justify-between p-4">
                   <span className="text-white text-sm font-medium">Himalayan Flower</span>
                   <Button size="sm" variant="outline" className="bg-white/80 hover:bg-white">
-                    See More
+                    <Link to={`/product/1`}>See More</Link>
                   </Button>
                 </div>
               </div>
@@ -89,7 +82,7 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Featured Products - New horizontal carousel design */}
+      {/* Featured Products */}
       <section className="py-12 px-4 md:py-16 bg-white">
         <div className="container max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-8">
@@ -99,12 +92,12 @@ const Index = () => {
             </Link>
           </div>
           
-          {/* New horizontal scrolling design for featured products */}
           <div className="relative">
             <div className="flex overflow-x-auto pb-4 gap-6 hide-scrollbar snap-x snap-mandatory">
               {featuredProducts.map((product) => (
-                <div 
+                <Link 
                   key={product.id} 
+                  to={`/product/${product.id}`}
                   className="min-w-[280px] snap-start" 
                 >
                   <Card className="product-card border-none shadow-sm hover:shadow-md transition-all duration-300">
@@ -138,7 +131,7 @@ const Index = () => {
                       </div>
                     </CardContent>
                   </Card>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -319,41 +312,6 @@ const Input = ({
       className={`px-4 py-2 border border-input rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary/20 ${className}`}
       {...props}
     />
-  );
-};
-
-const ProductCard = ({ product }: { product: Product }) => {
-  return (
-    <div className="product-card bg-white rounded-lg overflow-hidden">
-      <div className="aspect-square overflow-hidden">
-        <img 
-          src={product.image} 
-          alt={product.name} 
-          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-        />
-      </div>
-      
-      <div className="p-4">
-        <div className="flex justify-between items-center mb-2">
-          <h3 className="font-medium">{product.name}</h3>
-          <span className="text-primary">${product.price.toFixed(2)}</span>
-        </div>
-        
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1">
-            {product.colors.map((color, index) => (
-              <span 
-                key={index} 
-                className="w-4 h-4 rounded-full border border-gray-200" 
-                style={{ backgroundColor: color }}
-              />
-            ))}
-          </div>
-          
-          <Button size="sm">Buy</Button>
-        </div>
-      </div>
-    </div>
   );
 };
 
