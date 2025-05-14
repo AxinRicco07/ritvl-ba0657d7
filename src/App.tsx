@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -21,7 +20,6 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/about" element={<About />} />
         <Route path="/bestseller" element={<Products />} />
-        <Route path="/sale" element={<Products />} />
         <Route path="/gift-sets" element={<Products />} />
         <Route path="/our-story" element={<About />} />
         <Route path="/ingredients" element={<About />} />

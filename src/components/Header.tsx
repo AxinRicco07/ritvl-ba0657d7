@@ -1,9 +1,9 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Search, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "../assets/ritvlpng.png"
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
@@ -16,7 +16,7 @@ const Header = () => {
       <div className="container max-w-7xl mx-auto">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-          <img src={logo} className="h-12 w-12"/>
+            <img src={logo} className="h-12 w-12"/>
             <span className="text-xl font-serif italic">ritvl</span>
           </Link>
           
@@ -24,7 +24,7 @@ const Header = () => {
             <NavLink to="/">Shop</NavLink>
             <NavLink to="/products">Products</NavLink>
             <NavLink to="/bestseller">Bestseller</NavLink>
-            <NavLink to="/sale">Sale</NavLink>
+            <NavLink to="/about">About Us</NavLink>
           </nav>
           
           <div className="hidden md:flex items-center gap-4">
@@ -35,7 +35,9 @@ const Header = () => {
               <User className="h-5 w-5" />
             </Button>
             <Button variant="ghost" size="icon" aria-label="Cart">
-              <ShoppingCart className="h-5 w-5" />
+              <Link to="/cart">
+                <ShoppingCart className="h-5 w-5" />
+              </Link>
             </Button>
           </div>
           
@@ -53,7 +55,7 @@ const Header = () => {
               <MobileNavLink to="/" onClick={toggleMenu}>Shop</MobileNavLink>
               <MobileNavLink to="/products" onClick={toggleMenu}>Products</MobileNavLink>
               <MobileNavLink to="/bestseller" onClick={toggleMenu}>Bestseller</MobileNavLink>
-              <MobileNavLink to="/sale" onClick={toggleMenu}>Sale</MobileNavLink>
+              <MobileNavLink to="/about" onClick={toggleMenu}>About Us</MobileNavLink>
             </nav>
             <div className="flex items-center gap-6 mt-6 pt-4 border-t border-border">
               <Button variant="ghost" size="sm" className="flex items-center gap-2" aria-label="Search">
@@ -63,7 +65,9 @@ const Header = () => {
                 <User className="h-4 w-4" /> Account
               </Button>
               <Button variant="ghost" size="sm" className="flex items-center gap-2" aria-label="Cart">
-                <ShoppingCart className="h-4 w-4" /> Cart
+                <Link to="/cart" className="flex items-center gap-2">
+                  <ShoppingCart className="h-4 w-4" /> Cart
+                </Link>
               </Button>
             </div>
           </div>
