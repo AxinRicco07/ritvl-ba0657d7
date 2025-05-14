@@ -6,3 +6,24 @@
   padding: 0;
   text-align: left;
 }
+
+/* Hide scrollbar for featured products */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Ensure fixed hero height */
+.hero-section {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+}
+
+/* Better sparkle visibility */
+.animate-sparkle {
+  box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.9);
+}

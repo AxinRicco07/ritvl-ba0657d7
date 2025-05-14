@@ -1,9 +1,10 @@
-
 import { ArrowRight, Check, Package, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SaltSparkle from "@/components/SaltSparkle";
+import { Card, CardContent } from "@/components/ui/card";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const Index = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -14,16 +15,16 @@ const Index = () => {
 
   return (
     <main className="overflow-x-hidden">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="container max-w-7xl mx-auto py-12 md:py-20 px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          <div className={`relative ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.2s'}}>
+      {/* Hero Section - Updated to fit viewport better */}
+      <section className="relative min-h-[80vh] overflow-hidden flex items-center">
+        <div className="container max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-8">
+          <div className={`relative z-10 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.2s'}}>
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight">
               Relax. Recharge.<br />
               Renew.<br />
               Rise.
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
+            <p className="mt-4 text-lg text-muted-foreground max-w-lg">
               Premium epsom salts crafted for your ultimate bath experience.
             </p>
             <div className="mt-6">
@@ -32,8 +33,10 @@ const Index = () => {
               </Button>
             </div>
             
-            {/* Salt Sparkle Animation */}
-            <SaltSparkle />
+            {/* Enhanced Salt Sparkle Animation with higher visibility */}
+            <div className="relative w-full h-full">
+              <SaltSparkle />
+            </div>
           </div>
           
           <div className="grid grid-cols-2 gap-3 w-full">
@@ -82,8 +85,8 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Featured Products */}
-      <section className="py-12 px-4 md:py-16 bg-secondary/20">
+      {/* Featured Products - New horizontal carousel design */}
+      <section className="py-12 px-4 md:py-16 bg-white">
         <div className="container max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-8">
             <h2 className="text-2xl md:text-3xl font-display">Featured</h2>
@@ -92,10 +95,48 @@ const Index = () => {
             </Link>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+          {/* New horizontal scrolling design for featured products */}
+          <div className="relative">
+            <div className="flex overflow-x-auto pb-4 gap-6 hide-scrollbar snap-x snap-mandatory">
+              {featuredProducts.map((product) => (
+                <div 
+                  key={product.id} 
+                  className="min-w-[280px] snap-start" 
+                >
+                  <Card className="product-card border-none shadow-sm hover:shadow-md transition-all duration-300">
+                    <div className="overflow-hidden">
+                      <AspectRatio ratio={1 / 1}>
+                        <img 
+                          src={product.image} 
+                          alt={product.name} 
+                          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                        />
+                      </AspectRatio>
+                    </div>
+                    <CardContent className="p-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <h3 className="font-medium">{product.name}</h3>
+                        <span className="text-primary">${product.price.toFixed(2)}</span>
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1">
+                          {product.colors.map((color, index) => (
+                            <span 
+                              key={index} 
+                              className="w-4 h-4 rounded-full border border-gray-200" 
+                              style={{ backgroundColor: color }}
+                            />
+                          ))}
+                        </div>
+                        
+                        <Button size="sm">Buy</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -231,7 +272,7 @@ const Index = () => {
       </section>
       
       {/* Newsletter */}
-      <section className="py-12 px-4 md:py-16 bg-gray-50">
+      <section className="py-12 px-4 md:py-16 bg-white">
         <div className="container max-w-7xl mx-auto text-center">
           <h2 className="text-2xl md:text-3xl font-display mb-4">Join Our Community</h2>
           <p className="text-muted-foreground max-w-xl mx-auto mb-8">
@@ -251,6 +292,19 @@ const Index = () => {
     </main>
   );
 };
+
+// Let's add a scrollbar hiding utility to our CSS
+const hideScrollbarStyle = document.createElement('style');
+hideScrollbarStyle.textContent = `
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+`;
+document.head.appendChild(hideScrollbarStyle);
 
 const Input = ({ 
   className, 
@@ -367,6 +421,20 @@ const featuredProducts: Product[] = [
     price: 30,
     image: "/placeholder.svg",
     colors: ["#2A363B", "#E8B4BC", "#99B898"]
+  },
+  {
+    id: 5,
+3    name: "Soothing Lavender",
+    price: 28,
+    image: "/placeholder.svg",
+    colors: ["#9B89B3", "#EEE1F8", "#726C80"]
+  },
+  {
+    id: 6,
+    name: "Ocean Breeze",
+    price: 26,
+    image: "/placeholder.svg",
+    colors: ["#5EAFD3", "#D3EBF5", "#2D6E8E"]
   }
 ];
 
