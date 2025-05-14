@@ -16,8 +16,8 @@ const Header = () => {
       <div className="container max-w-7xl mx-auto">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logo} className="h-12 w-12"/>
-            <span className="text-xl font-serif italic">ritvl</span>
+            <img src={logo} className="h-16 w-16"/>
+            <span className="text-2xl font-serif italic bg-gradient-to-r from-blue-600 via-green-500 to-yellow-400 bg-clip-text text-transparent">ritvl</span>
           </Link>
           
           <nav className="hidden md:flex items-center gap-8">
