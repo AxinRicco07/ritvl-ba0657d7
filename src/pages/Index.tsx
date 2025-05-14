@@ -1,3 +1,4 @@
+
 import { ArrowRight, Check, Package, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -424,7 +425,7 @@ const featuredProducts: Product[] = [
   },
   {
     id: 5,
-3    name: "Soothing Lavender",
+    name: "Soothing Lavender",
     price: 28,
     image: "/placeholder.svg",
     colors: ["#9B89B3", "#EEE1F8", "#726C80"]
