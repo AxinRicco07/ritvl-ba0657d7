@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { WhatsApp } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 
@@ -101,7 +101,7 @@ const WhatsAppButton = () => {
         onClick={() => setIsOpen(!isOpen)}
         className="h-14 w-14 rounded-full bg-green-600 hover:bg-green-700 shadow-lg flex items-center justify-center"
       >
-        <WhatsApp className="h-6 w-6 text-white" />
+        <MessageSquare className="h-6 w-6 text-white" />
       </Button>
     </div>
   );
