@@ -27,3 +27,95 @@
 .animate-sparkle {
   box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.9);
 }
+
+/* Smooth hover transitions for cards */
+.product-card {
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.15);
+}
+
+/* Animation delays for staggered entries */
+.delay-100 {
+  animation-delay: 0.1s;
+}
+.delay-200 {
+  animation-delay: 0.2s;
+}
+.delay-300 {
+  animation-delay: 0.3s;
+}
+.delay-400 {
+  animation-delay: 0.4s;
+}
+.delay-500 {
+  animation-delay: 0.5s;
+}
+
+/* Bounce animation */
+.hover-bounce:hover {
+  animation: bounce 1s ease infinite;
+}
+
+/* Pulse effect */
+.pulse-effect {
+  animation: pulse 2s infinite;
+}
+
+/* Sparkle button effect */
+.sparkle-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.sparkle-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(225deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.sparkle-button:hover::after {
+  transform: translateX(100%);
+}
+
+/* Slow zoom effect for images */
+.zoom-hover {
+  overflow: hidden;
+}
+
+.zoom-hover img {
+  transition: transform 0.5s ease;
+}
+
+.zoom-hover:hover img {
+  transform: scale(1.05);
+}
+
+/* Text reveal animation */
+.text-reveal {
+  position: relative;
+  overflow: hidden;
+}
+
+.text-reveal span {
+  display: inline-block;
+  transform: translateY(100%);
+  opacity: 0;
+  animation: reveal 0.5s forwards;
+}
+
+@keyframes reveal {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

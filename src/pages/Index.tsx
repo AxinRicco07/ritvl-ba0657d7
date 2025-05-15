@@ -12,6 +12,7 @@ import {
   CarouselNext, 
   CarouselPrevious 
 } from "@/components/ui/carousel";
+import SaltSparkle from "@/components/SaltSparkle";
 import p1 from "../assets/p1.jpg";
 import p2 from "../assets/p2.jpg";
 import p3 from "../assets/p3.jpg";
@@ -39,27 +40,27 @@ const Index = () => {
       {/* Hero Section with Auto-Sliding */}
       <section className="relative min-h-[80vh] overflow-hidden flex items-center bg-amber-50/50">
         <div className="container max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-8">
-          <div className={`relative z-10 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.2s'}}>
+          <div className={`relative z-10 ${isVisible ? 'animate-slide-in-left' : 'opacity-0'}`} style={{animationDelay: '0.2s'}}>
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight font-bold text-amber-800">
-              Natural Healing.<br />
-              Pure Joy.<br />
-              Everyday Luxury.
+              <span className="block text-reveal"><span style={{animationDelay: '0.3s'}}>Natural Healing.</span></span>
+              <span className="block text-reveal"><span style={{animationDelay: '0.5s'}}>Pure Joy.</span></span>
+              <span className="block text-reveal"><span style={{animationDelay: '0.7s'}}>Everyday Luxury.</span></span>
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground max-w-lg">
+            <p className="mt-4 text-lg text-muted-foreground max-w-lg animate-fade-in" style={{animationDelay: '0.9s'}}>
               Experience the therapeutic benefits of our premium bath salts—ethically sourced, 100% natural, and crafted for your wellbeing.
             </p>
             <div className="mt-8 flex gap-4">
-              <Button asChild size="lg" className="rounded-full bg-green-800 hover:bg-green-700">
+              <Button asChild size="lg" className="rounded-full bg-green-800 hover:bg-green-700 sparkle-button animate-fade-in" style={{animationDelay: '1.1s'}}>
                 <Link to="/products">SHOP NOW</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full border-amber-800 text-amber-800">
+              <Button asChild variant="outline" size="lg" className="rounded-full border-amber-800 text-amber-800 animate-fade-in" style={{animationDelay: '1.3s'}}>
                 <Link to="/about">Learn More</Link>
               </Button>
             </div>
           </div>
           
           <div className="relative">
-            <div className={`overflow-hidden rounded-lg ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.4s'}}>
+            <div className={`overflow-hidden rounded-lg ${isVisible ? 'animate-slide-in-right' : 'opacity-0'}`} style={{animationDelay: '0.4s'}}>
               <div className="relative aspect-[4/3]">
                 {heroImages.map((img, index) => (
                   <div
@@ -74,14 +75,15 @@ const Index = () => {
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40 flex flex-col items-center justify-end p-6 text-center">
-                      <span className="text-white text-lg font-medium bg-white/20 backdrop-blur-sm px-3 py-1 mb-2 rounded-md">
+                      <span className="text-white text-lg font-medium bg-white/20 backdrop-blur-sm px-3 py-1 mb-2 rounded-md animate-fade-in">
                         {index === 0 ? "Featured" : index === 1 ? "Bestseller" : "New Arrival"}
                       </span>
-                      <h3 className="text-white text-xl font-bold">{heroTitles[index]}</h3>
-                      <Button variant="secondary" size="sm" className="mt-2">
+                      <h3 className="text-white text-xl font-bold animate-fade-in">{heroTitles[index]}</h3>
+                      <Button variant="secondary" size="sm" className="mt-2 animate-fade-in">
                         <Link to={`/product/${index + 1}`}>View Details</Link>
                       </Button>
                     </div>
+                    <SaltSparkle />
                   </div>
                 ))}
               </div>
@@ -106,17 +108,18 @@ const Index = () => {
       {/* Shop By Category Section */}
       <section className="py-16 bg-white">
         <div className="container max-w-7xl mx-auto px-4 md:px-6">
-          <h2 className="text-3xl font-display text-center mb-2 font-bold">Shop By Categories</h2>
-          <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">
+          <h2 className="text-3xl font-display text-center mb-2 font-bold animate-fade-in">Shop By Categories</h2>
+          <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12 animate-fade-in" style={{animationDelay: '0.2s'}}>
             Discover our curated collection of natural salt blends designed to enhance your daily rituals
           </p>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categories.map((category) => (
+            {categories.map((category, idx) => (
               <Link 
                 key={category.id}
                 to={category.link}
-                className="group relative overflow-hidden rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                className={`group relative overflow-hidden rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg animate-fade-in zoom-hover`}
+                style={{animationDelay: `${0.2 + idx * 0.1}s`}}
               >
                 <div className="aspect-[1/1.2] overflow-hidden">
                   <img 
@@ -128,7 +131,7 @@ const Index = () => {
                     <h3 className="text-white text-xl font-bold mb-2">{category.name}</h3>
                     <span className="text-white text-sm font-medium opacity-90 mb-2">{category.items} Products</span>
                     <span className="inline-flex items-center text-white text-sm font-medium bg-white/20 backdrop-blur-sm py-1 px-3 rounded-full w-fit">
-                      Explore <ArrowRight className="h-4 w-4 ml-1" />
+                      Explore <ArrowRight className="h-4 w-4 ml-1 group-hover:animate-bounce" />
                     </span>
                   </div>
                 </div>
@@ -142,22 +145,23 @@ const Index = () => {
       <section className="py-12 px-4 md:py-16 bg-secondary/10">
         <div className="container max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-display">Featured Products</h2>
-            <Link to="/products" className="text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors">
+            <h2 className="text-2xl md:text-3xl font-display animate-slide-in-left">Featured Products</h2>
+            <Link to="/products" className="text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors animate-slide-in-right">
               View all <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts.slice(0, 4).map((product) => (
+            {featuredProducts.slice(0, 4).map((product, idx) => (
               <Link 
                 key={product.id} 
                 to={`/product/${product.id}`}
-                className="group"
+                className={`group animate-fade-in`}
+                style={{animationDelay: `${0.1 + idx * 0.1}s`}}
               >
                 <Card className="product-card border-none shadow-sm hover:shadow-md transition-all duration-300">
                   <div className="overflow-hidden">
-                    <AspectRatio ratio={1 / 1}>
+                    <AspectRatio ratio={1 / 1} className="zoom-hover">
                       <img 
                         src={product.image} 
                         alt={product.name} 
@@ -176,13 +180,13 @@ const Index = () => {
                         {product.colors.map((color, index) => (
                           <span 
                             key={index} 
-                            className="w-4 h-4 rounded-full border border-gray-200" 
+                            className="w-4 h-4 rounded-full border border-gray-200 hover-bounce" 
                             style={{ backgroundColor: color }}
                           />
                         ))}
                       </div>
                       
-                      <Button size="sm">Buy</Button>
+                      <Button size="sm" className="sparkle-button">Buy</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -196,22 +200,23 @@ const Index = () => {
       <section className="py-12 px-4 md:py-16 bg-white">
         <div className="container max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-display">Bestselling Products</h2>
-            <Link to="/products" className="text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors">
+            <h2 className="text-2xl md:text-3xl font-display animate-slide-in-left">Bestselling Products</h2>
+            <Link to="/products" className="text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors animate-slide-in-right">
               View all <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts.slice(2, 6).map((product) => (
+            {featuredProducts.slice(2, 6).map((product, idx) => (
               <Link 
                 key={product.id} 
                 to={`/product/${product.id}`}
-                className="group"
+                className={`group animate-fade-in`}
+                style={{animationDelay: `${0.1 + idx * 0.1}s`}}
               >
                 <Card className="product-card border-none shadow-sm hover:shadow-md transition-all duration-300">
                   <div className="overflow-hidden">
-                    <AspectRatio ratio={1 / 1}>
+                    <AspectRatio ratio={1 / 1} className="zoom-hover">
                       <img 
                         src={product.image} 
                         alt={product.name} 
@@ -230,13 +235,13 @@ const Index = () => {
                         {product.colors.map((color, index) => (
                           <span 
                             key={index} 
-                            className="w-4 h-4 rounded-full border border-gray-200" 
+                            className="w-4 h-4 rounded-full border border-gray-200 hover-bounce" 
                             style={{ backgroundColor: color }}
                           />
                         ))}
                       </div>
                       
-                      <Button size="sm">Buy</Button>
+                      <Button size="sm" className="sparkle-button">Buy</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -249,39 +254,31 @@ const Index = () => {
       {/* Why Choose Us */}
       <section className="py-12 px-4 md:py-16 bg-amber-50/50">
         <div className="container max-w-7xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-display text-center mb-4">WHY RIVE?</h2>
-          <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">
+          <h2 className="text-2xl md:text-3xl font-display text-center mb-4 animate-slide-in-bottom">WHY RIVE?</h2>
+          <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12 animate-slide-in-bottom" style={{animationDelay: '0.2s'}}>
             Our mission is to bring the world's finest salts and spices to your kitchen, focusing on quality, sustainability, and exceptional flavor.
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <FeatureCard 
-              title="ETHICALLY SOURCED" 
-              description="We source our healing minerals from farmers, ensuring fair wages and sustainable practices."
-            >
-              <img src="/placeholder.svg" alt="Ethically Sourced" className="w-10 h-10 mb-4" />
-            </FeatureCard>
-            
-            <FeatureCard 
-              title="100% PURE" 
-              description="No additives, fillers, or artificial ingredients. Just pure, natural goodness."
-            >
-              <Check className="w-8 h-8 mb-4 text-gray-700" />
-            </FeatureCard>
-            
-            <FeatureCard 
-              title="SHIPS WORLDWIDE" 
-              description="We deliver our premium spices to customers across the globe."
-            >
-              <Package className="w-8 h-8 mb-4 text-gray-700" />
-            </FeatureCard>
-            
-            <FeatureCard 
-              title="LAB-TESTED FOR QUALITY" 
-              description="Every batch is tested to ensure the highest standards of purity and quality."
-            >
-              <Star className="w-8 h-8 mb-4 text-gray-700" />
-            </FeatureCard>
+            {[0, 1, 2, 3].map((index) => (
+              <div key={index} className={`animate-zoom-in`} style={{animationDelay: `${0.3 + index * 0.2}s`}}>
+                <FeatureCard 
+                  title={index === 0 ? "ETHICALLY SOURCED" : 
+                         index === 1 ? "100% PURE" : 
+                         index === 2 ? "SHIPS WORLDWIDE" :
+                         "LAB-TESTED FOR QUALITY"} 
+                  description={index === 0 ? "We source our healing minerals from farmers, ensuring fair wages and sustainable practices." :
+                               index === 1 ? "No additives, fillers, or artificial ingredients. Just pure, natural goodness." :
+                               index === 2 ? "We deliver our premium spices to customers across the globe." :
+                               "Every batch is tested to ensure the highest standards of purity and quality."}
+                >
+                  {index === 0 ? <img src="/placeholder.svg" alt="Ethically Sourced" className="w-10 h-10 mb-4 animate-pulse" /> :
+                   index === 1 ? <Check className="w-8 h-8 mb-4 text-gray-700 animate-bounce" /> :
+                   index === 2 ? <Package className="w-8 h-8 mb-4 text-gray-700 animate-pulse" /> :
+                   <Star className="w-8 h-8 mb-4 text-gray-700 animate-bounce" />}
+                </FeatureCard>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -290,23 +287,23 @@ const Index = () => {
       <section className="py-12 px-4 md:py-16">
         <div className="container max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-secondary/10 p-6 md:p-8 rounded-lg">
+            <div className="bg-secondary/10 p-6 md:p-8 rounded-lg animate-slide-in-left">
               <h3 className="text-xl font-display uppercase mb-4">PREMIUM SALT COLLECTION</h3>
               <p className="text-muted-foreground mb-6">
                 Discover our range of premium salts sourced from the world's finest mines and flats, perfect for finishing dishes or as thoughtful gifts.
               </p>
-              <Button variant="outline" className="flex items-center gap-2">
-                EXPLORE COLLECTION <ArrowRight className="h-4 w-4" />
+              <Button variant="outline" className="flex items-center gap-2 sparkle-button">
+                EXPLORE COLLECTION <ArrowRight className="h-4 w-4 group-hover:animate-bounce" />
               </Button>
             </div>
             
-            <div className="bg-secondary/10 p-6 md:p-8 rounded-lg">
+            <div className="bg-secondary/10 p-6 md:p-8 rounded-lg animate-slide-in-right">
               <h3 className="text-xl font-display uppercase mb-4">EXOTIC SPICE BLENDS</h3>
               <p className="text-muted-foreground mb-6">
                 Hand-crafted spice blends inspired by global cultures. Elevate your cooking with our aromatic spice mixes.
               </p>
-              <Button variant="outline" className="flex items-center gap-2">
-                EXPLORE COLLECTION <ArrowRight className="h-4 w-4" />
+              <Button variant="outline" className="flex items-center gap-2 sparkle-button">
+                EXPLORE COLLECTION <ArrowRight className="h-4 w-4 group-hover:animate-bounce" />
               </Button>
             </div>
           </div>
@@ -316,16 +313,20 @@ const Index = () => {
       {/* Testimonials */}
       <section className="py-12 px-4 md:py-16 bg-secondary/20">
         <div className="container max-w-7xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-display text-center mb-12">What Our Customers Say</h2>
+          <h2 className="text-2xl md:text-3xl font-display text-center mb-12 animate-fade-in">What Our Customers Say</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
+              <div 
+                key={index} 
+                className={`bg-white p-6 rounded-lg shadow-sm animate-slide-in-bottom`}
+                style={{animationDelay: `${0.2 + index * 0.2}s`}}
+              >
                 <div className="flex items-center gap-1 mb-2">
                   {[...Array(5)].map((_, i) => (
                     <Star 
                       key={i} 
-                      className={`h-4 w-4 ${i < testimonial.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
+                      className={`h-4 w-4 ${i < testimonial.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'} ${i === 2 ? 'animate-bounce' : ''}`} 
                     />
                   ))}
                 </div>
@@ -348,8 +349,8 @@ const Index = () => {
       {/* Newsletter */}
       <section className="py-12 px-4 md:py-16 bg-white">
         <div className="container max-w-7xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-display mb-4">Join Our Community</h2>
-          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
+          <h2 className="text-2xl md:text-3xl font-display mb-4 animate-fade-in">Join Our Community</h2>
+          <p className="text-muted-foreground max-w-xl mx-auto mb-8 animate-fade-in" style={{animationDelay: '0.2s'}}>
             Subscribe to our newsletter for exclusive offers, recipes, and self-care tips.
           </p>
           
@@ -357,9 +358,10 @@ const Index = () => {
             <Input 
               type="email" 
               placeholder="Your email address" 
-              className="bg-white"
+              className="bg-white animate-slide-in-left"
+              style={{animationDelay: '0.3s'}}
             />
-            <Button>Subscribe</Button>
+            <Button className="animate-slide-in-right sparkle-button" style={{animationDelay: '0.4s'}}>Subscribe</Button>
           </div>
         </div>
       </section>
@@ -418,7 +420,7 @@ const FeatureCard = ({
   description: string;
 }) => {
   return (
-    <div className="flex flex-col items-center text-center">
+    <div className="flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300">
       {children}
       <h3 className="font-medium mb-2">{title}</h3>
       <p className="text-muted-foreground text-sm">{description}</p>
