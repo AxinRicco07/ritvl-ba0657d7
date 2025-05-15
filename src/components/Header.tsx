@@ -21,7 +21,7 @@ const Header = () => {
           </Link>
           
           <nav className="hidden md:flex items-center gap-8">
-            <NavLink to="/">Shop</NavLink>
+            <NavLink to="/">Home</NavLink>
             <NavLink to="/products">Products</NavLink>
             <NavLink to="/bestseller">Bestseller</NavLink>
             <NavLink to="/about">About Us</NavLink>
@@ -52,7 +52,7 @@ const Header = () => {
         <div className="md:hidden absolute top-full left-0 right-0 bg-background border-b border-border animate-fade-in">
           <div className="container max-w-7xl mx-auto py-4 px-4">
             <nav className="flex flex-col space-y-4">
-              <MobileNavLink to="/" onClick={toggleMenu}>Shop</MobileNavLink>
+              <MobileNavLink to="/" onClick={toggleMenu}>Home</MobileNavLink>
               <MobileNavLink to="/products" onClick={toggleMenu}>Products</MobileNavLink>
               <MobileNavLink to="/bestseller" onClick={toggleMenu}>Bestseller</MobileNavLink>
               <MobileNavLink to="/about" onClick={toggleMenu}>About Us</MobileNavLink>
