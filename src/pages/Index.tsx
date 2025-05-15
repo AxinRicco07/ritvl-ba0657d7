@@ -1,8 +1,8 @@
 
-import { ArrowRight, Check, Package, Star, ArrowLeft } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { ArrowRight, Check, Package, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { 
@@ -12,20 +12,31 @@ import {
   CarouselNext, 
   CarouselPrevious 
 } from "@/components/ui/carousel";
-import p1 from "../assets/p1.jpg"
-import p2 from "../assets/p2.jpg"
-import p3 from "../assets/p3.jpg"
+import p1 from "../assets/p1.jpg";
+import p2 from "../assets/p2.jpg";
+import p3 from "../assets/p3.jpg";
 
 const Index = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
   
   useEffect(() => {
     setIsVisible(true);
+    
+    // Auto-slide for hero carousel
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % 3);
+    }, 5000);
+    
+    return () => clearInterval(interval);
   }, []);
+
+  const heroImages = [p2, p3, p1];
+  const heroTitles = ["Dreamer's Galaxy", "Rose's Mist Bath", "Himalayan Flower"];
 
   return (
     <main className="overflow-x-hidden">
-      {/* Hero Section */}
+      {/* Hero Section with Auto-Sliding */}
       <section className="relative min-h-[80vh] overflow-hidden flex items-center bg-amber-50/50">
         <div className="container max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-8">
           <div className={`relative z-10 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.2s'}}>
@@ -48,62 +59,46 @@ const Index = () => {
           </div>
           
           <div className="relative">
-            <Carousel className={`w-full ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.4s'}}>
-              <CarouselContent>
-                <CarouselItem className="relative">
-                  <div className="aspect-[4/3] rounded-lg overflow-hidden">
-                    <img 
-                      src={p2} 
-                      alt="Premium Epsom Salts" 
+            <div className={`overflow-hidden rounded-lg ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.4s'}}>
+              <div className="relative aspect-[4/3]">
+                {heroImages.map((img, index) => (
+                  <div
+                    key={index}
+                    className={`absolute inset-0 transition-opacity duration-1000 ${
+                      currentSlide === index ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt={`Featured Product ${index + 1}`}
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40 flex flex-col items-center justify-end p-6 text-center">
-                      <span className="text-white text-lg font-medium bg-white/20 backdrop-blur-sm px-3 py-1 mb-2 rounded-md">Featured</span>
-                      <h3 className="text-white text-xl font-bold">Dreamer's Galaxy</h3>
+                      <span className="text-white text-lg font-medium bg-white/20 backdrop-blur-sm px-3 py-1 mb-2 rounded-md">
+                        {index === 0 ? "Featured" : index === 1 ? "Bestseller" : "New Arrival"}
+                      </span>
+                      <h3 className="text-white text-xl font-bold">{heroTitles[index]}</h3>
                       <Button variant="secondary" size="sm" className="mt-2">
-                        <Link to="/product/1">View Details</Link>
+                        <Link to={`/product/${index + 1}`}>View Details</Link>
                       </Button>
                     </div>
                   </div>
-                </CarouselItem>
-                <CarouselItem>
-                  <div className="aspect-[4/3] rounded-lg overflow-hidden">
-                    <img 
-                      src={p3} 
-                      alt="Epsom Salt Texture" 
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40 flex flex-col items-center justify-end p-6 text-center">
-                      <span className="text-white text-lg font-medium bg-white/20 backdrop-blur-sm px-3 py-1 mb-2 rounded-md">Bestseller</span>
-                      <h3 className="text-white text-xl font-bold">Rose's Mist Bath</h3>
-                      <Button variant="secondary" size="sm" className="mt-2">
-                        <Link to="/product/2">View Details</Link>
-                      </Button>
-                    </div>
-                  </div>
-                </CarouselItem>
-                <CarouselItem>
-                  <div className="aspect-[4/3] rounded-lg overflow-hidden">
-                    <img 
-                      src={p1} 
-                      alt="Himalayan Pink Salt" 
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40 flex flex-col items-center justify-end p-6 text-center">
-                      <span className="text-white text-lg font-medium bg-white/20 backdrop-blur-sm px-3 py-1 mb-2 rounded-md">New Arrival</span>
-                      <h3 className="text-white text-xl font-bold">Himalayan Flower</h3>
-                      <Button variant="secondary" size="sm" className="mt-2">
-                        <Link to="/product/3">View Details</Link>
-                      </Button>
-                    </div>
-                  </div>
-                </CarouselItem>
-              </CarouselContent>
-              <div className="absolute -bottom-12 left-0 right-0 flex justify-center gap-2">
-                <CarouselPrevious className="relative inset-0 translate-y-0 h-10 w-10" />
-                <CarouselNext className="relative inset-0 translate-y-0 h-10 w-10" />
+                ))}
               </div>
-            </Carousel>
+              
+              <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+                {[0, 1, 2].map((dot) => (
+                  <button
+                    key={dot}
+                    onClick={() => setCurrentSlide(dot)}
+                    className={`w-3 h-3 rounded-full transition-colors ${
+                      currentSlide === dot ? "bg-white" : "bg-white/40"
+                    }`}
+                    aria-label={`Go to slide ${dot + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -143,7 +138,7 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Featured Products */}
+      {/* Featured Products - First Row */}
       <section className="py-12 px-4 md:py-16 bg-secondary/10">
         <div className="container max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-8">
@@ -153,54 +148,106 @@ const Index = () => {
             </Link>
           </div>
           
-          <div className="relative">
-            <div className="flex overflow-x-auto pb-4 gap-6 hide-scrollbar snap-x snap-mandatory">
-              {featuredProducts.map((product) => (
-                <Link 
-                  key={product.id} 
-                  to={`/product/${product.id}`}
-                  className="min-w-[280px] snap-start" 
-                >
-                  <Card className="product-card border-none shadow-sm hover:shadow-md transition-all duration-300">
-                    <div className="overflow-hidden">
-                      <AspectRatio ratio={1 / 1}>
-                        <img 
-                          src={product.image} 
-                          alt={product.name} 
-                          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                        />
-                      </AspectRatio>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredProducts.slice(0, 4).map((product) => (
+              <Link 
+                key={product.id} 
+                to={`/product/${product.id}`}
+                className="group"
+              >
+                <Card className="product-card border-none shadow-sm hover:shadow-md transition-all duration-300">
+                  <div className="overflow-hidden">
+                    <AspectRatio ratio={1 / 1}>
+                      <img 
+                        src={product.image} 
+                        alt={product.name} 
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </AspectRatio>
+                  </div>
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="font-medium">{product.name}</h3>
+                      <span className="text-primary">${product.price.toFixed(2)}</span>
                     </div>
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <h3 className="font-medium">{product.name}</h3>
-                        <span className="text-primary">${product.price.toFixed(2)}</span>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1">
+                        {product.colors.map((color, index) => (
+                          <span 
+                            key={index} 
+                            className="w-4 h-4 rounded-full border border-gray-200" 
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
                       </div>
                       
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1">
-                          {product.colors.map((color, index) => (
-                            <span 
-                              key={index} 
-                              className="w-4 h-4 rounded-full border border-gray-200" 
-                              style={{ backgroundColor: color }}
-                            />
-                          ))}
-                        </div>
-                        
-                        <Button size="sm">Buy</Button>
+                      <Button size="sm">Buy</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Products - Second Row */}
+      <section className="py-12 px-4 md:py-16 bg-white">
+        <div className="container max-w-7xl mx-auto">
+          <div className="flex flex-wrap items-center justify-between mb-8">
+            <h2 className="text-2xl md:text-3xl font-display">Bestselling Products</h2>
+            <Link to="/products" className="text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors">
+              View all <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredProducts.slice(2, 6).map((product) => (
+              <Link 
+                key={product.id} 
+                to={`/product/${product.id}`}
+                className="group"
+              >
+                <Card className="product-card border-none shadow-sm hover:shadow-md transition-all duration-300">
+                  <div className="overflow-hidden">
+                    <AspectRatio ratio={1 / 1}>
+                      <img 
+                        src={product.image} 
+                        alt={product.name} 
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </AspectRatio>
+                  </div>
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="font-medium">{product.name}</h3>
+                      <span className="text-primary">${product.price.toFixed(2)}</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1">
+                        {product.colors.map((color, index) => (
+                          <span 
+                            key={index} 
+                            className="w-4 h-4 rounded-full border border-gray-200" 
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
                       </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
+                      
+                      <Button size="sm">Buy</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
       
       {/* Why Choose Us */}
-      <section className="py-12 px-4 md:py-16">
+      <section className="py-12 px-4 md:py-16 bg-amber-50/50">
         <div className="container max-w-7xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-display text-center mb-4">WHY RIVE?</h2>
           <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">
@@ -235,37 +282,6 @@ const Index = () => {
             >
               <Star className="w-8 h-8 mb-4 text-gray-700" />
             </FeatureCard>
-          </div>
-        </div>
-      </section>
-      
-      {/* New Arrivals */}
-      <section className="py-12 px-4 md:py-16 bg-secondary/20">
-        <div className="container max-w-7xl mx-auto">
-          <div className="flex flex-wrap items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-display">Colorful New Arrivals</h2>
-            <Link to="/new-arrivals" className="text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors">
-              View all <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {newArrivals.map((item) => (
-              <div key={item.id} className="relative rounded-lg overflow-hidden aspect-[3/4] group">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6">
-                  <h3 className="text-white text-xl font-medium mb-1">{item.title}</h3>
-                  <p className="text-white/80 text-sm mb-3">{item.description}</p>
-                  <Button size="sm" variant="outline" className="w-fit bg-white/10 text-white backdrop-blur-sm border-white/20 hover:bg-white/30">
-                    Explore
-                  </Button>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -361,9 +377,25 @@ hideScrollbarStyle.textContent = `
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+  
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .animate-scale-in {
+    animation: scale-in 0.2s ease-out forwards;
+  }
 `;
 document.head.appendChild(hideScrollbarStyle);
 
+// Components
 const Input = ({ 
   className, 
   ...props 
@@ -394,19 +426,13 @@ const FeatureCard = ({
   );
 };
 
+// Data types
 interface Product {
   id: number;
   name: string;
   price: number;
   image: string;
   colors: string[];
-}
-
-interface NewArrival {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
 }
 
 interface Category {
@@ -424,6 +450,7 @@ interface Testimonial {
   rating: number;
 }
 
+// Sample data
 const categories: Category[] = [
   {
     id: 1,
@@ -497,33 +524,6 @@ const featuredProducts: Product[] = [
     price: 26,
     image: "/placeholder.svg",
     colors: ["#5EAFD3", "#D3EBF5", "#2D6E8E"]
-  }
-];
-
-const newArrivals: NewArrival[] = [
-  {
-    id: 1,
-    title: "Blue Lily",
-    description: "Gentle bath for relaxation",
-    image: "/placeholder.svg"
-  },
-  {
-    id: 2,
-    title: "Lavender Dream",
-    description: "Soothing sleep support",
-    image: "/placeholder.svg"
-  },
-  {
-    id: 3,
-    title: "Berry Fusion",
-    description: "Energizing morning bath",
-    image: "/placeholder.svg"
-  },
-  {
-    id: 4,
-    title: "Red Sunset",
-    description: "Rich antioxidant blend",
-    image: "/placeholder.svg"
   }
 ];
 

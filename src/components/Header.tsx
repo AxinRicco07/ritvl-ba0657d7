@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Search, User, Menu, X } from "lucide-react";
@@ -23,7 +24,7 @@ const Header = () => {
           <nav className="hidden md:flex items-center gap-8">
             <NavLink to="/">Home</NavLink>
             <NavLink to="/products">Products</NavLink>
-            <NavLink to="/bestseller">Bestseller</NavLink>
+            <NavLink to="/contact">Contact Us</NavLink>
             <NavLink to="/about">About Us</NavLink>
           </nav>
           
@@ -54,7 +55,7 @@ const Header = () => {
             <nav className="flex flex-col space-y-4">
               <MobileNavLink to="/" onClick={toggleMenu}>Home</MobileNavLink>
               <MobileNavLink to="/products" onClick={toggleMenu}>Products</MobileNavLink>
-              <MobileNavLink to="/bestseller" onClick={toggleMenu}>Bestseller</MobileNavLink>
+              <MobileNavLink to="/contact" onClick={toggleMenu}>Contact Us</MobileNavLink>
               <MobileNavLink to="/about" onClick={toggleMenu}>About Us</MobileNavLink>
             </nav>
             <div className="flex items-center gap-6 mt-6 pt-4 border-t border-border">
