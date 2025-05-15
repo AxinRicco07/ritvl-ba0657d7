@@ -1,9 +1,17 @@
-import { ArrowRight, Check, Package, Star } from "lucide-react";
+
+import { ArrowRight, Check, Package, Star, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { 
+  Carousel, 
+  CarouselContent, 
+  CarouselItem, 
+  CarouselNext, 
+  CarouselPrevious 
+} from "@/components/ui/carousel";
 import p1 from "../assets/p1.jpg"
 import p2 from "../assets/p2.jpg"
 import p3 from "../assets/p3.jpg"
@@ -18,75 +26,128 @@ const Index = () => {
   return (
     <main className="overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-[80vh] overflow-hidden flex items-center">
+      <section className="relative min-h-[80vh] overflow-hidden flex items-center bg-amber-50/50">
         <div className="container max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-8">
           <div className={`relative z-10 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.2s'}}>
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight">
-              Relax. Recharge.<br />
-              Renew.<br />
-              Rise.
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight font-bold text-amber-800">
+              Natural Healing.<br />
+              Pure Joy.<br />
+              Everyday Luxury.
             </h1>
             <p className="mt-4 text-lg text-muted-foreground max-w-lg">
-              Let Epsom salts melt away stress, soothe tired muscles, and rejuvenate your spirit—one soak at a time
+              Experience the therapeutic benefits of our premium bath salts—ethically sourced, 100% natural, and crafted for your wellbeing.
             </p>
-            <div className="mt-6">
-              <Button asChild size="lg" className="rounded-md">
-                <Link to="/products">Shop now</Link>
+            <div className="mt-8 flex gap-4">
+              <Button asChild size="lg" className="rounded-full bg-green-800 hover:bg-green-700">
+                <Link to="/products">SHOP NOW</Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="rounded-full border-amber-800 text-amber-800">
+                <Link to="/about">Learn More</Link>
               </Button>
             </div>
           </div>
           
-          <div className="grid grid-cols-2 gap-3 w-full">
-            <div className={`col-span-2 ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.3s'}}>
-              <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
-                <img 
-                  src={p2} 
-                  alt="Premium Epsom Salts" 
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 flex items-end p-4">
-                  <span className="text-white text-sm font-medium bg-white/20 backdrop-blur-sm px-3 py-1 rounded-md">Featured</span>
-                </div>
+          <div className="relative">
+            <Carousel className={`w-full ${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.4s'}}>
+              <CarouselContent>
+                <CarouselItem className="relative">
+                  <div className="aspect-[4/3] rounded-lg overflow-hidden">
+                    <img 
+                      src={p2} 
+                      alt="Premium Epsom Salts" 
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40 flex flex-col items-center justify-end p-6 text-center">
+                      <span className="text-white text-lg font-medium bg-white/20 backdrop-blur-sm px-3 py-1 mb-2 rounded-md">Featured</span>
+                      <h3 className="text-white text-xl font-bold">Dreamer's Galaxy</h3>
+                      <Button variant="secondary" size="sm" className="mt-2">
+                        <Link to="/product/1">View Details</Link>
+                      </Button>
+                    </div>
+                  </div>
+                </CarouselItem>
+                <CarouselItem>
+                  <div className="aspect-[4/3] rounded-lg overflow-hidden">
+                    <img 
+                      src={p3} 
+                      alt="Epsom Salt Texture" 
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40 flex flex-col items-center justify-end p-6 text-center">
+                      <span className="text-white text-lg font-medium bg-white/20 backdrop-blur-sm px-3 py-1 mb-2 rounded-md">Bestseller</span>
+                      <h3 className="text-white text-xl font-bold">Rose's Mist Bath</h3>
+                      <Button variant="secondary" size="sm" className="mt-2">
+                        <Link to="/product/2">View Details</Link>
+                      </Button>
+                    </div>
+                  </div>
+                </CarouselItem>
+                <CarouselItem>
+                  <div className="aspect-[4/3] rounded-lg overflow-hidden">
+                    <img 
+                      src={p1} 
+                      alt="Himalayan Pink Salt" 
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40 flex flex-col items-center justify-end p-6 text-center">
+                      <span className="text-white text-lg font-medium bg-white/20 backdrop-blur-sm px-3 py-1 mb-2 rounded-md">New Arrival</span>
+                      <h3 className="text-white text-xl font-bold">Himalayan Flower</h3>
+                      <Button variant="secondary" size="sm" className="mt-2">
+                        <Link to="/product/3">View Details</Link>
+                      </Button>
+                    </div>
+                  </div>
+                </CarouselItem>
+              </CarouselContent>
+              <div className="absolute -bottom-12 left-0 right-0 flex justify-center gap-2">
+                <CarouselPrevious className="relative inset-0 translate-y-0 h-10 w-10" />
+                <CarouselNext className="relative inset-0 translate-y-0 h-10 w-10" />
               </div>
-            </div>
-            
-            <div className={`${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.4s'}}>
-              <div className="relative aspect-square overflow-hidden rounded-lg">
-                <img 
-                  src={p3} 
-                  alt="Epsom Salt Texture" 
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 flex items-end p-4">
-                  <span className="text-white text-sm font-medium">Texture</span>
+            </Carousel>
+          </div>
+        </div>
+      </section>
+
+      {/* Shop By Category Section */}
+      <section className="py-16 bg-white">
+        <div className="container max-w-7xl mx-auto px-4 md:px-6">
+          <h2 className="text-3xl font-display text-center mb-2 font-bold">Shop By Categories</h2>
+          <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">
+            Discover our curated collection of natural salt blends designed to enhance your daily rituals
+          </p>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {categories.map((category) => (
+              <Link 
+                key={category.id}
+                to={category.link}
+                className="group relative overflow-hidden rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                <div className="aspect-[1/1.2] overflow-hidden">
+                  <img 
+                    src={category.image} 
+                    alt={category.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60 flex flex-col justify-end p-6">
+                    <h3 className="text-white text-xl font-bold mb-2">{category.name}</h3>
+                    <span className="text-white text-sm font-medium opacity-90 mb-2">{category.items} Products</span>
+                    <span className="inline-flex items-center text-white text-sm font-medium bg-white/20 backdrop-blur-sm py-1 px-3 rounded-full w-fit">
+                      Explore <ArrowRight className="h-4 w-4 ml-1" />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </div>
-            
-            <div className={`${isVisible ? 'animate-fade-in' : 'opacity-0'}`} style={{animationDelay: '0.5s'}}>
-              <div className="relative aspect-square overflow-hidden rounded-lg">
-                <img 
-                  src={p1} 
-                  alt="Himalayan Pink Salt" 
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 flex items-end justify-between p-4">
-                  <span className="text-white text-sm font-medium">Himalayan Flower</span>
-                  <Button size="sm" variant="outline" className="bg-white/80 hover:bg-white">
-                    <Link to={`/product/1`}>See More</Link>
-                  </Button>
-                </div>
-              </div>
-            </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
       
       {/* Featured Products */}
-      <section className="py-12 px-4 md:py-16 bg-white">
+      <section className="py-12 px-4 md:py-16 bg-secondary/10">
         <div className="container max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-display">Featured</h2>
+            <h2 className="text-2xl md:text-3xl font-display">Featured Products</h2>
             <Link to="/products" className="text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors">
               View all <ArrowRight className="h-4 w-4" />
             </Link>
@@ -348,12 +409,51 @@ interface NewArrival {
   image: string;
 }
 
+interface Category {
+  id: number;
+  name: string;
+  items: number;
+  image: string;
+  link: string;
+}
+
 interface Testimonial {
   name: string;
   title: string;
   comment: string;
   rating: number;
 }
+
+const categories: Category[] = [
+  {
+    id: 1,
+    name: "Bath Salts",
+    items: 12,
+    image: "/placeholder.svg",
+    link: "/products?category=bath-salts"
+  },
+  {
+    id: 2,
+    name: "Aromatherapy",
+    items: 8,
+    image: "/placeholder.svg",
+    link: "/products?category=aromatherapy" 
+  },
+  {
+    id: 3,
+    name: "Gift Sets",
+    items: 6,
+    image: "/placeholder.svg",
+    link: "/gift-sets"
+  },
+  {
+    id: 4,
+    name: "Specialty Crystals",
+    items: 10,
+    image: "/placeholder.svg",
+    link: "/products?category=specialty"
+  }
+];
 
 const featuredProducts: Product[] = [
   {
