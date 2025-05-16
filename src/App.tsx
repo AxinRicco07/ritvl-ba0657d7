@@ -55,35 +55,40 @@ function App() {
           <Route path="customers" element={<AdminCustomers />} />
         </Route>
         
-        {/* Public Routes */}
-        <Route path="/" element={
-          <>
-            <Header />
-            <AnimationWrapper>
-              <Routes>
-                <Route index element={<Index />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/product/:id" element={<ProductDetail />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/gift-sets" element={<Products />} />
-                <Route path="/our-story" element={<About />} />
-                <Route path="/ingredients" element={<About />} />
-                <Route path="/sustainability" element={<About />} />
-                <Route path="/faq" element={<About />} />
-                <Route path="/privacy-policy" element={<About />} />
-                <Route path="/terms" element={<About />} />
-                <Route path="/shipping" element={<About />} />
-                <Route path="/careers" element={<About />} />
-                <Route path="/new-arrivals" element={<Products />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </AnimationWrapper>
-            <WhatsAppButton />
-            <Footer />
-          </>
-        } />
+        {/* Public Routes - FIX: Restructured the routing to properly handle nested routes */}
+        <Route 
+          path="/"
+          element={
+            <>
+              <Header />
+              <AnimationWrapper>
+                <main>
+                  <Routes>
+                    <Route index element={<Index />} />
+                    <Route path="products" element={<Products />} />
+                    <Route path="product/:id" element={<ProductDetail />} />
+                    <Route path="cart" element={<Cart />} />
+                    <Route path="about" element={<About />} />
+                    <Route path="contact" element={<Contact />} />
+                    <Route path="gift-sets" element={<Products />} />
+                    <Route path="our-story" element={<About />} />
+                    <Route path="ingredients" element={<About />} />
+                    <Route path="sustainability" element={<About />} />
+                    <Route path="faq" element={<About />} />
+                    <Route path="privacy-policy" element={<About />} />
+                    <Route path="terms" element={<About />} />
+                    <Route path="shipping" element={<About />} />
+                    <Route path="careers" element={<About />} />
+                    <Route path="new-arrivals" element={<Products />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
+              </AnimationWrapper>
+              <WhatsAppButton />
+              <Footer />
+            </>
+          } 
+        />
       </Routes>
     </Router>
   );
