@@ -1,6 +1,6 @@
 
-import { BrowserRouter as Router, Routes, Route, useLocation,Outlet } from "react-router-dom";
-import { useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, useLocation, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Index from "@/pages/Index";
@@ -21,26 +21,28 @@ import "./App.css";
 // Animation wrapper component
 const AnimationWrapper = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
+  const [isAnimating, setIsAnimating] = useState(false);
   
   useEffect(() => {
     // Scroll to top on page change
     window.scrollTo(0, 0);
     
     // Add page transition class
-    const mainContent = document.querySelector('main');
-    if (mainContent) {
-      mainContent.classList.add('animate-fade-in');
-      
-      // Remove animation class after animation completes
-      const timer = setTimeout(() => {
-        mainContent.classList.remove('animate-fade-in');
-      }, 500);
-      
-      return () => clearTimeout(timer);
-    }
+    setIsAnimating(true);
+    
+    // Remove animation class after animation completes
+    const timer = setTimeout(() => {
+      setIsAnimating(false);
+    }, 500);
+    
+    return () => clearTimeout(timer);
   }, [location.pathname]);
   
-  return <>{children}</>;
+  return (
+    <main className={isAnimating ? "animate-fade-in" : ""}>
+      {children}
+    </main>
+  );
 };
 
 function App() {
@@ -55,14 +57,12 @@ function App() {
           <Route path="customers" element={<AdminCustomers />} />
         </Route>
         
-        {/* Public Routes - Corrected structure */}
+        {/* Public Routes */}
         <Route element={
           <>
             <Header />
             <AnimationWrapper>
-              <main>
-                <Outlet /> {/* This is where child routes will render */}
-              </main>
+              <Outlet /> {/* This is where child routes will render */}
             </AnimationWrapper>
             <WhatsAppButton />
             <Footer />
@@ -89,7 +89,6 @@ function App() {
       </Routes>
     </Router>
   );
-
 }
 
 export default App;

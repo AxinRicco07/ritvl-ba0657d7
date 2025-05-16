@@ -17,20 +17,17 @@ const Header = () => {
       <div className="container max-w-7xl mx-auto">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logo} className="h-16 w-16"/>
+            <img src={logo} className="h-20 w-20" alt="ritvl logo" />
             <span className="text-2xl font-sans font-light tracking-widest bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 bg-clip-text text-transparent">
-  <strong>ritvl</strong>
-</span>
-{/* <span className="text-2xl font-elegant font-medium italic tracking-normal bg-gradient-to-br from-gray-800 to-gray-600 bg-clip-text text-transparent">
-  ritvl
-</span> */}
+              <strong>ritvl</strong>
+            </span>
           </Link>
           
           <nav className="hidden md:flex items-center gap-8">
             <NavLink to="/">Home</NavLink>
-            <NavLink to="products">Products</NavLink>
-            <NavLink to="contact">Contact Us</NavLink>
-            <NavLink to="about">About Us</NavLink>
+            <NavLink to="/products">Products</NavLink>
+            <NavLink to="/contact">Contact Us</NavLink>
+            <NavLink to="/about">About Us</NavLink>
           </nav>
           
           <div className="hidden md:flex items-center gap-4">
