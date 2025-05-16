@@ -61,7 +61,7 @@ const AdminProducts: React.FC = () => {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>All Products</CardTitle>
-          <Button onClick={handleAddProduct}>
+          <Button onClick={handleAddProduct} className="bg-primary hover:bg-primary/90">
             <Plus className="mr-2 h-4 w-4" />
             Add Product
           </Button>
@@ -72,7 +72,7 @@ const AdminProducts: React.FC = () => {
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search products..."
-                className="pl-8"
+                className="pl-8 focus-visible:ring-primary"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -109,6 +109,7 @@ const AdminProducts: React.FC = () => {
                             ? "secondary"
                             : "destructive"
                         }
+                        className={product.status === "In Stock" ? "bg-primary hover:bg-primary/90" : ""}
                       >
                         {product.status}
                       </Badge>
@@ -118,6 +119,7 @@ const AdminProducts: React.FC = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleEditProduct(product.id)}
+                        className="hover:text-primary"
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -125,6 +127,7 @@ const AdminProducts: React.FC = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleDeleteProduct(product.id)}
+                        className="hover:text-destructive"
                       >
                         <Trash className="h-4 w-4" />
                       </Button>

@@ -58,7 +58,7 @@ export default function ProductDetail() {
   
   return (
     <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
-      <Link to="/products" className="flex items-center text-sm mb-6 hover:underline">
+      <Link to="/products" className="flex items-center text-sm mb-6 hover:underline hover:text-primary">
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back to products
       </Link>
@@ -66,7 +66,7 @@ export default function ProductDetail() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
         {/* Product Images */}
         <div>
-          <div className="bg-secondary/30 rounded-lg overflow-hidden mb-4">
+          <div className="bg-secondary/30 rounded-lg overflow-hidden mb-4 border border-border">
             <AspectRatio ratio={1} className="bg-secondary/20">
               <img 
                 src={product.images[selectedImage]} 
@@ -81,7 +81,7 @@ export default function ProductDetail() {
               <button 
                 key={index}
                 onClick={() => setSelectedImage(index)}
-                className={`rounded-md overflow-hidden border ${selectedImage === index ? 'border-black' : 'border-border'}`}
+                className={`rounded-md overflow-hidden border ${selectedImage === index ? 'border-primary' : 'border-border'}`}
               >
                 <AspectRatio ratio={1}>
                   <img src={image} alt={`Product view ${index+1}`} className="w-full h-full object-cover" />
@@ -100,7 +100,7 @@ export default function ProductDetail() {
               {[...Array(5)].map((_, i) => (
                 <Star 
                   key={i} 
-                  className={`h-4 w-4 ${i < Math.floor(product.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
+                  className={`h-4 w-4 ${i < Math.floor(product.rating) ? 'fill-primary text-primary' : 'text-gray-300'}`} 
                 />
               ))}
             </div>
@@ -128,7 +128,7 @@ export default function ProductDetail() {
                     type="button"
                     variant={selectedSize === size ? "default" : "outline"}
                     onClick={() => setSelectedSize(size)}
-                    className="rounded-full"
+                    className={`rounded-full ${selectedSize !== size ? "text-primary border-primary hover:bg-primary/5" : ""}`}
                   >
                     {size}
                   </Button>
@@ -146,7 +146,7 @@ export default function ProductDetail() {
                     type="button"
                     variant={selectedStrength === strength ? "default" : "outline"}
                     onClick={() => setSelectedStrength(strength)}
-                    className="rounded-full"
+                    className={`rounded-full ${selectedStrength !== strength ? "text-primary border-primary hover:bg-primary/5" : ""}`}
                   >
                     {strength}
                   </Button>
@@ -206,7 +206,7 @@ export default function ProductDetail() {
             
             {/* Gift Option */}
             <div className="flex items-start gap-2">
-              <Checkbox id="gift-option" />
+              <Checkbox id="gift-option" className="data-[state=checked]:bg-primary data-[state=checked]:border-primary" />
               <div className="grid gap-1.5 leading-none">
                 <label
                   htmlFor="gift-option"
@@ -227,10 +227,10 @@ export default function ProductDetail() {
       <div className="mt-16">
         <div className="border-b border-border">
           <div className="flex overflow-x-auto space-x-8">
-            <button className="border-b-2 border-black py-4 px-1 font-medium text-sm">Product Details</button>
-            <button className="text-muted-foreground py-4 px-1 text-sm">Ingredients</button>
-            <button className="text-muted-foreground py-4 px-1 text-sm">How to Use</button>
-            <button className="text-muted-foreground py-4 px-1 text-sm">Reviews</button>
+            <button className="border-b-2 border-primary py-4 px-1 font-medium text-sm">Product Details</button>
+            <button className="text-muted-foreground py-4 px-1 text-sm hover:text-primary">Ingredients</button>
+            <button className="text-muted-foreground py-4 px-1 text-sm hover:text-primary">How to Use</button>
+            <button className="text-muted-foreground py-4 px-1 text-sm hover:text-primary">Reviews</button>
           </div>
         </div>
         
@@ -243,7 +243,7 @@ export default function ProductDetail() {
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-4">
             {product.benefits.map((benefit, index) => (
               <li key={index} className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-black"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
                 {benefit}
               </li>
             ))}
@@ -256,7 +256,7 @@ export default function ProductDetail() {
         <h2 className="text-2xl font-serif mb-8">You May Also Like</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((item) => (
-            <div key={item} className="product-card bg-white rounded-lg overflow-hidden">
+            <div key={item} className="product-card bg-white rounded-lg overflow-hidden border border-border hover:border-primary/30 shadow-sm">
               <div className="aspect-square bg-secondary/30 relative overflow-hidden">
                 <img 
                   src="/placeholder.svg" 
@@ -265,10 +265,10 @@ export default function ProductDetail() {
                 />
               </div>
               <div className="p-3">
-                <h3 className="font-medium text-sm mb-1">Related Product {item}</h3>
+                <h3 className="font-medium text-sm mb-1 hover:text-primary">Related Product {item}</h3>
                 <div className="flex justify-between items-center">
                   <span className="text-sm">$24.99</span>
-                  <Button size="sm" variant="outline">Add</Button>
+                  <Button size="sm" variant="outline" className="text-primary border-primary hover:bg-primary/5">Add</Button>
                 </div>
               </div>
             </div>

@@ -246,7 +246,7 @@ export default function Products() {
               id="sort"
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
-              className="border border-input rounded-md bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black"
+              className="border border-input rounded-md bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
             >
               <option value="featured">Featured</option>
               <option value="price-low">Price: Low to High</option>
@@ -285,7 +285,7 @@ export default function Products() {
                     variant="outline" 
                     size="sm" 
                     onClick={clearAllFilters}
-                    className="w-full justify-center"
+                    className="w-full justify-center text-primary border-primary hover:bg-primary/5"
                   >
                     Clear all filters
                   </Button>
@@ -300,6 +300,7 @@ export default function Products() {
                         id={`mobile-category-${category.id}`} 
                         checked={selectedCategories.includes(category.id)}
                         onCheckedChange={() => toggleCategory(category.id)}
+                        className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                       />
                       <label 
                         htmlFor={`mobile-category-${category.id}`}
@@ -318,6 +319,7 @@ export default function Products() {
                         id={`mobile-benefit-${benefit.id}`}
                         checked={selectedBenefits.includes(benefit.id)}
                         onCheckedChange={() => toggleBenefit(benefit.id)}
+                        className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                       />
                       <label 
                         htmlFor={`mobile-benefit-${benefit.id}`}
@@ -336,6 +338,7 @@ export default function Products() {
                         id={`mobile-intensity-${intensity.id}`}
                         checked={selectedIntensities.includes(intensity.id)}
                         onCheckedChange={() => toggleIntensity(intensity.id)}
+                        className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                       />
                       <label 
                         htmlFor={`mobile-intensity-${intensity.id}`}
@@ -360,7 +363,7 @@ export default function Products() {
                   variant="outline" 
                   size="sm" 
                   onClick={clearAllFilters}
-                  className="w-full justify-center"
+                  className="w-full justify-center text-primary border-primary hover:bg-primary/5"
                 >
                   Clear all filters
                 </Button>
@@ -374,6 +377,7 @@ export default function Products() {
                     id={`category-${category.id}`} 
                     checked={selectedCategories.includes(category.id)}
                     onCheckedChange={() => toggleCategory(category.id)}
+                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                   />
                   <label 
                     htmlFor={`category-${category.id}`}
@@ -392,6 +396,7 @@ export default function Products() {
                     id={`benefit-${benefit.id}`}
                     checked={selectedBenefits.includes(benefit.id)}
                     onCheckedChange={() => toggleBenefit(benefit.id)}
+                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                   />
                   <label 
                     htmlFor={`benefit-${benefit.id}`}
@@ -410,6 +415,7 @@ export default function Products() {
                     id={`intensity-${intensity.id}`}
                     checked={selectedIntensities.includes(intensity.id)}
                     onCheckedChange={() => toggleIntensity(intensity.id)}
+                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                   />
                   <label 
                     htmlFor={`intensity-${intensity.id}`}
@@ -481,7 +487,7 @@ const FilterSection = ({
 
 const ProductCard = ({ product }: { product: typeof allProducts[number] }) => {
   return (
-    <div className="product-card bg-white rounded-lg overflow-hidden">
+    <div className="product-card bg-white rounded-lg overflow-hidden border border-border hover:border-primary/30 shadow-sm">
       <Link to={`/product/${product.id}`} className="block relative">
         <div className="aspect-square bg-secondary/30 relative overflow-hidden">
           <img 
@@ -491,7 +497,7 @@ const ProductCard = ({ product }: { product: typeof allProducts[number] }) => {
           />
           
           {product.new && (
-            <span className="absolute top-2 right-2 bg-black text-white text-xs px-2 py-1 rounded">
+            <span className="absolute top-2 right-2 bg-primary text-white text-xs px-2 py-1 rounded">
               New
             </span>
           )}
@@ -500,14 +506,14 @@ const ProductCard = ({ product }: { product: typeof allProducts[number] }) => {
       
       <div className="p-4">
         <Link to={`/product/${product.id}`} className="block">
-          <h3 className="font-medium hover:underline">{product.name}</h3>
+          <h3 className="font-medium hover:underline hover:text-primary transition-colors">{product.name}</h3>
         </Link>
         
         <div className="flex items-center gap-1 mt-1 mb-2">
           {[...Array(5)].map((_, i) => (
             <Star 
               key={i} 
-              className={`h-3 w-3 ${i < Math.floor(product.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
+              className={`h-3 w-3 ${i < Math.floor(product.rating) ? 'fill-primary text-primary' : 'text-gray-300'}`} 
             />
           ))}
           <span className="text-xs text-muted-foreground ml-1">({product.reviewCount})</span>
@@ -515,7 +521,7 @@ const ProductCard = ({ product }: { product: typeof allProducts[number] }) => {
         
         <div className="flex justify-between items-center">
           <span className="font-medium">${product.price.toFixed(2)}</span>
-          <Button size="sm" variant="outline" className="gap-1">
+          <Button size="sm" variant="outline" className="gap-1 text-primary border-primary hover:bg-primary/5">
             <ShoppingCart className="h-4 w-4" />
             Add
           </Button>
