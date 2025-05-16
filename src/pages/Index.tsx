@@ -16,7 +16,7 @@ import SaltSparkle from "@/components/SaltSparkle";
 import p1 from "../assets/p1.jpg";
 import p2 from "../assets/p2.jpg";
 import p3 from "../assets/p3.jpg";
-
+import ethics from "../assets/7942.jpg"
 const Index = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -254,7 +254,7 @@ const Index = () => {
       {/* Why Choose Us */}
       <section className="py-12 px-4 md:py-16 bg-amber-50/50">
         <div className="container max-w-7xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-display text-center mb-4 animate-slide-in-bottom">WHY RIVE?</h2>
+          <h2 className="text-2xl md:text-3xl font-display text-center mb-4 animate-slide-in-bottom">WHY <strong>ritvl</strong>?</h2>
           <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12 animate-slide-in-bottom" style={{animationDelay: '0.2s'}}>
             Our mission is to bring the world's finest salts and spices to your kitchen, focusing on quality, sustainability, and exceptional flavor.
           </p>
@@ -272,7 +272,7 @@ const Index = () => {
                                index === 2 ? "We deliver our premium spices to customers across the globe." :
                                "Every batch is tested to ensure the highest standards of purity and quality."}
                 >
-                  {index === 0 ? <img src="/placeholder.svg" alt="Ethically Sourced" className="w-10 h-10 mb-4 animate-pulse" /> :
+                  {index === 0 ? <img src={ethics} alt="Ethically Sourced" className="w-10 h-10 mb-4 animate-pulse" /> :
                    index === 1 ? <Check className="w-8 h-8 mb-4 text-gray-700 animate-bounce" /> :
                    index === 2 ? <Package className="w-8 h-8 mb-4 text-gray-700 animate-pulse" /> :
                    <Star className="w-8 h-8 mb-4 text-gray-700 animate-bounce" />}
@@ -288,24 +288,24 @@ const Index = () => {
         <div className="container max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-secondary/10 p-6 md:p-8 rounded-lg animate-slide-in-left">
-              <h3 className="text-xl font-display uppercase mb-4">PREMIUM SALT COLLECTION</h3>
-              <p className="text-muted-foreground mb-6">
-                Discover our range of premium salts sourced from the world's finest mines and flats, perfect for finishing dishes or as thoughtful gifts.
-              </p>
-              <Button variant="outline" className="flex items-center gap-2 sparkle-button">
-                EXPLORE COLLECTION <ArrowRight className="h-4 w-4 group-hover:animate-bounce" />
-              </Button>
-            </div>
-            
-            <div className="bg-secondary/10 p-6 md:p-8 rounded-lg animate-slide-in-right">
-              <h3 className="text-xl font-display uppercase mb-4">EXOTIC SPICE BLENDS</h3>
-              <p className="text-muted-foreground mb-6">
-                Hand-crafted spice blends inspired by global cultures. Elevate your cooking with our aromatic spice mixes.
-              </p>
-              <Button variant="outline" className="flex items-center gap-2 sparkle-button">
-                EXPLORE COLLECTION <ArrowRight className="h-4 w-4 group-hover:animate-bounce" />
-              </Button>
-            </div>
+  <h3 className="text-xl font-display uppercase mb-4">PREMIUM EPSOM SALT COLLECTION</h3>
+  <p className="text-muted-foreground mb-6">
+    Discover therapeutic-grade magnesium sulfate crystals, meticulously harvested for optimal purity and dissolution. Perfect for muscle relaxation, detoxification baths, and skincare rituals.
+  </p>
+  <Button variant="outline" className="flex items-center gap-2 sparkle-button">
+    EXPLORE BATH SALTS <ArrowRight className="h-4 w-4 group-hover:animate-bounce" />
+  </Button>
+</div>
+
+<div className="bg-secondary/10 p-6 md:p-8 rounded-lg animate-slide-in-right">
+  <h3 className="text-xl font-display uppercase mb-4">SPECIALTY EPSOM BLENDS</h3>
+  <p className="text-muted-foreground mb-6">
+    Enhanced mineral combinations infused with essential oils and natural botanicals. Our aromatic blends combine Epsom salts with lavender, eucalyptus, and chamomile for elevated therapeutic benefits.
+  </p>
+  <Button variant="outline" className="flex items-center gap-2 sparkle-button">
+    DISCOVER BLENDS <ArrowRight className="h-4 w-4 group-hover:animate-bounce" />
+  </Button>
+</div>
           </div>
         </div>
       </section>
@@ -487,42 +487,42 @@ const categories: Category[] = [
 const featuredProducts: Product[] = [
   {
     id: 1,
-    name: "Dreamer's Galaxy",
+    name: "Product 1",
     price: 25,
     image: "/placeholder.svg",
     colors: ["#E8D5B5", "#8AACB9", "#E2C1B3"]
   },
   {
     id: 2,
-    name: "Rose's Mist Bath",
+    name: "Product 2",
     price: 34,
     image: "/placeholder.svg",
     colors: ["#E7A4B7", "#EDE3DE", "#CEA997"]
   },
   {
     id: 3,
-    name: "Large Mystic Palm",
+    name: "Product 3",
     price: 33,
     image: "/placeholder.svg",
     colors: ["#99B898", "#FECEA8", "#FF847C"]
   },
   {
     id: 4,
-    name: "Pair Serenity Plant",
+    name: "Product 4",
     price: 30,
     image: "/placeholder.svg",
     colors: ["#2A363B", "#E8B4BC", "#99B898"]
   },
   {
     id: 5,
-    name: "Soothing Lavender",
+    name: "Product 5",
     price: 28,
     image: "/placeholder.svg",
     colors: ["#9B89B3", "#EEE1F8", "#726C80"]
   },
   {
     id: 6,
-    name: "Ocean Breeze",
+    name: "Product 6",
     price: 26,
     image: "/placeholder.svg",
     colors: ["#5EAFD3", "#D3EBF5", "#2D6E8E"]

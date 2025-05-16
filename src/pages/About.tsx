@@ -13,10 +13,10 @@ export default function About() {
               Our Story
             </h1>
             <p className="text-lg text-muted-foreground mb-6">
-              Founded in 2018, RIVE began with a simple mission: to create natural bath products that transform an everyday ritual into a luxurious self-care experience.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
             </p>
             <p className="text-muted-foreground mb-8">
-              Our founder, Emily Chen, discovered the therapeutic benefits of Epsom salt baths during her recovery from a sports injury. Disappointed by the limited options available—either clinical-looking unscented salts or heavily perfumed products with artificial ingredients—she set out to create something better.
+             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
             </p>
             <Button asChild size="lg" variant="outline">
               <Link to="/contact">Contact Us</Link>
@@ -70,7 +70,7 @@ export default function About() {
               </div>
               <h3 className="font-medium text-xl mb-3">Natural Ingredients</h3>
               <p className="text-muted-foreground">
-                We use only natural, ethically sourced ingredients. No artificial fragrances, dyes, or preservatives—ever.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
               </p>
             </div>
             
@@ -80,7 +80,7 @@ export default function About() {
               </div>
               <h3 className="font-medium text-xl mb-3">Sustainable Practices</h3>
               <p className="text-muted-foreground">
-                We're committed to minimizing our environmental footprint through sustainable sourcing, plastic-free packaging, and carbon-neutral shipping.
+                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
               </p>
             </div>
             
@@ -90,7 +90,7 @@ export default function About() {
               </div>
               <h3 className="font-medium text-xl mb-3">Wellness Focus</h3>
               <p className="text-muted-foreground">
-                Our products are designed to enhance your wellbeing, addressing specific needs from stress relief to muscle recovery.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
               </p>
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function About() {
                   <div>
                     <h3 className="font-medium text-lg mb-2">Sourcing</h3>
                     <p className="text-muted-foreground">
-                      We partner with suppliers who share our values. Our Epsom salts are pharmaceutical grade, and our essential oils are 100% pure and steam-distilled.
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
                     </p>
                   </div>
                 </div>
@@ -123,7 +123,7 @@ export default function About() {
                   <div>
                     <h3 className="font-medium text-lg mb-2">Formulation</h3>
                     <p className="text-muted-foreground">
-                      Our small-batch blends are developed by our in-house aromatherapist, combining traditional knowledge with modern wellness research.
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
                     </p>
                   </div>
                 </div>
@@ -135,7 +135,7 @@ export default function About() {
                   <div>
                     <h3 className="font-medium text-lg mb-2">Production</h3>
                     <p className="text-muted-foreground">
-                      Each product is handcrafted in our New England workshop, where we maintain strict quality control standards.
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
                     </p>
                   </div>
                 </div>
@@ -147,7 +147,7 @@ export default function About() {
                   <div>
                     <h3 className="font-medium text-lg mb-2">Testing</h3>
                     <p className="text-muted-foreground">
-                      We never test on animals. Our products are tested by human volunteers to ensure efficacy, gentleness, and sensory appeal.
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
                     </p>
                   </div>
                 </div>
@@ -199,7 +199,7 @@ export default function About() {
         <div className="container max-w-7xl mx-auto text-center">
           <h2 className="text-2xl md:text-3xl font-serif mb-4">Join Our Mission</h2>
           <p className="text-gray-300 max-w-xl mx-auto mb-8">
-            We're always looking for passionate individuals to join our growing team. Check out our current openings or send us your resume.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild variant="outline" className="bg-transparent border-white text-white hover:bg-white/10">

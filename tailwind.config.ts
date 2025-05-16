@@ -53,6 +53,7 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -183,6 +184,7 @@ export default {
 			fontFamily: {
 				sans: ['Montserrat', 'sans-serif'],
 				display: ['Cormorant Garamond', 'serif'],
+				elegant: ['"Playfair Display"', 'serif'],
 			}
 		}
 	},

@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 const allProducts = [
   {
     id: "1",
-    name: "Relaxing Lavender Bath Salt",
+    name: "Product 1",
     price: 24.99,
     image: "/placeholder.svg",
     category: "bath-salts",
@@ -23,7 +23,7 @@ const allProducts = [
   },
   {
     id: "2",
-    name: "Energizing Citrus Bath Bomb",
+    name: "Product 2",
     price: 8.99,
     image: "/placeholder.svg",
     category: "bath-bombs",
@@ -37,7 +37,7 @@ const allProducts = [
   },
   {
     id: "3",
-    name: "Soothing Eucalyptus Soak",
+    name: "Product 3",
     price: 18.50,
     image: "/placeholder.svg",
     category: "bath-salts",
@@ -51,7 +51,7 @@ const allProducts = [
   },
   {
     id: "4",
-    name: "Rose Petal Mineral Bath",
+    name: "Product 4",
     price: 22.99,
     image: "/placeholder.svg",
     category: "bath-salts",
@@ -65,7 +65,7 @@ const allProducts = [
   },
   {
     id: "5",
-    name: "Dead Sea Mud Mask",
+    name: "Product 5",
     price: 15.99,
     image: "/placeholder.svg",
     category: "body-care",
@@ -79,7 +79,7 @@ const allProducts = [
   },
   {
     id: "6",
-    name: "Himalayan Pink Salt Scrub",
+    name: "Product 6",
     price: 17.50,
     image: "/placeholder.svg",
     category: "body-care",
@@ -93,7 +93,7 @@ const allProducts = [
   },
   {
     id: "7",
-    name: "Relaxation Gift Set",
+    name: "product 7",
     price: 49.99,
     image: "/placeholder.svg",
     category: "gift-sets",
@@ -107,7 +107,7 @@ const allProducts = [
   },
   {
     id: "8",
-    name: "Muscle Recovery Soak",
+    name: "Product 8",
     price: 28.99,
     image: "/placeholder.svg",
     category: "bath-salts",

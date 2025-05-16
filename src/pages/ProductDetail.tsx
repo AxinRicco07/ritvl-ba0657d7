@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 // Mock product data
 const product = {
   id: "1",
-  name: "Relaxing Lavender Bath Salt",
+  name: "Product 1",
   price: 24.99,
   originalPrice: 29.99,
   description: "Our premium lavender bath salt provides deep relaxation and stress relief. Made with pure essential oils and natural sea salt, it transforms your bath into a luxurious spa experience.",
