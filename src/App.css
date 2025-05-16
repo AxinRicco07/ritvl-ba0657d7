@@ -119,3 +119,8 @@
     opacity: 1;
   }
 }
+
+/* Blue theme sparkle */
+.animate-sparkle {
+  box-shadow: 0 0 8px 2px rgba(219, 234, 254, 0.9);
+}

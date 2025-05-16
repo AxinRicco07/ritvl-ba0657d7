@@ -17,6 +17,7 @@ import p1 from "../assets/p1.jpg";
 import p2 from "../assets/p2.jpg";
 import p3 from "../assets/p3.jpg";
 import ethics from "../assets/7942.jpg"
+
 const Index = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -38,10 +39,10 @@ const Index = () => {
   return (
     <main className="overflow-x-hidden">
       {/* Hero Section with Auto-Sliding */}
-      <section className="relative min-h-[80vh] overflow-hidden flex items-center bg-amber-50/50">
+      <section className="relative min-h-[80vh] overflow-hidden flex items-center bg-blue-50/50">
         <div className="container max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-8">
           <div className={`relative z-10 ${isVisible ? 'animate-slide-in-left' : 'opacity-0'}`} style={{animationDelay: '0.2s'}}>
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight font-bold text-amber-800">
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight font-bold text-blue-800">
               <span className="block text-reveal"><span style={{animationDelay: '0.3s'}}>Natural Healing.</span></span>
               <span className="block text-reveal"><span style={{animationDelay: '0.5s'}}>Pure Joy.</span></span>
               <span className="block text-reveal"><span style={{animationDelay: '0.7s'}}>Everyday Luxury.</span></span>
@@ -50,10 +51,10 @@ const Index = () => {
               Experience the therapeutic benefits of our premium bath salts—ethically sourced, 100% natural, and crafted for your wellbeing.
             </p>
             <div className="mt-8 flex gap-4">
-              <Button asChild size="lg" className="rounded-full bg-green-800 hover:bg-green-700 sparkle-button animate-fade-in" style={{animationDelay: '1.1s'}}>
+              <Button asChild size="lg" className="rounded-full bg-blue-600 hover:bg-blue-500 sparkle-button animate-fade-in" style={{animationDelay: '1.1s'}}>
                 <Link to="/products">SHOP NOW</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full border-amber-800 text-amber-800 animate-fade-in" style={{animationDelay: '1.3s'}}>
+              <Button asChild variant="outline" size="lg" className="rounded-full border-blue-600 text-blue-600 hover:bg-blue-50 animate-fade-in" style={{animationDelay: '1.3s'}}>
                 <Link to="/about">Learn More</Link>
               </Button>
             </div>
@@ -186,7 +187,7 @@ const Index = () => {
                         ))}
                       </div>
                       
-                      <Button size="sm" className="sparkle-button">Buy</Button>
+                      <Button size="sm" className="bg-blue-600 hover:bg-blue-500 sparkle-button">Buy</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -241,7 +242,7 @@ const Index = () => {
                         ))}
                       </div>
                       
-                      <Button size="sm" className="sparkle-button">Buy</Button>
+                      <Button size="sm" className="bg-blue-600 hover:bg-blue-500 sparkle-button">Buy</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -252,7 +253,7 @@ const Index = () => {
       </section>
       
       {/* Why Choose Us */}
-      <section className="py-12 px-4 md:py-16 bg-amber-50/50">
+      <section className="py-12 px-4 md:py-16 bg-blue-50/50">
         <div className="container max-w-7xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-display text-center mb-4 animate-slide-in-bottom">WHY <strong>ritvl</strong>?</h2>
           <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12 animate-slide-in-bottom" style={{animationDelay: '0.2s'}}>
@@ -287,22 +288,22 @@ const Index = () => {
       <section className="py-12 px-4 md:py-16">
         <div className="container max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-secondary/10 p-6 md:p-8 rounded-lg animate-slide-in-left">
+            <div className="bg-blue-100/50 p-6 md:p-8 rounded-lg animate-slide-in-left">
   <h3 className="text-xl font-display uppercase mb-4">PREMIUM EPSOM SALT COLLECTION</h3>
   <p className="text-muted-foreground mb-6">
     Discover therapeutic-grade magnesium sulfate crystals, meticulously harvested for optimal purity and dissolution. Perfect for muscle relaxation, detoxification baths, and skincare rituals.
   </p>
-  <Button variant="outline" className="flex items-center gap-2 sparkle-button">
+  <Button variant="outline" className="flex items-center gap-2 border-blue-600 text-blue-600 hover:bg-blue-50 sparkle-button">
     EXPLORE BATH SALTS <ArrowRight className="h-4 w-4 group-hover:animate-bounce" />
   </Button>
 </div>
 
-<div className="bg-secondary/10 p-6 md:p-8 rounded-lg animate-slide-in-right">
+<div className="bg-blue-100/50 p-6 md:p-8 rounded-lg animate-slide-in-right">
   <h3 className="text-xl font-display uppercase mb-4">SPECIALTY EPSOM BLENDS</h3>
   <p className="text-muted-foreground mb-6">
     Enhanced mineral combinations infused with essential oils and natural botanicals. Our aromatic blends combine Epsom salts with lavender, eucalyptus, and chamomile for elevated therapeutic benefits.
   </p>
-  <Button variant="outline" className="flex items-center gap-2 sparkle-button">
+  <Button variant="outline" className="flex items-center gap-2 border-blue-600 text-blue-600 hover:bg-blue-50 sparkle-button">
     DISCOVER BLENDS <ArrowRight className="h-4 w-4 group-hover:animate-bounce" />
   </Button>
 </div>
@@ -311,7 +312,7 @@ const Index = () => {
       </section>
       
       {/* Testimonials */}
-      <section className="py-12 px-4 md:py-16 bg-secondary/20">
+      <section className="py-12 px-4 md:py-16 bg-blue-50/50">
         <div className="container max-w-7xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-display text-center mb-12 animate-fade-in">What Our Customers Say</h2>
           
@@ -361,7 +362,7 @@ const Index = () => {
               className="bg-white animate-slide-in-left"
               style={{animationDelay: '0.3s'}}
             />
-            <Button className="animate-slide-in-right sparkle-button" style={{animationDelay: '0.4s'}}>Subscribe</Button>
+            <Button className="bg-blue-600 hover:bg-blue-500 animate-slide-in-right sparkle-button" style={{animationDelay: '0.4s'}}>Subscribe</Button>
           </div>
         </div>
       </section>
