@@ -254,7 +254,7 @@ const Index = () => {
       {/* Why Choose Us - Updated Section */}
       <section className="py-12 px-4 md:py-16 bg-blue-50/50">
         <div className="container max-w-7xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-display text-center mb-4 animate-slide-in-bottom">WHY <strong>ritvl</strong>?</h2>
+          <h2 className="text-2xl md:text-3xl font-display text-center mb-4 animate-slide-in-bottom">WHY <strong>Salts</strong>?</h2>
           <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12 animate-slide-in-bottom" style={{animationDelay: '0.2s'}}>
             Our mission is to bring the world's finest salts and spices to your kitchen, focusing on quality, sustainability, and exceptional flavor.
           </p>

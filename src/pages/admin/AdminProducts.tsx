@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,20 +30,6 @@ const AdminProducts: React.FC = () => {
     product.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
   
-  const handleAddProduct = () => {
-    toast({
-      title: "Add Product",
-      description: "Product form would open here",
-    });
-  };
-  
-  const handleEditProduct = (id: number) => {
-    toast({
-      title: "Edit Product",
-      description: `Editing product with ID: ${id}`,
-    });
-  };
-  
   const handleDeleteProduct = (id: number) => {
     toast({
       title: "Delete Product",
@@ -61,9 +48,11 @@ const AdminProducts: React.FC = () => {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>All Products</CardTitle>
-          <Button onClick={handleAddProduct} className="bg-primary hover:bg-primary/90">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Product
+          <Button asChild className="bg-blue-600 hover:bg-blue-500">
+            <Link to="/admin/products/add">
+              <Plus className="mr-2 h-4 w-4" />
+              Add Product
+            </Link>
           </Button>
         </CardHeader>
         <CardContent>
@@ -72,7 +61,7 @@ const AdminProducts: React.FC = () => {
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search products..."
-                className="pl-8 focus-visible:ring-primary"
+                className="pl-8 focus-visible:ring-blue-500"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -109,7 +98,7 @@ const AdminProducts: React.FC = () => {
                             ? "secondary"
                             : "destructive"
                         }
-                        className={product.status === "In Stock" ? "bg-primary hover:bg-primary/90" : ""}
+                        className={product.status === "In Stock" ? "bg-blue-600 hover:bg-blue-500" : ""}
                       >
                         {product.status}
                       </Badge>
@@ -118,10 +107,12 @@ const AdminProducts: React.FC = () => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleEditProduct(product.id)}
-                        className="hover:text-primary"
+                        asChild
+                        className="hover:text-blue-600"
                       >
-                        <Edit className="h-4 w-4" />
+                        <Link to={`/admin/products/edit/${product.id}`}>
+                          <Edit className="h-4 w-4" />
+                        </Link>
                       </Button>
                       <Button
                         variant="ghost"
