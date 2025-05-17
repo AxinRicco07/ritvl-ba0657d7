@@ -9,6 +9,15 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Label } from "@/components/ui/label";
 import { FlaskConical, ArrowLeft, Save, PackagePlus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import ProductImageUploader from "@/components/admin/ProductImageUploader";
+
+// Product image type definition
+interface ProductImage {
+  id: string;
+  url: string;
+  file?: File;
+  isMain?: boolean;
+}
 
 // Product type definition
 interface Product {
@@ -19,7 +28,7 @@ interface Product {
   stock: number;
   status: string;
   description?: string;
-  imageUrl?: string;
+  images: ProductImage[];
 }
 
 const AdminProductForm: React.FC = () => {
@@ -37,7 +46,7 @@ const AdminProductForm: React.FC = () => {
     stock: 0,
     status: "In Stock",
     description: "",
-    imageUrl: ""
+    images: []
   });
   
   const [isLoading, setIsLoading] = useState(false);
@@ -47,9 +56,43 @@ const AdminProductForm: React.FC = () => {
 
   // Mock product data for edit mode
   const mockProducts: Product[] = [
-    { id: 1, name: "Sea Salt Body Scrub", category: "Body Care", price: 24.99, stock: 45, status: "In Stock", description: "Exfoliating scrub with sea salt minerals" },
-    { id: 2, name: "Lavender Bath Salt", category: "Bath", price: 18.50, stock: 32, status: "In Stock", description: "Relaxing bath salt infused with lavender" },
-    { id: 3, name: "Citrus & Honey Face Mask", category: "Face Care", price: 29.99, stock: 12, status: "Low Stock", description: "Refreshing face mask with citrus and honey" },
+    { 
+      id: 1, 
+      name: "Sea Salt Body Scrub", 
+      category: "Body Care", 
+      price: 24.99, 
+      stock: 45, 
+      status: "In Stock", 
+      description: "Exfoliating scrub with sea salt minerals",
+      images: [
+        { id: "1", url: "https://images.unsplash.com/photo-1500673922987-e212871fec22", isMain: true },
+        { id: "2", url: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21" }
+      ]
+    },
+    { 
+      id: 2, 
+      name: "Lavender Bath Salt", 
+      category: "Bath", 
+      price: 18.50, 
+      stock: 32, 
+      status: "In Stock", 
+      description: "Relaxing bath salt infused with lavender",
+      images: [
+        { id: "1", url: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9", isMain: true }
+      ]
+    },
+    { 
+      id: 3, 
+      name: "Citrus & Honey Face Mask", 
+      category: "Face Care", 
+      price: 29.99, 
+      stock: 12, 
+      status: "Low Stock", 
+      description: "Refreshing face mask with citrus and honey",
+      images: [
+        { id: "1", url: "https://images.unsplash.com/photo-1582562124811-c09040d0a901", isMain: true }
+      ]
+    },
   ];
   
   // Load product data in edit mode
@@ -75,7 +118,7 @@ const AdminProductForm: React.FC = () => {
     }
   }, [id, isEditMode, navigate, toast]);
   
-  const handleChange = (field: keyof Product, value: string | number) => {
+  const handleChange = (field: keyof Product, value: string | number | ProductImage[]) => {
     setProduct(prev => ({
       ...prev,
       [field]: value
@@ -86,7 +129,20 @@ const AdminProductForm: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate API call
+    // Check if product has at least one image
+    if (product.images.length === 0) {
+      toast({
+        title: "Image Required",
+        description: "Please add at least one product image",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+    
+    // In a real app, you'd handle file uploads here
+    // For now, we'll just simulate a successful API call
+    
     setTimeout(() => {
       toast({
         title: isEditMode ? "Product Updated" : "Product Created",
@@ -130,6 +186,15 @@ const AdminProductForm: React.FC = () => {
         
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-6 pt-6">
+            {/* Product Images */}
+            <div className="space-y-2">
+              <Label htmlFor="images">Product Images</Label>
+              <ProductImageUploader 
+                images={product.images} 
+                onChange={(images) => handleChange('images', images)} 
+              />
+            </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Product Name */}
               <div className="space-y-2">
@@ -209,18 +274,6 @@ const AdminProductForm: React.FC = () => {
                     <SelectItem value="Out of Stock">Out of Stock</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-              
-              {/* Image URL */}
-              <div className="space-y-2">
-                <Label htmlFor="imageUrl">Image URL</Label>
-                <Input 
-                  id="imageUrl" 
-                  value={product.imageUrl || ""} 
-                  onChange={(e) => handleChange('imageUrl', e.target.value)}
-                  placeholder="https://example.com/image.jpg"
-                  className="focus-visible:ring-blue-500"
-                />
               </div>
             </div>
             
