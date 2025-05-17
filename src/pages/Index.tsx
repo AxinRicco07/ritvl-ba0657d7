@@ -1,6 +1,5 @@
-
 import React, { useEffect, useState } from "react";
-import { ArrowRight, Check, Package, Star } from "lucide-react";
+import { ArrowRight, Bath, CheckCircle, FlaskConical, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
@@ -252,7 +251,7 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Why Choose Us */}
+      {/* Why Choose Us - Updated Section */}
       <section className="py-12 px-4 md:py-16 bg-blue-50/50">
         <div className="container max-w-7xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-display text-center mb-4 animate-slide-in-bottom">WHY <strong>ritvl</strong>?</h2>
@@ -264,19 +263,19 @@ const Index = () => {
             {[0, 1, 2, 3].map((index) => (
               <div key={index} className={`animate-zoom-in`} style={{animationDelay: `${0.3 + index * 0.2}s`}}>
                 <FeatureCard 
-                  title={index === 0 ? "ETHICALLY SOURCED" : 
-                         index === 1 ? "100% PURE" : 
-                         index === 2 ? "SHIPS WORLDWIDE" :
-                         "LAB-TESTED FOR QUALITY"} 
-                  description={index === 0 ? "We source our healing minerals from farmers, ensuring fair wages and sustainable practices." :
-                               index === 1 ? "No additives, fillers, or artificial ingredients. Just pure, natural goodness." :
-                               index === 2 ? "We deliver our premium spices to customers across the globe." :
-                               "Every batch is tested to ensure the highest standards of purity and quality."}
+                  title={index === 0 ? "HIGH MAGNESIUM CONTENT" : 
+                         index === 1 ? "PHARMACEUTICAL GRADE" : 
+                         index === 2 ? "THERAPEUTIC BENEFITS" :
+                         "MULTI-PURPOSE USE"} 
+                  description={index === 0 ? "Rich in magnesium sulfate to replenish mineral levels and support cellular function." :
+                               index === 1 ? "Medical-grade purity with no additives or synthetic enhancements." :
+                               index === 2 ? "Effective for muscle relief, stress reduction, and detoxification." :
+                               "Perfect for baths, compresses, skincare, and gardening applications"}
                 >
-                  {index === 0 ? <img src={ethics} alt="Ethically Sourced" className="w-10 h-10 mb-4 animate-pulse" /> :
-                   index === 1 ? <Check className="w-8 h-8 mb-4 text-gray-700 animate-bounce" /> :
-                   index === 2 ? <Package className="w-8 h-8 mb-4 text-gray-700 animate-pulse" /> :
-                   <Star className="w-8 h-8 mb-4 text-gray-700 animate-bounce" />}
+                  {index === 0 ? <FlaskConical className="w-10 h-10 mb-4 text-blue-600 animate-pulse" /> :
+                   index === 1 ? <CheckCircle className="w-8 h-8 mb-4 text-blue-600 animate-bounce" /> :
+                   index === 2 ? <Bath className="w-8 h-8 mb-4 text-blue-600 animate-pulse" /> :
+                   <Sparkles className="w-8 h-8 mb-4 text-blue-600 animate-bounce" />}
                 </FeatureCard>
               </div>
             ))}
