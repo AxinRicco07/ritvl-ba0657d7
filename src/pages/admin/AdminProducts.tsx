@@ -32,13 +32,13 @@ const AdminProducts: React.FC = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   
-  // Mock data for products with images
+  // Mock data for products with images and INR prices
   const products: Product[] = [
     { 
       id: 1, 
       name: "Sea Salt Body Scrub", 
-      category: "Body Care", 
-      price: 24.99, 
+      category: "Salts Types", 
+      price: 2099, 
       stock: 45, 
       status: "In Stock",
       images: [
@@ -48,8 +48,8 @@ const AdminProducts: React.FC = () => {
     { 
       id: 2, 
       name: "Lavender Bath Salt", 
-      category: "Bath", 
-      price: 18.50, 
+      category: "Lavender", 
+      price: 1550, 
       stock: 32, 
       status: "In Stock",
       images: [
@@ -58,9 +58,9 @@ const AdminProducts: React.FC = () => {
     },
     { 
       id: 3, 
-      name: "Citrus & Honey Face Mask", 
-      category: "Face Care", 
-      price: 29.99, 
+      name: "Rose Face Mask", 
+      category: "Rose", 
+      price: 2499, 
       stock: 12, 
       status: "Low Stock",
       images: [
@@ -69,9 +69,9 @@ const AdminProducts: React.FC = () => {
     },
     { 
       id: 4, 
-      name: "Eucalyptus Shower Steamer", 
-      category: "Bath", 
-      price: 15.99, 
+      name: "Jasmine Shower Steamer", 
+      category: "Jasmine", 
+      price: 1339, 
       stock: 0, 
       status: "Out of Stock",
       images: [
@@ -80,9 +80,9 @@ const AdminProducts: React.FC = () => {
     },
     { 
       id: 5, 
-      name: "Rose Water Toner", 
-      category: "Face Care", 
-      price: 22.50, 
+      name: "Mogra Water Toner", 
+      category: "Mogra", 
+      price: 1875, 
       stock: 28, 
       status: "In Stock",
       images: [
@@ -91,27 +91,27 @@ const AdminProducts: React.FC = () => {
     },
     { 
       id: 6, 
-      name: "Himalayan Salt Soap", 
-      category: "Body Care", 
-      price: 12.99, 
+      name: "Lemon Grass Salt Soap", 
+      category: "Lemon Grass", 
+      price: 1083, 
       stock: 50, 
       status: "In Stock",
       images: []
     },
     { 
       id: 7, 
-      name: "Detox Bath Set", 
-      category: "Gift Sets", 
-      price: 45.00, 
+      name: "Ocean Blue Bath Set", 
+      category: "Ocean Blue", 
+      price: 3750, 
       stock: 15, 
       status: "In Stock",
       images: []
     },
     { 
       id: 8, 
-      name: "Exfoliating Salt Scrub", 
-      category: "Body Care", 
-      price: 26.99, 
+      name: "Geranium Salt Scrub", 
+      category: "Geranium", 
+      price: 2249, 
       stock: 8, 
       status: "Low Stock",
       images: []
@@ -196,7 +196,7 @@ const AdminProducts: React.FC = () => {
                     </TableCell>
                     <TableCell className="font-medium">{product.name}</TableCell>
                     <TableCell>{product.category}</TableCell>
-                    <TableCell>${product.price.toFixed(2)}</TableCell>
+                    <TableCell>₹{product.price.toFixed(0)}</TableCell>
                     <TableCell>{product.stock}</TableCell>
                     <TableCell>
                       <Badge

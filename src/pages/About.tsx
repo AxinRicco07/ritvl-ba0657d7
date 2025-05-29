@@ -167,33 +167,6 @@ export default function About() {
         </div>
       </section>
       
-      {/* Team */}
-      <section className="section-padding">
-        <div className="container max-w-7xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-serif text-center mb-4 text-blue-800">Meet Our Team</h2>
-          <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-16">
-            The passionate people behind RIVE's products and mission.
-          </p>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {teamMembers.map((member) => (
-              <div key={member.name} className="text-center">
-                <div className="aspect-square rounded-full overflow-hidden mb-4 max-w-[220px] mx-auto">
-                  <img 
-                    src={member.image} 
-                    alt={member.name} 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <h3 className="font-medium text-lg">{member.name}</h3>
-                <p className="text-muted-foreground mb-2">{member.role}</p>
-                <p className="text-sm">{member.bio}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      
       {/* Join Our Mission */}
       <section className="section-padding bg-blue-900 text-white">
         <div className="container max-w-7xl mx-auto text-center">
@@ -214,30 +187,3 @@ export default function About() {
     </main>
   );
 }
-
-const teamMembers = [
-  {
-    name: "Emily Chen",
-    role: "Founder & CEO",
-    bio: "Former physical therapist with a passion for natural wellness and sustainable business practices.",
-    image: "/placeholder.svg"
-  },
-  {
-    name: "David Martinez",
-    role: "Head of Product Development",
-    bio: "Aromatherapist and herbalist with 15 years of experience in natural product formulation.",
-    image: "/placeholder.svg"
-  },
-  {
-    name: "Sarah Johnson",
-    role: "Creative Director",
-    bio: "Designer with a background in sustainable packaging and brand identity for wellness brands.",
-    image: "/placeholder.svg"
-  },
-  {
-    name: "Michael Lee",
-    role: "Operations Manager",
-    bio: "Supply chain expert focused on ethical sourcing and sustainable manufacturing processes.",
-    image: "/placeholder.svg"
-  }
-];

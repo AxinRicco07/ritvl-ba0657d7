@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -51,16 +50,16 @@ const AdminProductForm: React.FC = () => {
   
   const [isLoading, setIsLoading] = useState(false);
   
-  // Mock categories
-  const categories = ["Bath", "Body Care", "Face Care", "Gift Sets"];
+  // Updated categories with salt types
+  const categories = ["Salts Types", "Mogra", "Lavender", "Rose", "Jasmine", "Lemon Grass", "Cinnamon", "Ocean Blue", "Geranium"];
 
-  // Mock product data for edit mode
+  // Mock product data for edit mode with INR prices
   const mockProducts: Product[] = [
     { 
       id: 1, 
       name: "Sea Salt Body Scrub", 
-      category: "Body Care", 
-      price: 24.99, 
+      category: "Salts Types", 
+      price: 2099, 
       stock: 45, 
       status: "In Stock", 
       description: "Exfoliating scrub with sea salt minerals",
@@ -72,8 +71,8 @@ const AdminProductForm: React.FC = () => {
     { 
       id: 2, 
       name: "Lavender Bath Salt", 
-      category: "Bath", 
-      price: 18.50, 
+      category: "Lavender", 
+      price: 1550, 
       stock: 32, 
       status: "In Stock", 
       description: "Relaxing bath salt infused with lavender",
@@ -83,12 +82,12 @@ const AdminProductForm: React.FC = () => {
     },
     { 
       id: 3, 
-      name: "Citrus & Honey Face Mask", 
-      category: "Face Care", 
-      price: 29.99, 
+      name: "Rose Face Mask", 
+      category: "Rose", 
+      price: 2499, 
       stock: 12, 
       status: "Low Stock", 
-      description: "Refreshing face mask with citrus and honey",
+      description: "Refreshing face mask with rose essence",
       images: [
         { id: "1", url: "https://images.unsplash.com/photo-1582562124811-c09040d0a901", isMain: true }
       ]
@@ -231,14 +230,14 @@ const AdminProductForm: React.FC = () => {
               
               {/* Price */}
               <div className="space-y-2">
-                <Label htmlFor="price">Price ($)</Label>
+                <Label htmlFor="price">Price (₹)</Label>
                 <Input 
                   id="price" 
                   type="number" 
-                  step="0.01"
+                  step="1"
                   min="0"
                   value={product.price} 
-                  onChange={(e) => handleChange('price', parseFloat(e.target.value))}
+                  onChange={(e) => handleChange('price', parseInt(e.target.value))}
                   className="focus-visible:ring-blue-500"
                   required
                 />

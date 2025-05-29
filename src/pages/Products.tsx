@@ -1,18 +1,17 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Filter, X, ChevronDown, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 
-// Mock product data
+// Mock product data with INR prices and new categories
 const allProducts = [
   {
     id: "1",
-    name: "Product 1",
-    price: 24.99,
+    name: "Himalayan Pink Salt",
+    price: 2099,
     image: "/placeholder.svg",
-    category: "bath-salts",
+    category: "salts-types",
     benefits: ["relaxation", "sleep"],
     rating: 4.8,
     reviewCount: 126,
@@ -23,10 +22,10 @@ const allProducts = [
   },
   {
     id: "2",
-    name: "Product 2",
-    price: 8.99,
+    name: "Mogra Bath Bomb",
+    price: 749,
     image: "/placeholder.svg",
-    category: "bath-bombs",
+    category: "mogra",
     benefits: ["energy", "mood"],
     rating: 4.6,
     reviewCount: 98,
@@ -37,10 +36,10 @@ const allProducts = [
   },
   {
     id: "3",
-    name: "Product 3",
-    price: 18.50,
+    name: "Lavender Bath Salt",
+    price: 1550,
     image: "/placeholder.svg",
-    category: "bath-salts",
+    category: "lavender",
     benefits: ["respiratory", "muscle-relief"],
     rating: 4.7,
     reviewCount: 74,
@@ -51,10 +50,10 @@ const allProducts = [
   },
   {
     id: "4",
-    name: "Product 4",
-    price: 22.99,
+    name: "Rose Petal Salt",
+    price: 1920,
     image: "/placeholder.svg",
-    category: "bath-salts",
+    category: "rose",
     benefits: ["skin-health", "relaxation"],
     rating: 4.5,
     reviewCount: 63,
@@ -65,10 +64,10 @@ const allProducts = [
   },
   {
     id: "5",
-    name: "Product 5",
-    price: 15.99,
+    name: "Jasmine Body Scrub",
+    price: 1339,
     image: "/placeholder.svg",
-    category: "body-care",
+    category: "jasmine",
     benefits: ["detox", "skin-health"],
     rating: 4.9,
     reviewCount: 112,
@@ -79,10 +78,10 @@ const allProducts = [
   },
   {
     id: "6",
-    name: "Product 6",
-    price: 17.50,
+    name: "Lemon Grass Salt",
+    price: 1458,
     image: "/placeholder.svg",
-    category: "body-care",
+    category: "lemon-grass",
     benefits: ["exfoliation", "skin-health"],
     rating: 4.7,
     reviewCount: 85,
@@ -93,10 +92,10 @@ const allProducts = [
   },
   {
     id: "7",
-    name: "product 7",
-    price: 49.99,
+    name: "Cinnamon Salt Mix",
+    price: 4166,
     image: "/placeholder.svg",
-    category: "gift-sets",
+    category: "cinnamon",
     benefits: ["relaxation", "sleep", "stress-relief"],
     rating: 4.9,
     reviewCount: 57,
@@ -107,10 +106,10 @@ const allProducts = [
   },
   {
     id: "8",
-    name: "Product 8",
-    price: 28.99,
+    name: "Ocean Blue Salt",
+    price: 2415,
     image: "/placeholder.svg",
-    category: "bath-salts",
+    category: "ocean-blue",
     benefits: ["muscle-relief", "recovery"],
     rating: 4.8,
     reviewCount: 94,
@@ -118,14 +117,33 @@ const allProducts = [
     new: false,
     fragranceIntensity: "strong",
     isGiftSet: false
+  },
+  {
+    id: "9",
+    name: "Geranium Bath Salt",
+    price: 1875,
+    image: "/placeholder.svg",
+    category: "geranium",
+    benefits: ["mood", "stress-relief"],
+    rating: 4.6,
+    reviewCount: 78,
+    featured: false,
+    new: true,
+    fragranceIntensity: "medium",
+    isGiftSet: false
   }
 ];
 
 const categories = [
-  { id: "bath-salts", label: "Bath Salts" },
-  { id: "bath-bombs", label: "Bath Bombs" },
-  { id: "body-care", label: "Body Care" },
-  { id: "gift-sets", label: "Gift Sets" }
+  { id: "salts-types", label: "Salts Types" },
+  { id: "mogra", label: "Mogra" },
+  { id: "lavender", label: "Lavender" },
+  { id: "rose", label: "Rose" },
+  { id: "jasmine", label: "Jasmine" },
+  { id: "lemon-grass", label: "Lemon Grass" },
+  { id: "cinnamon", label: "Cinnamon" },
+  { id: "ocean-blue", label: "Ocean Blue" },
+  { id: "geranium", label: "Geranium" }
 ];
 
 const benefits = [
@@ -520,7 +538,7 @@ const ProductCard = ({ product }: { product: typeof allProducts[number] }) => {
         </div>
         
         <div className="flex justify-between items-center">
-          <span className="font-medium">${product.price.toFixed(2)}</span>
+          <span className="font-medium">₹{product.price.toFixed(0)}</span>
           <Button size="sm" variant="outline" className="gap-1 text-primary border-primary hover:bg-primary/5">
             <ShoppingCart className="h-4 w-4" />
             Add
