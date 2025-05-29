@@ -20,11 +20,19 @@ const WhatsAppButton = () => {
       return;
     }
     
+    // Format Indian phone number
+    let formattedNumber = phoneNumber.replace(/\D/g, ''); // Remove non-digits
+    
+    // If number doesn't start with country code, add +91 for India
+    if (formattedNumber.length === 10 && !formattedNumber.startsWith('91')) {
+      formattedNumber = '91' + formattedNumber;
+    }
+    
     const message = `Hello! I'm ${name || 'a customer'} interested in your products. Please contact me.`;
     const encodedMessage = encodeURIComponent(message);
     
     // Open WhatsApp with the pre-filled message
-    window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, "_blank");
+    window.open(`https://wa.me/${formattedNumber}?text=${encodedMessage}`, "_blank");
     
     // Show success message
     toast({
@@ -67,11 +75,11 @@ const WhatsAppButton = () => {
                   id="phoneNumber"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  placeholder="+1234567890"
+                  placeholder="9876543210 or +919876543210"
                   className="w-full px-3 py-2 border rounded-md"
                   required
                 />
-                <p className="text-xs text-gray-500 mt-1">Include country code (+1, +44, etc.)</p>
+                <p className="text-xs text-gray-500 mt-1">Enter your 10-digit Indian mobile number</p>
               </div>
               <div className="flex gap-2 pt-2">
                 <Button 
@@ -99,7 +107,7 @@ const WhatsAppButton = () => {
       
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className="h-14 w-14 rounded-full bg-green-600 hover:bg-green-700 shadow-lg flex items-center justify-center"
+        className="h-14 w-14 rounded-full bg-green-600 hover:bg-green-700 shadow-lg flex items-center justify-center animate-jiggle"
       >
         <MessageSquare className="h-6 w-6 text-white" />
       </Button>

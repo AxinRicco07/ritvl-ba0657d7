@@ -130,3 +130,26 @@ input:focus, textarea:focus {
   box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
   border-color: rgba(33, 150, 243, 0.6);
 }
+
+/* Jiggle animation for WhatsApp button */
+.animate-jiggle {
+  animation: jiggle 2s ease-in-out infinite;
+}
+
+@keyframes jiggle {
+  0%, 50%, 100% {
+    transform: rotate(0deg);
+  }
+  10% {
+    transform: rotate(-10deg);
+  }
+  20% {
+    transform: rotate(10deg);
+  }
+  30% {
+    transform: rotate(-10deg);
+  }
+  40% {
+    transform: rotate(10deg);
+  }
+}

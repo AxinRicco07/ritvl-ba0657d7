@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Filter, X, ChevronDown, ShoppingCart, Star } from "lucide-react";
@@ -505,8 +506,8 @@ const FilterSection = ({
 
 const ProductCard = ({ product }: { product: typeof allProducts[number] }) => {
   return (
-    <div className="product-card bg-white rounded-lg overflow-hidden border border-border hover:border-primary/30 shadow-sm">
-      <Link to={`/product/${product.id}`} className="block relative">
+    <Link to={`/product/${product.id}`} className="block">
+      <div className="product-card bg-white rounded-lg overflow-hidden border border-border hover:border-primary/30 shadow-sm">
         <div className="aspect-square bg-secondary/30 relative overflow-hidden">
           <img 
             src={product.image} 
@@ -520,31 +521,38 @@ const ProductCard = ({ product }: { product: typeof allProducts[number] }) => {
             </span>
           )}
         </div>
-      </Link>
-      
-      <div className="p-4">
-        <Link to={`/product/${product.id}`} className="block">
+        
+        <div className="p-4">
           <h3 className="font-medium hover:underline hover:text-primary transition-colors">{product.name}</h3>
-        </Link>
-        
-        <div className="flex items-center gap-1 mt-1 mb-2">
-          {[...Array(5)].map((_, i) => (
-            <Star 
-              key={i} 
-              className={`h-3 w-3 ${i < Math.floor(product.rating) ? 'fill-primary text-primary' : 'text-gray-300'}`} 
-            />
-          ))}
-          <span className="text-xs text-muted-foreground ml-1">({product.reviewCount})</span>
-        </div>
-        
-        <div className="flex justify-between items-center">
-          <span className="font-medium">₹{product.price.toFixed(0)}</span>
-          <Button size="sm" variant="outline" className="gap-1 text-primary border-primary hover:bg-primary/5">
-            <ShoppingCart className="h-4 w-4" />
-            Add
-          </Button>
+          
+          <div className="flex items-center gap-1 mt-1 mb-2">
+            {[...Array(5)].map((_, i) => (
+              <Star 
+                key={i} 
+                className={`h-3 w-3 ${i < Math.floor(product.rating) ? 'fill-primary text-primary' : 'text-gray-300'}`} 
+              />
+            ))}
+            <span className="text-xs text-muted-foreground ml-1">({product.reviewCount})</span>
+          </div>
+          
+          <div className="flex justify-between items-center">
+            <span className="font-medium">₹{product.price.toFixed(0)}</span>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="gap-1 text-primary border-primary hover:bg-primary/5"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // Handle add to cart logic here
+              }}
+            >
+              <ShoppingCart className="h-4 w-4" />
+              Add
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
