@@ -7,36 +7,59 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Checkbox } from "@/components/ui/checkbox";
 
-// Mock product data
-const product = {
-  id: "1",
-  name: "Product 1",
-  price: 24.99,
-  originalPrice: 29.99,
-  description: "Our premium lavender bath salt provides deep relaxation and stress relief. Made with pure essential oils and natural sea salt, it transforms your bath into a luxurious spa experience.",
-  longDescription: "Immerse yourself in the soothing properties of our carefully crafted lavender bath salt. This therapeutic blend combines premium Dead Sea salts with organic lavender essential oil to create the ultimate relaxation experience. The fine-grain texture dissolves quickly in warm water, releasing aromatic compounds that calm your mind and ease muscle tension. Regular use helps improve sleep quality, reduce stress, and leave your skin feeling soft and nourished.",
-  ingredients: "Sea Salt, Epsom Salt (Magnesium Sulfate), Sodium Bicarbonate, Lavender Essential Oil, Dried Lavender Flowers, Vitamin E",
-  rating: 4.8,
-  reviewCount: 126,
-  images: [
-    "/placeholder.svg",
-    "/placeholder.svg",
-    "/placeholder.svg",
-    "/placeholder.svg"
-  ],
-  options: {
-    size: ["250g", "500g", "1kg"],
-    fragranceStrength: ["Light", "Medium", "Strong"]
+// Product data matching the categories and products from other pages
+const productData = {
+  "1": {
+    id: "1",
+    name: "Himalayan Pink Salt",
+    price: 2099,
+    originalPrice: 2499,
+    description: "Premium Himalayan pink salt crystals, naturally harvested from ancient sea beds. Rich in minerals and perfect for therapeutic baths and culinary use.",
+    longDescription: "Our Himalayan Pink Salt is sourced directly from the pristine mines of Pakistan, where ancient sea beds have crystallized over millions of years. This premium-grade salt contains over 80 trace minerals, including magnesium, potassium, and calcium, making it ideal for both therapeutic baths and gourmet cooking. The beautiful rose-pink color comes from iron oxide deposits, giving each crystal a unique natural hue.",
+    ingredients: "100% Pure Himalayan Pink Salt (Sodium Chloride with naturally occurring trace minerals)",
+    rating: 4.8,
+    reviewCount: 126,
+    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
+    category: "salts-types",
+    benefits: ["Muscle relief", "Detoxification", "Mineral replenishment", "Stress reduction"],
+    featured: true,
+    new: false,
+    inStock: true
   },
-  benefits: [
-    "Relieves muscle tension",
-    "Improves sleep quality",
-    "Soothes skin irritation",
-    "Reduces stress & anxiety"
-  ],
-  featured: true,
-  new: false,
-  inStock: true
+  "2": {
+    id: "2",
+    name: "Mogra Bath Bomb",
+    price: 749,
+    originalPrice: 899,
+    description: "Luxurious mogra-scented bath bomb that fizzes and releases enchanting floral fragrance while nourishing your skin.",
+    longDescription: "Transform your bath into a luxurious spa experience with our Mogra Bath Bomb. Infused with the intoxicating fragrance of mogra (jasmine), this bath bomb fizzes gently to release essential oils and skin-conditioning ingredients. The natural mogra fragrance promotes relaxation and emotional balance while leaving your skin soft and delicately scented.",
+    ingredients: "Sodium Bicarbonate, Citric Acid, Epsom Salt, Mogra Essential Oil, Coconut Oil, Dried Mogra Petals",
+    rating: 4.6,
+    reviewCount: 98,
+    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
+    category: "mogra",
+    benefits: ["Aromatherapy", "Skin nourishment", "Relaxation", "Mood enhancement"],
+    featured: false,
+    new: true,
+    inStock: true
+  },
+  "3": {
+    id: "3",
+    name: "Lavender Bath Salt",
+    price: 1550,
+    originalPrice: 1799,
+    description: "Calming lavender-infused Epsom salt blend designed to promote deep relaxation and peaceful sleep.",
+    longDescription: "Our Lavender Bath Salt combines premium Epsom salt with pure lavender essential oil and dried lavender flowers. Known for its calming properties, lavender helps reduce stress, anxiety, and promotes restful sleep. The magnesium in Epsom salt aids muscle recovery and relaxation, making this the perfect end-of-day ritual.",
+    ingredients: "Epsom Salt (Magnesium Sulfate), Lavender Essential Oil, Dried Lavender Flowers, Sea Salt",
+    rating: 4.7,
+    reviewCount: 74,
+    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
+    category: "lavender",
+    benefits: ["Sleep support", "Stress relief", "Muscle relaxation", "Aromatherapy"],
+    featured: true,
+    new: false,
+    inStock: true
+  }
 };
 
 export default function ProductDetail() {
@@ -45,6 +68,9 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("500g");
   const [selectedStrength, setSelectedStrength] = useState("Medium");
+  
+  // Get product data or fallback to first product
+  const product = productData[id as keyof typeof productData] || productData["1"];
   
   const decreaseQuantity = () => {
     if (quantity > 1) {
@@ -58,7 +84,7 @@ export default function ProductDetail() {
   
   return (
     <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
-      <Link to="/products" className="flex items-center text-sm mb-6 hover:underline hover:text-primary">
+      <Link to="/products" className="flex items-center text-sm mb-6 hover:underline hover:text-primary transition-colors duration-300">
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back to products
       </Link>
@@ -81,7 +107,7 @@ export default function ProductDetail() {
               <button 
                 key={index}
                 onClick={() => setSelectedImage(index)}
-                className={`rounded-md overflow-hidden border ${selectedImage === index ? 'border-primary' : 'border-border'}`}
+                className={`rounded-md overflow-hidden border transition-all duration-300 ${selectedImage === index ? 'border-primary scale-105' : 'border-border hover:border-primary/50'}`}
               >
                 <AspectRatio ratio={1}>
                   <img src={image} alt={`Product view ${index+1}`} className="w-full h-full object-cover" />
@@ -100,7 +126,7 @@ export default function ProductDetail() {
               {[...Array(5)].map((_, i) => (
                 <Star 
                   key={i} 
-                  className={`h-4 w-4 ${i < Math.floor(product.rating) ? 'fill-primary text-primary' : 'text-gray-300'}`} 
+                  className={`h-4 w-4 transition-colors duration-300 ${i < Math.floor(product.rating) ? 'fill-primary text-primary' : 'text-gray-300'}`} 
                 />
               ))}
             </div>
@@ -108,9 +134,9 @@ export default function ProductDetail() {
           </div>
           
           <div className="flex items-baseline gap-2 mb-6">
-            <span className="text-2xl font-medium">${product.price.toFixed(2)}</span>
+            <span className="text-2xl font-medium">₹{product.price.toFixed(0)}</span>
             {product.originalPrice && (
-              <span className="text-sm text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</span>
+              <span className="text-sm text-muted-foreground line-through">₹{product.originalPrice.toFixed(0)}</span>
             )}
           </div>
           
@@ -122,13 +148,13 @@ export default function ProductDetail() {
             <div>
               <h3 className="font-medium mb-3">Size</h3>
               <div className="flex flex-wrap gap-2">
-                {product.options.size.map((size) => (
+                {["250g", "500g", "1kg"].map((size) => (
                   <Button
                     key={size}
                     type="button"
                     variant={selectedSize === size ? "default" : "outline"}
                     onClick={() => setSelectedSize(size)}
-                    className={`rounded-full ${selectedSize !== size ? "text-primary border-primary hover:bg-primary/5" : ""}`}
+                    className={`rounded-full transition-all duration-300 ${selectedSize !== size ? "text-primary border-primary hover:bg-primary/5 hover:scale-105" : "hover:scale-105"}`}
                   >
                     {size}
                   </Button>
@@ -140,13 +166,13 @@ export default function ProductDetail() {
             <div>
               <h3 className="font-medium mb-3">Fragrance Strength</h3>
               <div className="flex flex-wrap gap-2">
-                {product.options.fragranceStrength.map((strength) => (
+                {["Light", "Medium", "Strong"].map((strength) => (
                   <Button
                     key={strength}
                     type="button"
                     variant={selectedStrength === strength ? "default" : "outline"}
                     onClick={() => setSelectedStrength(strength)}
-                    className={`rounded-full ${selectedStrength !== strength ? "text-primary border-primary hover:bg-primary/5" : ""}`}
+                    className={`rounded-full transition-all duration-300 ${selectedStrength !== strength ? "text-primary border-primary hover:bg-primary/5 hover:scale-105" : "hover:scale-105"}`}
                   >
                     {strength}
                   </Button>
@@ -161,20 +187,20 @@ export default function ProductDetail() {
                 <div className="flex items-center border border-input rounded-md overflow-hidden">
                   <button 
                     onClick={decreaseQuantity}
-                    className="px-3 py-2 hover:bg-secondary transition-colors"
+                    className="px-3 py-2 hover:bg-secondary transition-colors duration-300"
                   >
                     -
                   </button>
                   <span className="px-4 py-2 border-x border-input">{quantity}</span>
                   <button 
                     onClick={increaseQuantity}
-                    className="px-3 py-2 hover:bg-secondary transition-colors"
+                    className="px-3 py-2 hover:bg-secondary transition-colors duration-300"
                   >
                     +
                   </button>
                 </div>
                 
-                <Button className="gap-2 flex-1" size="lg">
+                <Button className="gap-2 flex-1 transition-all duration-300 hover:scale-105" size="lg">
                   <ShoppingCart className="h-5 w-5" />
                   Add to Cart
                 </Button>
@@ -183,17 +209,17 @@ export default function ProductDetail() {
             
             {/* Shipping & Returns */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <Card className="bg-secondary/30 border-none">
+              <Card className="bg-secondary/30 border-none transition-all duration-300 hover:bg-secondary/40">
                 <CardContent className="p-4 flex gap-3 items-start">
                   <Truck className="h-5 w-5 text-primary mt-1" />
                   <div>
                     <h4 className="font-medium text-sm">Free Shipping</h4>
-                    <p className="text-sm text-muted-foreground">On orders over $50</p>
+                    <p className="text-sm text-muted-foreground">On orders over ₹2000</p>
                   </div>
                 </CardContent>
               </Card>
               
-              <Card className="bg-secondary/30 border-none">
+              <Card className="bg-secondary/30 border-none transition-all duration-300 hover:bg-secondary/40">
                 <CardContent className="p-4 flex gap-3 items-start">
                   <Shield className="h-5 w-5 text-primary mt-1" />
                   <div>
@@ -212,7 +238,7 @@ export default function ProductDetail() {
                   htmlFor="gift-option"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  Add gift wrapping (+$5.00)
+                  Add gift wrapping (+₹200)
                 </label>
                 <p className="text-sm text-muted-foreground">
                   Includes premium packaging and a handwritten note
@@ -227,10 +253,10 @@ export default function ProductDetail() {
       <div className="mt-16">
         <div className="border-b border-border">
           <div className="flex overflow-x-auto space-x-8">
-            <button className="border-b-2 border-primary py-4 px-1 font-medium text-sm">Product Details</button>
-            <button className="text-muted-foreground py-4 px-1 text-sm hover:text-primary">Ingredients</button>
-            <button className="text-muted-foreground py-4 px-1 text-sm hover:text-primary">How to Use</button>
-            <button className="text-muted-foreground py-4 px-1 text-sm hover:text-primary">Reviews</button>
+            <button className="border-b-2 border-primary py-4 px-1 font-medium text-sm transition-colors duration-300">Product Details</button>
+            <button className="text-muted-foreground py-4 px-1 text-sm hover:text-primary transition-colors duration-300">Ingredients</button>
+            <button className="text-muted-foreground py-4 px-1 text-sm hover:text-primary transition-colors duration-300">How to Use</button>
+            <button className="text-muted-foreground py-4 px-1 text-sm hover:text-primary transition-colors duration-300">Reviews</button>
           </div>
         </div>
         
@@ -248,6 +274,9 @@ export default function ProductDetail() {
               </li>
             ))}
           </ul>
+          
+          <h3 className="font-medium mb-3 mt-6">Ingredients</h3>
+          <p className="text-muted-foreground">{product.ingredients}</p>
         </div>
       </div>
       
@@ -256,22 +285,24 @@ export default function ProductDetail() {
         <h2 className="text-2xl font-serif mb-8">You May Also Like</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((item) => (
-            <div key={item} className="product-card bg-white rounded-lg overflow-hidden border border-border hover:border-primary/30 shadow-sm">
-              <div className="aspect-square bg-secondary/30 relative overflow-hidden">
-                <img 
-                  src="/placeholder.svg" 
-                  alt="Related product" 
-                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                />
-              </div>
-              <div className="p-3">
-                <h3 className="font-medium text-sm mb-1 hover:text-primary">Related Product {item}</h3>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">$24.99</span>
-                  <Button size="sm" variant="outline" className="text-primary border-primary hover:bg-primary/5">Add</Button>
+            <Link key={item} to={`/product/${item}`} className="block">
+              <div className="bg-white rounded-lg overflow-hidden border border-border hover:border-primary/30 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+                <div className="aspect-square bg-secondary/30 relative overflow-hidden">
+                  <img 
+                    src="/placeholder.svg" 
+                    alt="Related product" 
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                  />
+                </div>
+                <div className="p-3">
+                  <h3 className="font-medium text-sm mb-1 hover:text-primary transition-colors duration-300">Related Product {item}</h3>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-semibold">₹{(Math.random() * 2000 + 500).toFixed(0)}</span>
+                    <Button size="sm" variant="outline" className="text-primary border-primary hover:bg-primary/5 transition-all duration-300 hover:scale-105">Add</Button>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

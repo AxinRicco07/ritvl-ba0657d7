@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { ArrowRight, Bath, CheckCircle, FlaskConical, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -37,30 +38,30 @@ const Index = () => {
 
   return (
     <main className="overflow-x-hidden">
-      {/* Hero Section with Auto-Sliding */}
+      {/* Hero Section with Elegant Animations */}
       <section className="relative min-h-[80vh] overflow-hidden flex items-center bg-blue-50/50">
         <div className="container max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-8">
-          <div className={`relative z-10 ${isVisible ? 'animate-slide-in-left' : 'opacity-0'}`} style={{animationDelay: '0.2s'}}>
+          <div className={`relative z-10 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight font-bold text-blue-800">
-              <span className="block text-reveal"><span style={{animationDelay: '0.3s'}}>Natural Healing.</span></span>
-              <span className="block text-reveal"><span style={{animationDelay: '0.5s'}}>Pure Joy.</span></span>
-              <span className="block text-reveal"><span style={{animationDelay: '0.7s'}}>Everyday Luxury.</span></span>
+              <span className={`block transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>Natural Healing.</span>
+              <span className={`block transition-all duration-700 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>Pure Joy.</span>
+              <span className={`block transition-all duration-700 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>Everyday Luxury.</span>
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground max-w-lg animate-fade-in" style={{animationDelay: '0.9s'}}>
+            <p className={`mt-4 text-lg text-muted-foreground max-w-lg transition-all duration-700 delay-900 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               Experience the therapeutic benefits of our premium bath salts—ethically sourced, 100% natural, and crafted for your wellbeing.
             </p>
-            <div className="mt-8 flex gap-4">
-              <Button asChild size="lg" className="rounded-full bg-blue-600 hover:bg-blue-500 sparkle-button animate-fade-in" style={{animationDelay: '1.1s'}}>
+            <div className={`mt-8 flex gap-4 transition-all duration-700 delay-1100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+              <Button asChild size="lg" className="rounded-full bg-blue-600 hover:bg-blue-500 transition-all duration-300 hover:scale-105">
                 <Link to="/products">SHOP NOW</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full border-blue-600 text-blue-600 hover:bg-blue-50 animate-fade-in" style={{animationDelay: '1.3s'}}>
+              <Button asChild variant="outline" size="lg" className="rounded-full border-blue-600 text-blue-600 hover:bg-blue-50 transition-all duration-300 hover:scale-105">
                 <Link to="/about">Learn More</Link>
               </Button>
             </div>
           </div>
           
           <div className="relative">
-            <div className={`overflow-hidden rounded-lg ${isVisible ? 'animate-slide-in-right' : 'opacity-0'}`} style={{animationDelay: '0.4s'}}>
+            <div className={`overflow-hidden rounded-lg transition-all duration-1000 delay-400 ease-out ${isVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'}`}>
               <div className="relative aspect-[4/3]">
                 {heroImages.map((img, index) => (
                   <div
@@ -75,11 +76,11 @@ const Index = () => {
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40 flex flex-col items-center justify-end p-6 text-center">
-                      <span className="text-white text-lg font-medium bg-white/20 backdrop-blur-sm px-3 py-1 mb-2 rounded-md animate-fade-in">
+                      <span className="text-white text-lg font-medium bg-white/20 backdrop-blur-sm px-3 py-1 mb-2 rounded-md">
                         {index === 0 ? "Featured" : index === 1 ? "Bestseller" : "New Arrival"}
                       </span>
-                      <h3 className="text-white text-xl font-bold animate-fade-in">{heroTitles[index]}</h3>
-                      <Button variant="secondary" size="sm" className="mt-2 animate-fade-in">
+                      <h3 className="text-white text-xl font-bold">{heroTitles[index]}</h3>
+                      <Button variant="secondary" size="sm" className="mt-2">
                         <Link to={`/product/${index + 1}`}>View Details</Link>
                       </Button>
                     </div>
@@ -108,8 +109,8 @@ const Index = () => {
       {/* Shop By Category Section */}
       <section className="py-16 bg-white">
         <div className="container max-w-7xl mx-auto px-4 md:px-6">
-          <h2 className="text-3xl font-display text-center mb-2 font-bold animate-fade-in">Shop By Categories</h2>
-          <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12 animate-fade-in" style={{animationDelay: '0.2s'}}>
+          <h2 className={`text-3xl font-display text-center mb-2 font-bold transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>Shop By Categories</h2>
+          <p className={`text-center text-muted-foreground max-w-2xl mx-auto mb-12 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             Discover our curated collection of natural salt blends designed to enhance your daily rituals
           </p>
           
@@ -118,20 +119,20 @@ const Index = () => {
               <Link 
                 key={category.id}
                 to={category.link}
-                className={`group relative overflow-hidden rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg animate-fade-in zoom-hover`}
-                style={{animationDelay: `${0.2 + idx * 0.1}s`}}
+                className={`group relative overflow-hidden rounded-xl transition-all duration-500 hover:-translate-y-2 hover:shadow-xl ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                style={{transitionDelay: `${400 + idx * 100}ms`}}
               >
                 <div className="aspect-[1/1.2] overflow-hidden">
                   <img 
                     src={category.image} 
                     alt={category.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60 flex flex-col justify-end p-6">
-                    <h3 className="text-white text-xl font-bold mb-2">{category.name}</h3>
-                    <span className="text-white text-sm font-medium opacity-90 mb-2">{category.items} Products</span>
-                    <span className="inline-flex items-center text-white text-sm font-medium bg-white/20 backdrop-blur-sm py-1 px-3 rounded-full w-fit">
-                      Explore <ArrowRight className="h-4 w-4 ml-1 group-hover:animate-bounce" />
+                    <h3 className="text-white text-xl font-bold mb-2 transform transition-transform duration-300 group-hover:translate-y-[-4px]">{category.name}</h3>
+                    <span className="text-white text-sm font-medium opacity-90 mb-2 transform transition-transform duration-300 group-hover:translate-y-[-4px]">{category.items} Products</span>
+                    <span className="inline-flex items-center text-white text-sm font-medium bg-white/20 backdrop-blur-sm py-1 px-3 rounded-full w-fit transform transition-all duration-300 group-hover:translate-y-[-4px] group-hover:bg-white/30">
+                      Explore <ArrowRight className="h-4 w-4 ml-1 transition-transform duration-300 group-hover:translate-x-1" />
                     </span>
                   </div>
                 </div>
@@ -145,9 +146,9 @@ const Index = () => {
       <section className="py-12 px-4 md:py-16 bg-secondary/10">
         <div className="container max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-display animate-slide-in-left">Featured Products</h2>
-            <Link to="/products" className="text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors animate-slide-in-right">
-              View all <ArrowRight className="h-4 w-4" />
+            <h2 className={`text-2xl md:text-3xl font-display transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>Featured Products</h2>
+            <Link to="/products" className={`text-sm font-medium flex items-center gap-1 hover:text-primary transition-all duration-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}`}>
+              View all <ArrowRight className="h-4 w-4 transition-transform duration-300 hover:translate-x-1" />
             </Link>
           </div>
           
@@ -156,23 +157,23 @@ const Index = () => {
               <Link 
                 key={product.id} 
                 to={`/product/${product.id}`}
-                className={`group animate-fade-in`}
-                style={{animationDelay: `${0.1 + idx * 0.1}s`}}
+                className={`group transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+                style={{transitionDelay: `${600 + idx * 100}ms`}}
               >
-                <Card className="product-card border-none shadow-sm hover:shadow-md transition-all duration-300">
+                <Card className="border-none shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-2">
                   <div className="overflow-hidden">
-                    <AspectRatio ratio={1 / 1} className="zoom-hover">
+                    <AspectRatio ratio={1 / 1}>
                       <img 
                         src={product.image} 
                         alt={product.name} 
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                     </AspectRatio>
                   </div>
                   <CardContent className="p-4">
                     <div className="flex justify-between items-center mb-2">
-                      <h3 className="font-medium">{product.name}</h3>
-                      <span className="text-primary">${product.price.toFixed(2)}</span>
+                      <h3 className="font-medium group-hover:text-primary transition-colors duration-300">{product.name}</h3>
+                      <span className="text-primary font-semibold">₹{product.price.toFixed(0)}</span>
                     </div>
                     
                     <div className="flex items-center justify-between">
@@ -180,13 +181,13 @@ const Index = () => {
                         {product.colors.map((color, index) => (
                           <span 
                             key={index} 
-                            className="w-4 h-4 rounded-full border border-gray-200 hover-bounce" 
+                            className="w-4 h-4 rounded-full border border-gray-200 transition-transform duration-300 hover:scale-125" 
                             style={{ backgroundColor: color }}
                           />
                         ))}
                       </div>
                       
-                      <Button size="sm" className="bg-blue-600 hover:bg-blue-500 sparkle-button">Buy</Button>
+                      <Button size="sm" className="bg-blue-600 hover:bg-blue-500 transition-all duration-300 hover:scale-105">Buy</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -200,9 +201,9 @@ const Index = () => {
       <section className="py-12 px-4 md:py-16 bg-white">
         <div className="container max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-display animate-slide-in-left">Bestselling Products</h2>
-            <Link to="/products" className="text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors animate-slide-in-right">
-              View all <ArrowRight className="h-4 w-4" />
+            <h2 className={`text-2xl md:text-3xl font-display transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>Bestselling Products</h2>
+            <Link to="/products" className={`text-sm font-medium flex items-center gap-1 hover:text-primary transition-all duration-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}`}>
+              View all <ArrowRight className="h-4 w-4 transition-transform duration-300 hover:translate-x-1" />
             </Link>
           </div>
           
@@ -211,23 +212,23 @@ const Index = () => {
               <Link 
                 key={product.id} 
                 to={`/product/${product.id}`}
-                className={`group animate-fade-in`}
-                style={{animationDelay: `${0.1 + idx * 0.1}s`}}
+                className={`group transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+                style={{transitionDelay: `${600 + idx * 100}ms`}}
               >
-                <Card className="product-card border-none shadow-sm hover:shadow-md transition-all duration-300">
+                <Card className="border-none shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-2">
                   <div className="overflow-hidden">
-                    <AspectRatio ratio={1 / 1} className="zoom-hover">
+                    <AspectRatio ratio={1 / 1}>
                       <img 
                         src={product.image} 
                         alt={product.name} 
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                     </AspectRatio>
                   </div>
                   <CardContent className="p-4">
                     <div className="flex justify-between items-center mb-2">
-                      <h3 className="font-medium">{product.name}</h3>
-                      <span className="text-primary">${product.price.toFixed(2)}</span>
+                      <h3 className="font-medium group-hover:text-primary transition-colors duration-300">{product.name}</h3>
+                      <span className="text-primary font-semibold">₹{product.price.toFixed(0)}</span>
                     </div>
                     
                     <div className="flex items-center justify-between">
@@ -235,13 +236,13 @@ const Index = () => {
                         {product.colors.map((color, index) => (
                           <span 
                             key={index} 
-                            className="w-4 h-4 rounded-full border border-gray-200 hover-bounce" 
+                            className="w-4 h-4 rounded-full border border-gray-200 transition-transform duration-300 hover:scale-125" 
                             style={{ backgroundColor: color }}
                           />
                         ))}
                       </div>
                       
-                      <Button size="sm" className="bg-blue-600 hover:bg-blue-500 sparkle-button">Buy</Button>
+                      <Button size="sm" className="bg-blue-600 hover:bg-blue-500 transition-all duration-300 hover:scale-105">Buy</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -254,14 +255,14 @@ const Index = () => {
       {/* Why Choose Us - Updated Section */}
       <section className="py-12 px-4 md:py-16 bg-blue-50/50">
         <div className="container max-w-7xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-display text-center mb-4 animate-slide-in-bottom">WHY <strong>Salts</strong>?</h2>
-          <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12 animate-slide-in-bottom" style={{animationDelay: '0.2s'}}>
-            Experience the therapeutic benefits of natural mineral salts, carefully harvested and formulated to enhance your wellness rituals and self-care practices.
+          <h2 className={`text-2xl md:text-3xl font-display text-center mb-4 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>WHY <strong>Salts</strong>?</h2>
+          <p className={`text-center text-muted-foreground max-w-2xl mx-auto mb-12 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            Transform your everyday bathing routine into a luxurious spa experience with our premium collection of therapeutic bath salts, carefully curated to promote relaxation, wellness, and natural healing.
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[0, 1, 2, 3].map((index) => (
-              <div key={index} className={`animate-zoom-in`} style={{animationDelay: `${0.3 + index * 0.2}s`}}>
+              <div key={index} className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{transitionDelay: `${400 + index * 150}ms`}}>
                 <FeatureCard 
                   title={index === 0 ? "HIGH MAGNESIUM CONTENT" : 
                          index === 1 ? "PHARMACEUTICAL GRADE" : 
@@ -272,10 +273,10 @@ const Index = () => {
                                index === 2 ? "Effective for muscle relief, stress reduction, and detoxification." :
                                "Perfect for baths, compresses, skincare, and gardening applications"}
                 >
-                  {index === 0 ? <FlaskConical className="w-10 h-10 mb-4 text-blue-600 animate-pulse" /> :
-                   index === 1 ? <CheckCircle className="w-8 h-8 mb-4 text-blue-600 animate-bounce" /> :
-                   index === 2 ? <Bath className="w-8 h-8 mb-4 text-blue-600 animate-pulse" /> :
-                   <Sparkles className="w-8 h-8 mb-4 text-blue-600 animate-bounce" />}
+                  {index === 0 ? <FlaskConical className="w-10 h-10 mb-4 text-blue-600 transition-transform duration-500 hover:scale-110" /> :
+                   index === 1 ? <CheckCircle className="w-8 h-8 mb-4 text-blue-600 transition-transform duration-500 hover:scale-110" /> :
+                   index === 2 ? <Bath className="w-8 h-8 mb-4 text-blue-600 transition-transform duration-500 hover:scale-110" /> :
+                   <Sparkles className="w-8 h-8 mb-4 text-blue-600 transition-transform duration-500 hover:scale-110" />}
                 </FeatureCard>
               </div>
             ))}
@@ -287,25 +288,25 @@ const Index = () => {
       <section className="py-12 px-4 md:py-16">
         <div className="container max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-blue-100/50 p-6 md:p-8 rounded-lg animate-slide-in-left">
-  <h3 className="text-xl font-display uppercase mb-4">PREMIUM EPSOM SALT COLLECTION</h3>
-  <p className="text-muted-foreground mb-6">
-    Discover therapeutic-grade magnesium sulfate crystals, meticulously harvested for optimal purity and dissolution. Perfect for muscle relaxation, detoxification baths, and skincare rituals.
-  </p>
-  <Button variant="outline" className="flex items-center gap-2 border-blue-600 text-blue-600 hover:bg-blue-50 sparkle-button">
-    EXPLORE BATH SALTS <ArrowRight className="h-4 w-4 group-hover:animate-bounce" />
-  </Button>
-</div>
+            <div className={`bg-blue-100/50 p-6 md:p-8 rounded-lg transition-all duration-700 ${isVisible ? 'opacity-100 -translate-x-0' : 'opacity-0 -translate-x-4'}`}>
+              <h3 className="text-xl font-display uppercase mb-4">PREMIUM EPSOM SALT COLLECTION</h3>
+              <p className="text-muted-foreground mb-6">
+                Discover therapeutic-grade magnesium sulfate crystals, meticulously harvested for optimal purity and dissolution. Perfect for muscle relaxation, detoxification baths, and skincare rituals.
+              </p>
+              <Button variant="outline" className="flex items-center gap-2 border-blue-600 text-blue-600 hover:bg-blue-50 transition-all duration-300 hover:scale-105">
+                EXPLORE BATH SALTS <ArrowRight className="h-4 w-4 transition-transform duration-300 hover:translate-x-1" />
+              </Button>
+            </div>
 
-<div className="bg-blue-100/50 p-6 md:p-8 rounded-lg animate-slide-in-right">
-  <h3 className="text-xl font-display uppercase mb-4">SPECIALTY EPSOM BLENDS</h3>
-  <p className="text-muted-foreground mb-6">
-    Enhanced mineral combinations infused with essential oils and natural botanicals. Our aromatic blends combine Epsom salts with lavender, eucalyptus, and chamomile for elevated therapeutic benefits.
-  </p>
-  <Button variant="outline" className="flex items-center gap-2 border-blue-600 text-blue-600 hover:bg-blue-50 sparkle-button">
-    DISCOVER BLENDS <ArrowRight className="h-4 w-4 group-hover:animate-bounce" />
-  </Button>
-</div>
+            <div className={`bg-blue-100/50 p-6 md:p-8 rounded-lg transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}`}>
+              <h3 className="text-xl font-display uppercase mb-4">SPECIALTY EPSOM BLENDS</h3>
+              <p className="text-muted-foreground mb-6">
+                Enhanced mineral combinations infused with essential oils and natural botanicals. Our aromatic blends combine Epsom salts with lavender, eucalyptus, and chamomile for elevated therapeutic benefits.
+              </p>
+              <Button variant="outline" className="flex items-center gap-2 border-blue-600 text-blue-600 hover:bg-blue-50 transition-all duration-300 hover:scale-105">
+                DISCOVER BLENDS <ArrowRight className="h-4 w-4 transition-transform duration-300 hover:translate-x-1" />
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -313,26 +314,26 @@ const Index = () => {
       {/* Testimonials */}
       <section className="py-12 px-4 md:py-16 bg-blue-50/50">
         <div className="container max-w-7xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-display text-center mb-12 animate-fade-in">What Our Customers Say</h2>
+          <h2 className={`text-2xl md:text-3xl font-display text-center mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>What Our Customers Say</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((testimonial, index) => (
               <div 
                 key={index} 
-                className={`bg-white p-6 rounded-lg shadow-sm animate-slide-in-bottom`}
-                style={{animationDelay: `${0.2 + index * 0.2}s`}}
+                className={`bg-white p-6 rounded-lg shadow-sm transition-all duration-700 hover:shadow-lg hover:-translate-y-1 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+                style={{transitionDelay: `${600 + index * 200}ms`}}
               >
                 <div className="flex items-center gap-1 mb-2">
                   {[...Array(5)].map((_, i) => (
                     <Star 
                       key={i} 
-                      className={`h-4 w-4 ${i < testimonial.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'} ${i === 2 ? 'animate-bounce' : ''}`} 
+                      className={`h-4 w-4 transition-colors duration-300 ${i < testimonial.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
                     />
                   ))}
                 </div>
                 <p className="italic text-muted-foreground mb-6">"{testimonial.comment}"</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center transition-transform duration-300 hover:scale-110">
                     {testimonial.name.charAt(0)}
                   </div>
                   <div>
@@ -349,19 +350,18 @@ const Index = () => {
       {/* Newsletter */}
       <section className="py-12 px-4 md:py-16 bg-white">
         <div className="container max-w-7xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-display mb-4 animate-fade-in">Join Our Community</h2>
-          <p className="text-muted-foreground max-w-xl mx-auto mb-8 animate-fade-in" style={{animationDelay: '0.2s'}}>
+          <h2 className={`text-2xl md:text-3xl font-display mb-4 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>Join Our Community</h2>
+          <p className={`text-muted-foreground max-w-xl mx-auto mb-8 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             Subscribe to our newsletter for exclusive offers, recipes, and self-care tips.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+          <div className={`flex flex-col sm:flex-row gap-4 max-w-md mx-auto transition-all duration-700 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             <Input 
               type="email" 
               placeholder="Your email address" 
-              className="bg-white animate-slide-in-left"
-              style={{animationDelay: '0.3s'}}
+              className="bg-white transition-all duration-300 focus:scale-105"
             />
-            <Button className="bg-blue-600 hover:bg-blue-500 animate-slide-in-right sparkle-button" style={{animationDelay: '0.4s'}}>Subscribe</Button>
+            <Button className="bg-blue-600 hover:bg-blue-500 transition-all duration-300 hover:scale-105">Subscribe</Button>
           </div>
         </div>
       </section>
