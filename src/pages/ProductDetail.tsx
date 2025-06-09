@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -6,61 +5,7 @@ import { ArrowLeft, Star, Truck, Shield, ShoppingCart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Checkbox } from "@/components/ui/checkbox";
-
-// Product data matching the categories and products from other pages
-const productData = {
-  "1": {
-    id: "1",
-    name: "Himalayan Pink Salt",
-    price: 2099,
-    originalPrice: 2499,
-    description: "Premium Himalayan pink salt crystals, naturally harvested from ancient sea beds. Rich in minerals and perfect for therapeutic baths and culinary use.",
-    longDescription: "Our Himalayan Pink Salt is sourced directly from the pristine mines of Pakistan, where ancient sea beds have crystallized over millions of years. This premium-grade salt contains over 80 trace minerals, including magnesium, potassium, and calcium, making it ideal for both therapeutic baths and gourmet cooking. The beautiful rose-pink color comes from iron oxide deposits, giving each crystal a unique natural hue.",
-    ingredients: "100% Pure Himalayan Pink Salt (Sodium Chloride with naturally occurring trace minerals)",
-    rating: 4.8,
-    reviewCount: 126,
-    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
-    category: "salts-types",
-    benefits: ["Muscle relief", "Detoxification", "Mineral replenishment", "Stress reduction"],
-    featured: true,
-    new: false,
-    inStock: true
-  },
-  "2": {
-    id: "2",
-    name: "Mogra Bath Bomb",
-    price: 749,
-    originalPrice: 899,
-    description: "Luxurious mogra-scented bath bomb that fizzes and releases enchanting floral fragrance while nourishing your skin.",
-    longDescription: "Transform your bath into a luxurious spa experience with our Mogra Bath Bomb. Infused with the intoxicating fragrance of mogra (jasmine), this bath bomb fizzes gently to release essential oils and skin-conditioning ingredients. The natural mogra fragrance promotes relaxation and emotional balance while leaving your skin soft and delicately scented.",
-    ingredients: "Sodium Bicarbonate, Citric Acid, Epsom Salt, Mogra Essential Oil, Coconut Oil, Dried Mogra Petals",
-    rating: 4.6,
-    reviewCount: 98,
-    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
-    category: "mogra",
-    benefits: ["Aromatherapy", "Skin nourishment", "Relaxation", "Mood enhancement"],
-    featured: false,
-    new: true,
-    inStock: true
-  },
-  "3": {
-    id: "3",
-    name: "Lavender Bath Salt",
-    price: 1550,
-    originalPrice: 1799,
-    description: "Calming lavender-infused Epsom salt blend designed to promote deep relaxation and peaceful sleep.",
-    longDescription: "Our Lavender Bath Salt combines premium Epsom salt with pure lavender essential oil and dried lavender flowers. Known for its calming properties, lavender helps reduce stress, anxiety, and promotes restful sleep. The magnesium in Epsom salt aids muscle recovery and relaxation, making this the perfect end-of-day ritual.",
-    ingredients: "Epsom Salt (Magnesium Sulfate), Lavender Essential Oil, Dried Lavender Flowers, Sea Salt",
-    rating: 4.7,
-    reviewCount: 74,
-    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
-    category: "lavender",
-    benefits: ["Sleep support", "Stress relief", "Muscle relaxation", "Aromatherapy"],
-    featured: true,
-    new: false,
-    inStock: true
-  }
-};
+import { useProduct } from "@/hooks/useProducts";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -69,8 +14,8 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState("500g");
   const [selectedStrength, setSelectedStrength] = useState("Medium");
   
-  // Get product data or fallback to first product
-  const product = productData[id as keyof typeof productData] || productData["1"];
+  // Fetch product from Strapi
+  const { data: product, isLoading, error } = useProduct(id || '');
   
   const decreaseQuantity = () => {
     if (quantity > 1) {
@@ -81,6 +26,30 @@ export default function ProductDetail() {
   const increaseQuantity = () => {
     setQuantity(quantity + 1);
   };
+  
+  if (isLoading) {
+    return (
+      <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
+        <div className="text-center py-12">
+          <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p>Loading product...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  if (error || !product) {
+    return (
+      <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
+        <div className="text-center py-12">
+          <p className="text-red-500 mb-4">Product not found or error loading product.</p>
+          <Link to="/products">
+            <Button>Back to Products</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
@@ -95,7 +64,7 @@ export default function ProductDetail() {
           <div className="bg-secondary/30 rounded-lg overflow-hidden mb-4 border border-border">
             <AspectRatio ratio={1} className="bg-secondary/20">
               <img 
-                src={product.images[selectedImage]} 
+                src={product.images[selectedImage] || '/placeholder.svg'} 
                 alt={product.name} 
                 className="w-full h-full object-cover"
               />
@@ -280,7 +249,7 @@ export default function ProductDetail() {
         </div>
       </div>
       
-      {/* Related Products */}
+      {/* Related Products - You might want to fetch these from Strapi as well */}
       <div className="mt-16">
         <h2 className="text-2xl font-serif mb-8">You May Also Like</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
