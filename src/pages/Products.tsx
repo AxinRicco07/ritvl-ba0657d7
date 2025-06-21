@@ -1,9 +1,139 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Filter, X, ChevronDown, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useProducts } from "@/hooks/useProducts";
+
+// Mock product data with INR prices and new categories
+const allProducts = [
+  {
+    id: "1",
+    name: "Himalayan Pink Salt",
+    price: 2099,
+    image: "/placeholder.svg",
+    category: "salts-types",
+    benefits: ["relaxation", "sleep"],
+    rating: 4.8,
+    reviewCount: 126,
+    featured: true,
+    new: false,
+    fragranceIntensity: "medium",
+    isGiftSet: false
+  },
+  {
+    id: "2",
+    name: "Mogra Bath Bomb",
+    price: 749,
+    image: "/placeholder.svg",
+    category: "mogra",
+    benefits: ["energy", "mood"],
+    rating: 4.6,
+    reviewCount: 98,
+    featured: false,
+    new: true,
+    fragranceIntensity: "strong",
+    isGiftSet: false
+  },
+  {
+    id: "3",
+    name: "Lavender Bath Salt",
+    price: 1550,
+    image: "/placeholder.svg",
+    category: "lavender",
+    benefits: ["respiratory", "muscle-relief"],
+    rating: 4.7,
+    reviewCount: 74,
+    featured: true,
+    new: false,
+    fragranceIntensity: "strong",
+    isGiftSet: false
+  },
+  {
+    id: "4",
+    name: "Rose Petal Salt",
+    price: 1920,
+    image: "/placeholder.svg",
+    category: "rose",
+    benefits: ["skin-health", "relaxation"],
+    rating: 4.5,
+    reviewCount: 63,
+    featured: false,
+    new: false,
+    fragranceIntensity: "light",
+    isGiftSet: false
+  },
+  {
+    id: "5",
+    name: "Jasmine Body Scrub",
+    price: 1339,
+    image: "/placeholder.svg",
+    category: "jasmine",
+    benefits: ["detox", "skin-health"],
+    rating: 4.9,
+    reviewCount: 112,
+    featured: true,
+    new: false,
+    fragranceIntensity: "light",
+    isGiftSet: false
+  },
+  {
+    id: "6",
+    name: "Lemon Grass Salt",
+    price: 1458,
+    image: "/placeholder.svg",
+    category: "lemon-grass",
+    benefits: ["exfoliation", "skin-health"],
+    rating: 4.7,
+    reviewCount: 85,
+    featured: false,
+    new: true,
+    fragranceIntensity: "medium",
+    isGiftSet: false
+  },
+  {
+    id: "7",
+    name: "Cinnamon Salt Mix",
+    price: 4166,
+    image: "/placeholder.svg",
+    category: "cinnamon",
+    benefits: ["relaxation", "sleep", "stress-relief"],
+    rating: 4.9,
+    reviewCount: 57,
+    featured: true,
+    new: false,
+    fragranceIntensity: "medium",
+    isGiftSet: true
+  },
+  {
+    id: "8",
+    name: "Ocean Blue Salt",
+    price: 2415,
+    image: "/placeholder.svg",
+    category: "ocean-blue",
+    benefits: ["muscle-relief", "recovery"],
+    rating: 4.8,
+    reviewCount: 94,
+    featured: false,
+    new: false,
+    fragranceIntensity: "strong",
+    isGiftSet: false
+  },
+  {
+    id: "9",
+    name: "Geranium Bath Salt",
+    price: 1875,
+    image: "/placeholder.svg",
+    category: "geranium",
+    benefits: ["mood", "stress-relief"],
+    rating: 4.6,
+    reviewCount: 78,
+    featured: false,
+    new: true,
+    fragranceIntensity: "medium",
+    isGiftSet: false
+  }
+];
 
 const categories = [
   { id: "salts-types", label: "Salts Types" },
@@ -43,9 +173,6 @@ export default function Products() {
   const [selectedIntensities, setSelectedIntensities] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState("featured");
   
-  // Fetch products from Strapi
-  const { data: allProducts = [], isLoading, error } = useProducts();
-  
   const toggleCategory = (categoryId: string) => {
     setSelectedCategories(prev => 
       prev.includes(categoryId) 
@@ -72,14 +199,17 @@ export default function Products() {
   
   // Filter products based on selected filters
   const filteredProducts = allProducts.filter(product => {
+    // Apply category filter
     if (selectedCategories.length > 0 && !selectedCategories.includes(product.category)) {
       return false;
     }
     
+    // Apply benefits filter
     if (selectedBenefits.length > 0 && !product.benefits.some(benefit => selectedBenefits.includes(benefit))) {
       return false;
     }
     
+    // Apply fragrance intensity filter
     if (selectedIntensities.length > 0 && !selectedIntensities.includes(product.fragranceIntensity)) {
       return false;
     }
@@ -114,28 +244,6 @@ export default function Products() {
   const toggleMobileFilters = () => {
     setMobileFiltersOpen(!mobileFiltersOpen);
   };
-  
-  if (isLoading) {
-    return (
-      <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
-        <div className="text-center py-12">
-          <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p>Loading products...</p>
-        </div>
-      </div>
-    );
-  }
-  
-  if (error) {
-    return (
-      <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
-        <div className="text-center py-12">
-          <p className="text-red-500 mb-4">Error loading products. Please try again.</p>
-          <Button onClick={() => window.location.reload()}>Reload</Button>
-        </div>
-      </div>
-    );
-  }
   
   return (
     <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
@@ -396,13 +504,13 @@ const FilterSection = ({
   );
 };
 
-const ProductCard = ({ product }: { product: any }) => {
+const ProductCard = ({ product }: { product: typeof allProducts[number] }) => {
   return (
     <Link to={`/product/${product.id}`} className="block">
       <div className="product-card bg-white rounded-lg overflow-hidden border border-border hover:border-primary/30 shadow-sm">
         <div className="aspect-square bg-secondary/30 relative overflow-hidden">
           <img 
-            src={product.images[0] || '/placeholder.svg'} 
+            src={product.image} 
             alt={product.name} 
             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
           />

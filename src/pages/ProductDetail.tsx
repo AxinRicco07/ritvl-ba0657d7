@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -5,7 +6,38 @@ import { ArrowLeft, Star, Truck, Shield, ShoppingCart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useProduct } from "@/hooks/useProducts";
+
+// Mock product data
+const product = {
+  id: "1",
+  name: "Product 1",
+  price: 24.99,
+  originalPrice: 29.99,
+  description: "Our premium lavender bath salt provides deep relaxation and stress relief. Made with pure essential oils and natural sea salt, it transforms your bath into a luxurious spa experience.",
+  longDescription: "Immerse yourself in the soothing properties of our carefully crafted lavender bath salt. This therapeutic blend combines premium Dead Sea salts with organic lavender essential oil to create the ultimate relaxation experience. The fine-grain texture dissolves quickly in warm water, releasing aromatic compounds that calm your mind and ease muscle tension. Regular use helps improve sleep quality, reduce stress, and leave your skin feeling soft and nourished.",
+  ingredients: "Sea Salt, Epsom Salt (Magnesium Sulfate), Sodium Bicarbonate, Lavender Essential Oil, Dried Lavender Flowers, Vitamin E",
+  rating: 4.8,
+  reviewCount: 126,
+  images: [
+    "/placeholder.svg",
+    "/placeholder.svg",
+    "/placeholder.svg",
+    "/placeholder.svg"
+  ],
+  options: {
+    size: ["250g", "500g", "1kg"],
+    fragranceStrength: ["Light", "Medium", "Strong"]
+  },
+  benefits: [
+    "Relieves muscle tension",
+    "Improves sleep quality",
+    "Soothes skin irritation",
+    "Reduces stress & anxiety"
+  ],
+  featured: true,
+  new: false,
+  inStock: true
+};
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -13,9 +45,6 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("500g");
   const [selectedStrength, setSelectedStrength] = useState("Medium");
-  
-  // Fetch product from Strapi
-  const { data: product, isLoading, error } = useProduct(id || '');
   
   const decreaseQuantity = () => {
     if (quantity > 1) {
@@ -27,33 +56,9 @@ export default function ProductDetail() {
     setQuantity(quantity + 1);
   };
   
-  if (isLoading) {
-    return (
-      <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
-        <div className="text-center py-12">
-          <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p>Loading product...</p>
-        </div>
-      </div>
-    );
-  }
-  
-  if (error || !product) {
-    return (
-      <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
-        <div className="text-center py-12">
-          <p className="text-red-500 mb-4">Product not found or error loading product.</p>
-          <Link to="/products">
-            <Button>Back to Products</Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-  
   return (
     <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
-      <Link to="/products" className="flex items-center text-sm mb-6 hover:underline hover:text-primary transition-colors duration-300">
+      <Link to="/products" className="flex items-center text-sm mb-6 hover:underline hover:text-primary">
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back to products
       </Link>
@@ -64,7 +69,7 @@ export default function ProductDetail() {
           <div className="bg-secondary/30 rounded-lg overflow-hidden mb-4 border border-border">
             <AspectRatio ratio={1} className="bg-secondary/20">
               <img 
-                src={product.images[selectedImage] || '/placeholder.svg'} 
+                src={product.images[selectedImage]} 
                 alt={product.name} 
                 className="w-full h-full object-cover"
               />
@@ -76,7 +81,7 @@ export default function ProductDetail() {
               <button 
                 key={index}
                 onClick={() => setSelectedImage(index)}
-                className={`rounded-md overflow-hidden border transition-all duration-300 ${selectedImage === index ? 'border-primary scale-105' : 'border-border hover:border-primary/50'}`}
+                className={`rounded-md overflow-hidden border ${selectedImage === index ? 'border-primary' : 'border-border'}`}
               >
                 <AspectRatio ratio={1}>
                   <img src={image} alt={`Product view ${index+1}`} className="w-full h-full object-cover" />
@@ -95,7 +100,7 @@ export default function ProductDetail() {
               {[...Array(5)].map((_, i) => (
                 <Star 
                   key={i} 
-                  className={`h-4 w-4 transition-colors duration-300 ${i < Math.floor(product.rating) ? 'fill-primary text-primary' : 'text-gray-300'}`} 
+                  className={`h-4 w-4 ${i < Math.floor(product.rating) ? 'fill-primary text-primary' : 'text-gray-300'}`} 
                 />
               ))}
             </div>
@@ -103,9 +108,9 @@ export default function ProductDetail() {
           </div>
           
           <div className="flex items-baseline gap-2 mb-6">
-            <span className="text-2xl font-medium">₹{product.price.toFixed(0)}</span>
+            <span className="text-2xl font-medium">${product.price.toFixed(2)}</span>
             {product.originalPrice && (
-              <span className="text-sm text-muted-foreground line-through">₹{product.originalPrice.toFixed(0)}</span>
+              <span className="text-sm text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</span>
             )}
           </div>
           
@@ -117,13 +122,13 @@ export default function ProductDetail() {
             <div>
               <h3 className="font-medium mb-3">Size</h3>
               <div className="flex flex-wrap gap-2">
-                {["250g", "500g", "1kg"].map((size) => (
+                {product.options.size.map((size) => (
                   <Button
                     key={size}
                     type="button"
                     variant={selectedSize === size ? "default" : "outline"}
                     onClick={() => setSelectedSize(size)}
-                    className={`rounded-full transition-all duration-300 ${selectedSize !== size ? "text-primary border-primary hover:bg-primary/5 hover:scale-105" : "hover:scale-105"}`}
+                    className={`rounded-full ${selectedSize !== size ? "text-primary border-primary hover:bg-primary/5" : ""}`}
                   >
                     {size}
                   </Button>
@@ -135,13 +140,13 @@ export default function ProductDetail() {
             <div>
               <h3 className="font-medium mb-3">Fragrance Strength</h3>
               <div className="flex flex-wrap gap-2">
-                {["Light", "Medium", "Strong"].map((strength) => (
+                {product.options.fragranceStrength.map((strength) => (
                   <Button
                     key={strength}
                     type="button"
                     variant={selectedStrength === strength ? "default" : "outline"}
                     onClick={() => setSelectedStrength(strength)}
-                    className={`rounded-full transition-all duration-300 ${selectedStrength !== strength ? "text-primary border-primary hover:bg-primary/5 hover:scale-105" : "hover:scale-105"}`}
+                    className={`rounded-full ${selectedStrength !== strength ? "text-primary border-primary hover:bg-primary/5" : ""}`}
                   >
                     {strength}
                   </Button>
@@ -156,20 +161,20 @@ export default function ProductDetail() {
                 <div className="flex items-center border border-input rounded-md overflow-hidden">
                   <button 
                     onClick={decreaseQuantity}
-                    className="px-3 py-2 hover:bg-secondary transition-colors duration-300"
+                    className="px-3 py-2 hover:bg-secondary transition-colors"
                   >
                     -
                   </button>
                   <span className="px-4 py-2 border-x border-input">{quantity}</span>
                   <button 
                     onClick={increaseQuantity}
-                    className="px-3 py-2 hover:bg-secondary transition-colors duration-300"
+                    className="px-3 py-2 hover:bg-secondary transition-colors"
                   >
                     +
                   </button>
                 </div>
                 
-                <Button className="gap-2 flex-1 transition-all duration-300 hover:scale-105" size="lg">
+                <Button className="gap-2 flex-1" size="lg">
                   <ShoppingCart className="h-5 w-5" />
                   Add to Cart
                 </Button>
@@ -178,17 +183,17 @@ export default function ProductDetail() {
             
             {/* Shipping & Returns */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <Card className="bg-secondary/30 border-none transition-all duration-300 hover:bg-secondary/40">
+              <Card className="bg-secondary/30 border-none">
                 <CardContent className="p-4 flex gap-3 items-start">
                   <Truck className="h-5 w-5 text-primary mt-1" />
                   <div>
                     <h4 className="font-medium text-sm">Free Shipping</h4>
-                    <p className="text-sm text-muted-foreground">On orders over ₹2000</p>
+                    <p className="text-sm text-muted-foreground">On orders over $50</p>
                   </div>
                 </CardContent>
               </Card>
               
-              <Card className="bg-secondary/30 border-none transition-all duration-300 hover:bg-secondary/40">
+              <Card className="bg-secondary/30 border-none">
                 <CardContent className="p-4 flex gap-3 items-start">
                   <Shield className="h-5 w-5 text-primary mt-1" />
                   <div>
@@ -207,7 +212,7 @@ export default function ProductDetail() {
                   htmlFor="gift-option"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  Add gift wrapping (+₹200)
+                  Add gift wrapping (+$5.00)
                 </label>
                 <p className="text-sm text-muted-foreground">
                   Includes premium packaging and a handwritten note
@@ -222,10 +227,10 @@ export default function ProductDetail() {
       <div className="mt-16">
         <div className="border-b border-border">
           <div className="flex overflow-x-auto space-x-8">
-            <button className="border-b-2 border-primary py-4 px-1 font-medium text-sm transition-colors duration-300">Product Details</button>
-            <button className="text-muted-foreground py-4 px-1 text-sm hover:text-primary transition-colors duration-300">Ingredients</button>
-            <button className="text-muted-foreground py-4 px-1 text-sm hover:text-primary transition-colors duration-300">How to Use</button>
-            <button className="text-muted-foreground py-4 px-1 text-sm hover:text-primary transition-colors duration-300">Reviews</button>
+            <button className="border-b-2 border-primary py-4 px-1 font-medium text-sm">Product Details</button>
+            <button className="text-muted-foreground py-4 px-1 text-sm hover:text-primary">Ingredients</button>
+            <button className="text-muted-foreground py-4 px-1 text-sm hover:text-primary">How to Use</button>
+            <button className="text-muted-foreground py-4 px-1 text-sm hover:text-primary">Reviews</button>
           </div>
         </div>
         
@@ -243,35 +248,30 @@ export default function ProductDetail() {
               </li>
             ))}
           </ul>
-          
-          <h3 className="font-medium mb-3 mt-6">Ingredients</h3>
-          <p className="text-muted-foreground">{product.ingredients}</p>
         </div>
       </div>
       
-      {/* Related Products - You might want to fetch these from Strapi as well */}
+      {/* Related Products */}
       <div className="mt-16">
         <h2 className="text-2xl font-serif mb-8">You May Also Like</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((item) => (
-            <Link key={item} to={`/product/${item}`} className="block">
-              <div className="bg-white rounded-lg overflow-hidden border border-border hover:border-primary/30 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                <div className="aspect-square bg-secondary/30 relative overflow-hidden">
-                  <img 
-                    src="/placeholder.svg" 
-                    alt="Related product" 
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-                  />
-                </div>
-                <div className="p-3">
-                  <h3 className="font-medium text-sm mb-1 hover:text-primary transition-colors duration-300">Related Product {item}</h3>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-semibold">₹{(Math.random() * 2000 + 500).toFixed(0)}</span>
-                    <Button size="sm" variant="outline" className="text-primary border-primary hover:bg-primary/5 transition-all duration-300 hover:scale-105">Add</Button>
-                  </div>
+            <div key={item} className="product-card bg-white rounded-lg overflow-hidden border border-border hover:border-primary/30 shadow-sm">
+              <div className="aspect-square bg-secondary/30 relative overflow-hidden">
+                <img 
+                  src="/placeholder.svg" 
+                  alt="Related product" 
+                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                />
+              </div>
+              <div className="p-3">
+                <h3 className="font-medium text-sm mb-1 hover:text-primary">Related Product {item}</h3>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">$24.99</span>
+                  <Button size="sm" variant="outline" className="text-primary border-primary hover:bg-primary/5">Add</Button>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </div>
