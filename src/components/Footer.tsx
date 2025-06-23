@@ -67,6 +67,17 @@ const Footer = () => {
           <p className="text-sm text-gray-400">
             © {new Date().getFullYear()} RIVE. All rights reserved.
           </p>
+          <div className="flex gap-4 mt-4 md:mt-0">
+            <Link to="/privacy-policy" className="text-sm text-gray-400 hover:text-primary transition-colors">
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className="text-sm text-gray-400 hover:text-primary transition-colors">
+              Terms of Service
+            </Link>
+            <Link to="/shipping" className="text-sm text-gray-400 hover:text-primary transition-colors">
+              Shipping Policy
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
