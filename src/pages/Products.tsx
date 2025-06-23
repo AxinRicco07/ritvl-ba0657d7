@@ -1,16 +1,17 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Filter, X, ChevronDown, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useCart } from "@/contexts/CartContext";
+import { formatINRWithPaisa } from "@/utils/currency";
 
-// Mock product data with INR prices and new categories
+// Mock product data with paisa values (1 rupee = 100 paisa)
 const allProducts = [
   {
     id: "1",
     name: "Himalayan Pink Salt",
-    price: 2099,
+    price: 209900, // ₹2099.00 in paisa
     image: "/placeholder.svg",
     category: "salts-types",
     benefits: ["relaxation", "sleep"],
@@ -24,7 +25,7 @@ const allProducts = [
   {
     id: "2",
     name: "Mogra Bath Bomb",
-    price: 749,
+    price: 74900,
     image: "/placeholder.svg",
     category: "mogra",
     benefits: ["energy", "mood"],
@@ -38,7 +39,7 @@ const allProducts = [
   {
     id: "3",
     name: "Lavender Bath Salt",
-    price: 1550,
+    price: 155000,
     image: "/placeholder.svg",
     category: "lavender",
     benefits: ["respiratory", "muscle-relief"],
@@ -52,7 +53,7 @@ const allProducts = [
   {
     id: "4",
     name: "Rose Petal Salt",
-    price: 1920,
+    price: 192000,
     image: "/placeholder.svg",
     category: "rose",
     benefits: ["skin-health", "relaxation"],
@@ -66,7 +67,7 @@ const allProducts = [
   {
     id: "5",
     name: "Jasmine Body Scrub",
-    price: 1339,
+    price: 133900,
     image: "/placeholder.svg",
     category: "jasmine",
     benefits: ["detox", "skin-health"],
@@ -80,7 +81,7 @@ const allProducts = [
   {
     id: "6",
     name: "Lemon Grass Salt",
-    price: 1458,
+    price: 145800,
     image: "/placeholder.svg",
     category: "lemon-grass",
     benefits: ["exfoliation", "skin-health"],
@@ -94,7 +95,7 @@ const allProducts = [
   {
     id: "7",
     name: "Cinnamon Salt Mix",
-    price: 4166,
+    price: 416600,
     image: "/placeholder.svg",
     category: "cinnamon",
     benefits: ["relaxation", "sleep", "stress-relief"],
@@ -108,7 +109,7 @@ const allProducts = [
   {
     id: "8",
     name: "Ocean Blue Salt",
-    price: 2415,
+    price: 241500,
     image: "/placeholder.svg",
     category: "ocean-blue",
     benefits: ["muscle-relief", "recovery"],
@@ -122,7 +123,7 @@ const allProducts = [
   {
     id: "9",
     name: "Geranium Bath Salt",
-    price: 1875,
+    price: 187500,
     image: "/placeholder.svg",
     category: "geranium",
     benefits: ["mood", "stress-relief"],
@@ -505,6 +506,20 @@ const FilterSection = ({
 };
 
 const ProductCard = ({ product }: { product: typeof allProducts[number] }) => {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+    });
+  };
+
   return (
     <Link to={`/product/${product.id}`} className="block">
       <div className="product-card bg-white rounded-lg overflow-hidden border border-border hover:border-primary/30 shadow-sm">
@@ -536,16 +551,12 @@ const ProductCard = ({ product }: { product: typeof allProducts[number] }) => {
           </div>
           
           <div className="flex justify-between items-center">
-            <span className="font-medium">₹{product.price.toFixed(0)}</span>
+            <span className="font-medium">{formatINRWithPaisa(product.price)}</span>
             <Button 
               size="sm" 
               variant="outline" 
               className="gap-1 text-primary border-primary hover:bg-primary/5"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                // Handle add to cart logic here
-              }}
+              onClick={handleAddToCart}
             >
               <ShoppingCart className="h-4 w-4" />
               Add

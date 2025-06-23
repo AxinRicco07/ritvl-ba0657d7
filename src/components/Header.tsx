@@ -1,10 +1,14 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Search, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/contexts/CartContext";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { getCartCount } = useCart();
+  const cartCount = getCartCount();
   
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -35,9 +39,14 @@ const Header = () => {
             <Button variant="ghost" size="icon" aria-label="Account">
               <User className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" aria-label="Cart">
+            <Button variant="ghost" size="icon" aria-label="Cart" className="relative">
               <Link to="/cart">
                 <ShoppingCart className="h-5 w-5" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
               </Link>
             </Button>
           </div>
@@ -65,9 +74,15 @@ const Header = () => {
               <Button variant="ghost" size="sm" className="flex items-center gap-2" aria-label="Account">
                 <User className="h-4 w-4" /> Account
               </Button>
-              <Button variant="ghost" size="sm" className="flex items-center gap-2" aria-label="Cart">
+              <Button variant="ghost" size="sm" className="flex items-center gap-2 relative" aria-label="Cart">
                 <Link to="/cart" className="flex items-center gap-2">
-                  <ShoppingCart className="h-4 w-4" /> Cart
+                  <ShoppingCart className="h-4 w-4" /> 
+                  Cart
+                  {cartCount > 0 && (
+                    <span className="bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center ml-1">
+                      {cartCount}
+                    </span>
+                  )}
                 </Link>
               </Button>
             </div>

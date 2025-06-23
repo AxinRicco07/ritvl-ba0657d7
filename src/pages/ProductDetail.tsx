@@ -6,16 +6,18 @@ import { ArrowLeft, Star, Truck, Shield, ShoppingCart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useCart } from "@/contexts/CartContext";
+import { formatINRWithPaisa } from "@/utils/currency";
 
-// Mock product data
+// Mock product data with paisa pricing
 const product = {
   id: "1",
-  name: "Product 1",
-  price: 24.99,
-  originalPrice: 29.99,
-  description: "Our premium lavender bath salt provides deep relaxation and stress relief. Made with pure essential oils and natural sea salt, it transforms your bath into a luxurious spa experience.",
-  longDescription: "Immerse yourself in the soothing properties of our carefully crafted lavender bath salt. This therapeutic blend combines premium Dead Sea salts with organic lavender essential oil to create the ultimate relaxation experience. The fine-grain texture dissolves quickly in warm water, releasing aromatic compounds that calm your mind and ease muscle tension. Regular use helps improve sleep quality, reduce stress, and leave your skin feeling soft and nourished.",
-  ingredients: "Sea Salt, Epsom Salt (Magnesium Sulfate), Sodium Bicarbonate, Lavender Essential Oil, Dried Lavender Flowers, Vitamin E",
+  name: "Himalayan Pink Salt",
+  price: 209900, // ₹2099.00 in paisa
+  originalPrice: 249900, // ₹2499.00 in paisa
+  description: "Our premium Himalayan pink salt provides deep relaxation and stress relief. Made with pure essential oils and natural sea salt, it transforms your bath into a luxurious spa experience.",
+  longDescription: "Immerse yourself in the soothing properties of our carefully crafted Himalayan pink salt. This therapeutic blend combines premium Dead Sea salts with organic essential oils to create the ultimate relaxation experience. The fine-grain texture dissolves quickly in warm water, releasing aromatic compounds that calm your mind and ease muscle tension. Regular use helps improve sleep quality, reduce stress, and leave your skin feeling soft and nourished.",
+  ingredients: "Sea Salt, Epsom Salt (Magnesium Sulfate), Sodium Bicarbonate, Natural Essential Oils, Dried Flowers, Vitamin E",
   rating: 4.8,
   reviewCount: 126,
   images: [
@@ -41,10 +43,12 @@ const product = {
 
 export default function ProductDetail() {
   const { id } = useParams();
+  const { addToCart } = useCart();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("500g");
   const [selectedStrength, setSelectedStrength] = useState("Medium");
+  const [giftWrap, setGiftWrap] = useState(false);
   
   const decreaseQuantity = () => {
     if (quantity > 1) {
@@ -54,6 +58,17 @@ export default function ProductDetail() {
   
   const increaseQuantity = () => {
     setQuantity(quantity + 1);
+  };
+
+  const handleAddToCart = () => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price + (giftWrap ? 500 : 0), // Add ₹5 for gift wrap in paisa
+      image: product.images[0],
+      size: selectedSize,
+      strength: selectedStrength,
+    }, quantity);
   };
   
   return (
@@ -108,9 +123,9 @@ export default function ProductDetail() {
           </div>
           
           <div className="flex items-baseline gap-2 mb-6">
-            <span className="text-2xl font-medium">${product.price.toFixed(2)}</span>
+            <span className="text-2xl font-medium">{formatINRWithPaisa(product.price)}</span>
             {product.originalPrice && (
-              <span className="text-sm text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</span>
+              <span className="text-sm text-muted-foreground line-through">{formatINRWithPaisa(product.originalPrice)}</span>
             )}
           </div>
           
@@ -174,7 +189,7 @@ export default function ProductDetail() {
                   </button>
                 </div>
                 
-                <Button className="gap-2 flex-1" size="lg">
+                <Button className="gap-2 flex-1" size="lg" onClick={handleAddToCart}>
                   <ShoppingCart className="h-5 w-5" />
                   Add to Cart
                 </Button>
@@ -188,7 +203,7 @@ export default function ProductDetail() {
                   <Truck className="h-5 w-5 text-primary mt-1" />
                   <div>
                     <h4 className="font-medium text-sm">Free Shipping</h4>
-                    <p className="text-sm text-muted-foreground">On orders over $50</p>
+                    <p className="text-sm text-muted-foreground">On orders over ₹50</p>
                   </div>
                 </CardContent>
               </Card>
@@ -206,13 +221,18 @@ export default function ProductDetail() {
             
             {/* Gift Option */}
             <div className="flex items-start gap-2">
-              <Checkbox id="gift-option" className="data-[state=checked]:bg-primary data-[state=checked]:border-primary" />
+              <Checkbox 
+                id="gift-option" 
+                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                checked={giftWrap}
+                onCheckedChange={(checked) => setGiftWrap(!!checked)}
+              />
               <div className="grid gap-1.5 leading-none">
                 <label
                   htmlFor="gift-option"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  Add gift wrapping (+$5.00)
+                  Add gift wrapping (+₹5.00)
                 </label>
                 <p className="text-sm text-muted-foreground">
                   Includes premium packaging and a handwritten note
@@ -267,7 +287,7 @@ export default function ProductDetail() {
               <div className="p-3">
                 <h3 className="font-medium text-sm mb-1 hover:text-primary">Related Product {item}</h3>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">$24.99</span>
+                  <span className="text-sm">{formatINRWithPaisa(209900)}</span>
                   <Button size="sm" variant="outline" className="text-primary border-primary hover:bg-primary/5">Add</Button>
                 </div>
               </div>

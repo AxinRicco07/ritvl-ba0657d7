@@ -1,57 +1,15 @@
 
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Trash2, ShoppingCart } from "lucide-react";
-
-// Mock cart data
-const initialCartItems = [
-  {
-    id: "1",
-    name: "Relaxing Lavender Bath Salt",
-    price: 24.99,
-    image: "/placeholder.svg",
-    size: "500g",
-    strength: "Medium",
-    quantity: 2,
-  },
-  {
-    id: "2",
-    name: "Energizing Citrus Bath Bomb",
-    price: 8.99,
-    image: "/placeholder.svg",
-    size: "120g",
-    strength: "Strong",
-    quantity: 1,
-  },
-  {
-    id: "3",
-    name: "Soothing Eucalyptus Soak",
-    price: 18.50,
-    image: "/placeholder.svg",
-    size: "250g",
-    strength: "Light",
-    quantity: 1,
-  }
-];
+import { useCart } from "@/contexts/CartContext";
+import { formatINRWithPaisa } from "@/utils/currency";
 
 export default function Cart() {
-  const [cartItems, setCartItems] = useState(initialCartItems);
+  const { cartItems, removeFromCart, updateQuantity, clearCart, getCartTotal } = useCart();
   
-  const removeItem = (id: string) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
-  };
-  
-  const updateQuantity = (id: string, newQuantity: number) => {
-    if (newQuantity < 1) return;
-    
-    setCartItems(cartItems.map(item => 
-      item.id === id ? {...item, quantity: newQuantity} : item
-    ));
-  };
-  
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shipping = subtotal > 50 ? 0 : 5.99;
+  const subtotal = getCartTotal();
+  const shipping = subtotal > 5000 ? 0 : 599; // Free shipping over ₹50 (5000 paisa)
   const total = subtotal + shipping;
   
   if (cartItems.length === 0) {
@@ -88,7 +46,7 @@ export default function Cart() {
             </div>
             
             {cartItems.map((item) => (
-              <div key={item.id} className="border-t border-border first:border-t-0 p-4">
+              <div key={`${item.id}-${item.size}-${item.strength}`} className="border-t border-border first:border-t-0 p-4">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
                   {/* Product info */}
                   <div className="md:col-span-6 flex items-center gap-4">
@@ -101,11 +59,13 @@ export default function Cart() {
                     </div>
                     <div>
                       <h3 className="font-medium">{item.name}</h3>
-                      <div className="text-sm text-muted-foreground mt-1">
-                        {item.size} / {item.strength}
-                      </div>
+                      {(item.size || item.strength) && (
+                        <div className="text-sm text-muted-foreground mt-1">
+                          {item.size && item.strength ? `${item.size} / ${item.strength}` : item.size || item.strength}
+                        </div>
+                      )}
                       <button 
-                        onClick={() => removeItem(item.id)}
+                        onClick={() => removeFromCart(item.id)}
                         className="text-sm text-muted-foreground flex items-center gap-1 hover:text-destructive transition-colors mt-2 md:hidden"
                       >
                         <Trash2 className="h-3 w-3" /> Remove
@@ -116,7 +76,7 @@ export default function Cart() {
                   {/* Price */}
                   <div className="md:col-span-2 md:text-center flex justify-between items-center md:block">
                     <span className="text-sm font-medium md:hidden">Price:</span>
-                    <span>${item.price.toFixed(2)}</span>
+                    <span>{formatINRWithPaisa(item.price)}</span>
                   </div>
                   
                   {/* Quantity */}
@@ -142,12 +102,12 @@ export default function Cart() {
                   {/* Total */}
                   <div className="md:col-span-2 md:text-right flex justify-between items-center md:block">
                     <span className="text-sm font-medium md:hidden">Total:</span>
-                    <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
+                    <span className="font-medium">{formatINRWithPaisa(item.price * item.quantity)}</span>
                   </div>
                   
                   {/* Remove button (desktop) */}
                   <button 
-                    onClick={() => removeItem(item.id)}
+                    onClick={() => removeFromCart(item.id)}
                     className="hidden md:block absolute right-4 text-muted-foreground hover:text-destructive transition-colors"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -163,7 +123,7 @@ export default function Cart() {
                 Continue Shopping
               </Link>
             </Button>
-            <Button onClick={() => setCartItems([])}>Clear Cart</Button>
+            <Button onClick={clearCart}>Clear Cart</Button>
           </div>
         </div>
         
@@ -174,15 +134,15 @@ export default function Cart() {
             <div className="space-y-3 mb-6">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>{formatINRWithPaisa(subtotal)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Shipping</span>
-                <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                <span>{shipping === 0 ? "Free" : formatINRWithPaisa(shipping)}</span>
               </div>
               <div className="border-t border-border pt-3 flex justify-between font-medium">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>{formatINRWithPaisa(total)}</span>
               </div>
             </div>
             
@@ -191,7 +151,7 @@ export default function Cart() {
             </Button>
             
             <p className="text-center text-sm text-muted-foreground mt-4">
-              Free shipping on orders over $50
+              Free shipping on orders over ₹50
             </p>
             
             <div className="border-t border-border mt-6 pt-6">
