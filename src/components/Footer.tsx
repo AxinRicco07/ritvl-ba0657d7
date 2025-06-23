@@ -1,13 +1,11 @@
 
 import { Link } from "react-router-dom";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 const Footer = () => {
   return (
     <footer className="bg-black text-white">
       <div className="container max-w-7xl mx-auto py-12 px-4 md:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-serif">
@@ -45,21 +43,6 @@ const Footer = () => {
               <li><Link to="/faq" className="text-gray-300 hover:text-primary transition-colors">FAQs</Link></li>
               <li><Link to="/contact" className="text-gray-300 hover:text-primary transition-colors">Contact Us</Link></li>
             </ul>
-          </div>
-          
-          <div>
-            <h3 className="font-medium text-lg mb-4">Newsletter</h3>
-            <p className="text-gray-300 mb-4">
-              Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.
-            </p>
-            <div className="flex gap-2">
-              <Input 
-                type="email" 
-                placeholder="Your email" 
-                className="bg-gray-800 border-gray-700 text-white focus-visible:ring-primary"
-              />
-              <Button className="bg-primary text-white hover:bg-primary/90">Subscribe</Button>
-            </div>
           </div>
         </div>
         
