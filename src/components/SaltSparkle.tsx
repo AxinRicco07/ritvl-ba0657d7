@@ -1,13 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
-
+import {v4} from "uuid"
 const SaltSparkle = () => {
   const [sparkles, setSparkles] = useState<{id: number, x: number, y: number, size: number, opacity: number}[]>([]);
   
   useEffect(() => {
     const createSparkle = () => {
       const sparkle = {
-        id: Date.now(),
+        id: Date.now() * Math.random(),
         x: Math.random() * 100, // Random position within container
         y: Math.random() * 100,
         size: Math.random() * 5 + 2, // Larger size between 2-7px
@@ -36,7 +36,7 @@ const SaltSparkle = () => {
   }, []);
   
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div  className="absolute inset-0 pointer-events-none overflow-hidden">
       {sparkles.map(sparkle => (
         <div
           key={sparkle.id}
