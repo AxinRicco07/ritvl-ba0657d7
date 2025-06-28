@@ -56,8 +56,8 @@ export default function About() {
       </section>
       
       {/* Our Values */}
-      <section className="section-padding">
-        <div className="container max-w-7xl mx-auto">
+      <section className="section-padding py-16 md:py-20">
+        <div className="container max-w-7xl mx-auto px-6 md:px-8">
           <h2 className="text-2xl md:text-3xl font-serif text-center mb-4 text-blue-800">Our Values</h2>
           <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-16">
             These principles guide everything we do, from product development to customer service.
@@ -98,8 +98,8 @@ export default function About() {
       </section>
       
       {/* Our Process */}
-      <section className="section-padding bg-blue-50/50">
-        <div className="container max-w-7xl mx-auto">
+      <section className="section-padding bg-blue-50/50 py-16 md:py-20">
+        <div className="container max-w-7xl mx-auto px-6 md:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="order-2 lg:order-1">
               <h2 className="text-2xl md:text-3xl font-serif mb-6 text-blue-800">Our Process</h2>
