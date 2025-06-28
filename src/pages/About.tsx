@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -163,24 +162,6 @@ export default function About() {
                 />
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-      
-      {/* Join Our Mission */}
-      <section className="section-padding bg-blue-900 text-white">
-        <div className="container max-w-7xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-serif mb-4">Join Our Mission</h2>
-          <p className="text-blue-100 max-w-xl mx-auto mb-8">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild variant="outline" className="bg-transparent border-white text-white hover:bg-white/10">
-              <Link to="/careers">View Openings</Link>
-            </Button>
-            <Button asChild className="bg-white text-blue-900 hover:bg-blue-50">
-              <Link to="/contact">Contact Us</Link>
-            </Button>
           </div>
         </div>
       </section>
