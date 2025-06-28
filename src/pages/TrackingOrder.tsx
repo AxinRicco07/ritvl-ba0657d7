@@ -187,7 +187,7 @@ export default function TrackingOrder() {
                     <div className="flex items-center gap-2 mb-1">
                       <h4 className="font-medium">{stage.name}</h4>
                       {stage.current && (
-                        <Badge variant="outline" size="sm">
+                        <Badge variant="outline" className="text-xs">
                           In Progress
                         </Badge>
                       )}
