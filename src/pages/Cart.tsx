@@ -39,17 +39,18 @@ export default function Cart() {
         <div className="lg:col-span-8">
           <div className="border border-border rounded-lg overflow-hidden">
             <div className="hidden md:grid grid-cols-12 gap-4 p-4 bg-secondary/30 text-sm font-medium">
-              <div className="col-span-6">Product</div>
+              <div className="col-span-5">Product</div>
               <div className="col-span-2 text-center">Price</div>
               <div className="col-span-2 text-center">Quantity</div>
               <div className="col-span-2 text-right">Total</div>
+              <div className="col-span-1 text-center">Action</div>
             </div>
             
             {cartItems.map((item) => (
               <div key={`${item.id}-${item.size}-${item.strength}`} className="border-t border-border first:border-t-0 p-4">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
                   {/* Product info */}
-                  <div className="md:col-span-6 flex items-center gap-4">
+                  <div className="md:col-span-5 flex items-center gap-4">
                     <div className="w-20 h-20 bg-secondary/30 rounded-md overflow-hidden">
                       <img 
                         src={item.image} 
@@ -106,12 +107,14 @@ export default function Cart() {
                   </div>
                   
                   {/* Remove button (desktop) */}
-                  <button 
-                    onClick={() => removeFromCart(item.id)}
-                    className="hidden md:block absolute right-4 text-muted-foreground hover:text-destructive transition-colors"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
+                  <div className="md:col-span-1 text-center hidden md:block">
+                    <button 
+                      onClick={() => removeFromCart(item.id)}
+                      className="text-muted-foreground hover:text-destructive transition-colors p-1"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
