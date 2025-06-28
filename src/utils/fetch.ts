@@ -1,0 +1,1 @@
+export const fetchPrefix = "http://localhost:3000"
