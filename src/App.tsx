@@ -17,6 +17,12 @@ import Footer from "./components/Footer";
 import WhatsAppButton from "./components/WhatsAppButton";
 import "./App.css";
 import Layout from "./Layout";
+import AdminLayout from "./components/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminProducts from "./pages/admin/AdminProducts";
+import AdminProductForm from "./pages/admin/AdminProductForm";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminCustomers from "./pages/admin/AdminCustomers";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +33,7 @@ const App = () => (
         <Toaster />
         <BrowserRouter>
           <Routes>
+            {/* Public Routes with Layout */}
             <Route element={<Layout />}>
               <Route path="/" element={<Index />} />
               <Route path="/products" element={<Products />} />
@@ -40,6 +47,16 @@ const App = () => (
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
               <Route path="*" element={<NotFound />} />
+            </Route>
+
+            {/* Admin Route with a different layout */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="products/add" element={<AdminProductForm />} />
+              <Route path="products/edit/:id" element={<AdminProductForm />} />
+              <Route path="orders" element={<AdminOrders />} />
+              <Route path="customers" element={<AdminCustomers />} />
             </Route>
           </Routes>
         </BrowserRouter>
