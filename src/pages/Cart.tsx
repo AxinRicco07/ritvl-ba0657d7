@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Trash2, ShoppingCart } from "lucide-react";
@@ -6,12 +5,13 @@ import { useCart } from "@/contexts/CartContext";
 import { formatINRWithPaisa } from "@/utils/currency";
 
 export default function Cart() {
-  const { cartItems, removeFromCart, updateQuantity, clearCart, getCartTotal } = useCart();
-  
+  const { cartItems, removeFromCart, updateQuantity, clearCart, getCartTotal } =
+    useCart();
+
   const subtotal = getCartTotal();
   const shipping = subtotal > 5000 ? 0 : 599; // Free shipping over ₹50 (5000 paisa)
   const total = subtotal + shipping;
-  
+
   if (cartItems.length === 0) {
     return (
       <div className="container max-w-7xl mx-auto py-16 px-4 md:px-8 text-center">
@@ -30,11 +30,11 @@ export default function Cart() {
       </div>
     );
   }
-  
+
   return (
     <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
       <h1 className="text-3xl font-serif mb-8">Shopping Cart</h1>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8">
           <div className="border border-border rounded-lg overflow-hidden">
@@ -45,71 +45,84 @@ export default function Cart() {
               <div className="col-span-2 text-right">Total</div>
               <div className="col-span-1 text-center">Action</div>
             </div>
-            
+
             {cartItems.map((item) => (
-              <div key={`${item.id}-${item.size}-${item.strength}`} className="border-t border-border first:border-t-0 p-4">
+              <div
+                key={`${item.productId}-${item.quantity}`}
+                className="border-t border-border first:border-t-0 p-4"
+              >
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
                   {/* Product info */}
                   <div className="md:col-span-5 flex items-center gap-4">
                     <div className="w-20 h-20 bg-secondary/30 rounded-md overflow-hidden">
-                      <img 
-                        src={item.image} 
-                        alt={item.name} 
+                      <img
+                        src={item.image}
+                        alt={item.name}
                         className="w-full h-full object-cover"
                       />
                     </div>
                     <div>
                       <h3 className="font-medium">{item.name}</h3>
-                      {(item.size || item.strength) && (
-                        <div className="text-sm text-muted-foreground mt-1">
-                          {item.size && item.strength ? `${item.size} / ${item.strength}` : item.size || item.strength}
-                        </div>
-                      )}
-                      <button 
-                        onClick={() => removeFromCart(item.id)}
+
+                      <button
+                        onClick={() => removeFromCart(item.productId)}
                         className="text-sm text-muted-foreground flex items-center gap-1 hover:text-destructive transition-colors mt-2 md:hidden"
                       >
                         <Trash2 className="h-3 w-3" /> Remove
                       </button>
                     </div>
                   </div>
-                  
+
                   {/* Price */}
                   <div className="md:col-span-2 md:text-center flex justify-between items-center md:block">
-                    <span className="text-sm font-medium md:hidden">Price:</span>
-                    <span>{formatINRWithPaisa(item.price)}</span>
+                    <span className="text-sm font-medium md:hidden">
+                      Price:
+                    </span>
+                    <span>{formatINRWithPaisa(item.price.sp * 100)}</span>
                   </div>
-                  
+
                   {/* Quantity */}
                   <div className="md:col-span-2 md:text-center flex justify-between items-center md:block">
-                    <span className="text-sm font-medium md:hidden">Quantity:</span>
+                    <span className="text-sm font-medium md:hidden">
+                      Quantity:
+                    </span>
                     <div className="flex items-center border border-input rounded-md w-24 md:mx-auto">
-                      <button 
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      <button
+                        onClick={() =>
+                          updateQuantity(item.productId, item.quantity - 1)
+                        }
                         className="px-2 py-1 hover:bg-secondary transition-colors text-sm"
                       >
                         -
                       </button>
-                      <span className="flex-1 text-center py-1">{item.quantity}</span>
-                      <button 
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      <span className="flex-1 text-center py-1">
+                        {item.quantity}
+                      </span>
+                      <button
+                        onClick={() =>
+                          updateQuantity(item.productId, item.quantity + 1)
+                        }
                         className="px-2 py-1 hover:bg-secondary transition-colors text-sm"
                       >
                         +
                       </button>
                     </div>
                   </div>
-                  
+
                   {/* Total */}
                   <div className="md:col-span-2 md:text-right flex justify-between items-center md:block">
-                    <span className="text-sm font-medium md:hidden">Total:</span>
-                    <span className="font-medium">{formatINRWithPaisa(item.price * item.quantity)}</span>
+                    <span className="text-sm font-medium md:hidden">
+                      Total:
+                    </span>
+                    <span className="font-medium">
+                      {formatINRWithPaisa(item.price.sp * item.quantity * 100)}
+                    </span>
                   </div>
-                  
+
                   {/* Remove button (desktop) */}
                   <div className="md:col-span-1 text-center hidden md:block">
-                    <button 
-                      onClick={() => removeFromCart(item.id)}
+                    <button
+                      onClick={() => removeFromCart(item.productId)}
                       className="text-muted-foreground hover:text-destructive transition-colors p-1"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -119,21 +132,19 @@ export default function Cart() {
               </div>
             ))}
           </div>
-          
+
           <div className="flex justify-between mt-6">
             <Button asChild variant="outline">
-              <Link to="/products">
-                Continue Shopping
-              </Link>
+              <Link to="/products">Continue Shopping</Link>
             </Button>
             <Button onClick={clearCart}>Clear Cart</Button>
           </div>
         </div>
-        
+
         <div className="lg:col-span-4">
           <div className="bg-secondary/30 rounded-lg p-6">
             <h2 className="font-serif text-xl mb-4">Order Summary</h2>
-            
+
             <div className="space-y-3 mb-6">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Subtotal</span>
@@ -141,28 +152,30 @@ export default function Cart() {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Shipping</span>
-                <span>{shipping === 0 ? "Free" : formatINRWithPaisa(shipping)}</span>
+                <span>
+                  {shipping === 0 ? "Free" : formatINRWithPaisa(shipping)}
+                </span>
               </div>
               <div className="border-t border-border pt-3 flex justify-between font-medium">
                 <span>Total</span>
                 <span>{formatINRWithPaisa(total)}</span>
               </div>
             </div>
-            
+
             <Button className="w-full" size="lg">
               Checkout <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            
+
             <p className="text-center text-sm text-muted-foreground mt-4">
               Free shipping on orders over ₹50
             </p>
-            
+
             <div className="border-t border-border mt-6 pt-6">
               <h3 className="font-medium mb-2">Have a promo code?</h3>
               <div className="flex gap-2">
-                <input 
-                  type="text" 
-                  placeholder="Enter code" 
+                <input
+                  type="text"
+                  placeholder="Enter code"
                   className="px-3 py-2 border border-input rounded-md flex-1 focus:outline-none focus:ring-1 focus:ring-black"
                 />
                 <Button variant="outline">Apply</Button>

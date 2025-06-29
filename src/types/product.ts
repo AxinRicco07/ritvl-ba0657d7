@@ -27,6 +27,17 @@ export type HomeProduct = {
   };
 };
 
+type ProductType = 
+  | 'salt'
+  | 'mogra'
+  | 'lavender'
+  | 'rose'
+  | 'jasmine'
+  | 'lemon grass'
+  | 'cinnamon'
+  | 'oceanblue'
+  | 'geranium';
+
 
 export type PublicProduct = {
     id: string;
@@ -66,8 +77,9 @@ export type PublicProduct = {
       name: string;
     };
     relatedProducts: string[];
-    productType: 'salt' | string;
+    productType: ProductType;
     inStock: boolean;
     fewStocks: number;
+
   };
   

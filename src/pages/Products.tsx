@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useCart } from "@/contexts/CartContext";
 import { formatINRWithPaisa } from "@/utils/currency";
+import { PublicProduct } from "@/types/product";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPrefix } from "@/utils/fetch";
 
 // Mock product data with paisa values (1 rupee = 100 paisa)
 const allProducts = [
@@ -20,7 +23,7 @@ const allProducts = [
     featured: true,
     new: false,
     fragranceIntensity: "medium",
-    isGiftSet: false
+    isGiftSet: false,
   },
   {
     id: "2",
@@ -34,7 +37,7 @@ const allProducts = [
     featured: false,
     new: true,
     fragranceIntensity: "strong",
-    isGiftSet: false
+    isGiftSet: false,
   },
   {
     id: "3",
@@ -48,7 +51,7 @@ const allProducts = [
     featured: true,
     new: false,
     fragranceIntensity: "strong",
-    isGiftSet: false
+    isGiftSet: false,
   },
   {
     id: "4",
@@ -62,7 +65,7 @@ const allProducts = [
     featured: false,
     new: false,
     fragranceIntensity: "light",
-    isGiftSet: false
+    isGiftSet: false,
   },
   {
     id: "5",
@@ -76,7 +79,7 @@ const allProducts = [
     featured: true,
     new: false,
     fragranceIntensity: "light",
-    isGiftSet: false
+    isGiftSet: false,
   },
   {
     id: "6",
@@ -90,7 +93,7 @@ const allProducts = [
     featured: false,
     new: true,
     fragranceIntensity: "medium",
-    isGiftSet: false
+    isGiftSet: false,
   },
   {
     id: "7",
@@ -104,7 +107,7 @@ const allProducts = [
     featured: true,
     new: false,
     fragranceIntensity: "medium",
-    isGiftSet: true
+    isGiftSet: true,
   },
   {
     id: "8",
@@ -118,7 +121,7 @@ const allProducts = [
     featured: false,
     new: false,
     fragranceIntensity: "strong",
-    isGiftSet: false
+    isGiftSet: false,
   },
   {
     id: "9",
@@ -132,8 +135,8 @@ const allProducts = [
     featured: false,
     new: true,
     fragranceIntensity: "medium",
-    isGiftSet: false
-  }
+    isGiftSet: false,
+  },
 ];
 
 const categories = [
@@ -145,7 +148,7 @@ const categories = [
   { id: "lemon-grass", label: "Lemon Grass" },
   { id: "cinnamon", label: "Cinnamon" },
   { id: "ocean-blue", label: "Ocean Blue" },
-  { id: "geranium", label: "Geranium" }
+  { id: "geranium", label: "Geranium" },
 ];
 
 const benefits = [
@@ -158,111 +161,136 @@ const benefits = [
   { id: "mood", label: "Mood Enhancement" },
   { id: "detox", label: "Detoxification" },
   { id: "recovery", label: "Recovery" },
-  { id: "stress-relief", label: "Stress Relief" }
+  { id: "stress-relief", label: "Stress Relief" },
 ];
 
 const fragranceIntensities = [
   { id: "light", label: "Light" },
   { id: "medium", label: "Medium" },
-  { id: "strong", label: "Strong" }
+  { id: "strong", label: "Strong" },
 ];
+
+const productTypes = [
+  "salt",
+  "mogra",
+  "lavender",
+  "rose",
+  "jasmine",
+  "lemon grass",
+  "cinnamon",
+  "oceanblue",
+  "geranium",
+] as const;
 
 export default function Products() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<
+    (typeof productTypes)[number][]
+  >([]);
   const [selectedBenefits, setSelectedBenefits] = useState<string[]>([]);
   const [selectedIntensities, setSelectedIntensities] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState("featured");
-  
-  const toggleCategory = (categoryId: string) => {
-    setSelectedCategories(prev => 
-      prev.includes(categoryId) 
-        ? prev.filter(id => id !== categoryId)
-        : [...prev, categoryId]
-    );
-  };
-  
-  const toggleBenefit = (benefitId: string) => {
-    setSelectedBenefits(prev => 
-      prev.includes(benefitId) 
-        ? prev.filter(id => id !== benefitId)
-        : [...prev, benefitId]
-    );
-  };
-  
-  const toggleIntensity = (intensityId: string) => {
-    setSelectedIntensities(prev => 
-      prev.includes(intensityId) 
-        ? prev.filter(id => id !== intensityId)
-        : [...prev, intensityId]
-    );
-  };
-  
-  // Filter products based on selected filters
-  const filteredProducts = allProducts.filter(product => {
-    // Apply category filter
-    if (selectedCategories.length > 0 && !selectedCategories.includes(product.category)) {
-      return false;
-    }
-    
-    // Apply benefits filter
-    if (selectedBenefits.length > 0 && !product.benefits.some(benefit => selectedBenefits.includes(benefit))) {
-      return false;
-    }
-    
-    // Apply fragrance intensity filter
-    if (selectedIntensities.length > 0 && !selectedIntensities.includes(product.fragranceIntensity)) {
-      return false;
-    }
-    
-    return true;
-  });
-  
-  // Sort products
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    switch (sortOption) {
-      case "price-low":
-        return a.price - b.price;
-      case "price-high":
-        return b.price - a.price;
-      case "rating":
-        return b.rating - a.rating;
-      case "newest":
-        return Number(b.new) - Number(a.new);
-      default: // featured
-        return Number(b.featured) - Number(a.featured);
-    }
-  });
-  
+
+  const toggleMobileFilters = () => setMobileFiltersOpen(!mobileFiltersOpen);
   const clearAllFilters = () => {
     setSelectedCategories([]);
     setSelectedBenefits([]);
     setSelectedIntensities([]);
   };
-  
-  const hasActiveFilters = selectedCategories.length > 0 || selectedBenefits.length > 0 || selectedIntensities.length > 0;
-  
-  const toggleMobileFilters = () => {
-    setMobileFiltersOpen(!mobileFiltersOpen);
-  };
-  
+  const hasActiveFilters =
+    selectedCategories.length > 0 ||
+    selectedBenefits.length > 0 ||
+    selectedIntensities.length > 0;
+
+  const toggle = (
+    id: string,
+    list: string[],
+    setter: React.Dispatch<React.SetStateAction<string[]>>
+  ) =>
+    setter((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+
+  const {
+    data: products = [],
+    isLoading,
+    isError,
+  } = useQuery<PublicProduct[]>({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const res = await fetch(`${fetchPrefix}/api/products`, {
+        method: "GET"
+      });
+      if (!res.ok) throw new Error("Failed to fetch products");
+      return res.json();
+    },
+  });
+
+  const filteredProducts = products.filter((product) => {
+    if (
+      selectedCategories.length > 0 &&
+      !selectedCategories.includes(product.productType)
+    )
+      return false;
+
+    if (
+      selectedBenefits.length > 0 &&
+      !product.benefits.some((b) => selectedBenefits.includes(b))
+    )
+      return false;
+
+    // if (
+    //   selectedIntensities.length > 0 &&
+    //   !selectedIntensities.includes(product.fragranceIntensity)
+    // )
+    //   return false;
+
+    return true;
+  });
+
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    switch (sortOption) {
+      case "price-low":
+        return a.price.sp - b.price.sp;
+      case "price-high":
+        return b.price.sp - a.price.sp;
+      case "rating":
+        return b.ratings.average - a.ratings.average;
+      case "newest":
+        return Number(b.tags.includes("new")) - Number(a.tags.includes("new"));
+      default:
+        return (
+          Number(b.tags.includes("featured")) -
+          Number(a.tags.includes("featured"))
+        );
+    }
+  });
+
   return (
     <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
       <div className="mb-8">
         <h1 className="text-3xl font-serif mb-4">Products</h1>
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <Button 
-            onClick={toggleMobileFilters} 
-            variant="outline" 
+          <Button
+            onClick={toggleMobileFilters}
+            variant="outline"
             className="lg:hidden flex items-center gap-2"
           >
             <Filter className="h-4 w-4" />
-            Filters {hasActiveFilters && `(${selectedCategories.length + selectedBenefits.length + selectedIntensities.length})`}
+            Filters
+            {hasActiveFilters &&
+              ` (${
+                selectedCategories.length +
+                selectedBenefits.length +
+                selectedIntensities.length
+              })`}
           </Button>
-          
+
           <div className="flex items-center ml-auto">
-            <label htmlFor="sort" className="text-sm mr-2">Sort by:</label>
-            <select 
+            <label htmlFor="sort" className="text-sm mr-2">
+              Sort by:
+            </label>
+            <select
               id="sort"
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
@@ -277,188 +305,61 @@ export default function Products() {
           </div>
         </div>
       </div>
-      
+
       <div className="lg:grid lg:grid-cols-12 lg:gap-8">
-        {/* Mobile filters modal */}
+        {/* Filters */}
         {mobileFiltersOpen && (
-          <div className="fixed inset-0 z-40 flex lg:hidden">
-            <div 
-              className="fixed inset-0 bg-black bg-opacity-25"
-              onClick={toggleMobileFilters}
-            ></div>
-            
-            <div className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl">
-              <div className="flex items-center justify-between px-4 pb-4 border-b border-border">
-                <h2 className="text-lg font-medium">Filters</h2>
-                <button 
-                  type="button"
-                  className="text-muted-foreground"
-                  onClick={toggleMobileFilters}
-                >
-                  <X className="h-5 w-5" aria-hidden="true" />
-                </button>
-              </div>
-              
-              {hasActiveFilters && (
-                <div className="px-4 py-4 border-b border-border">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={clearAllFilters}
-                    className="w-full justify-center text-primary border-primary hover:bg-primary/5"
-                  >
-                    Clear all filters
-                  </Button>
-                </div>
-              )}
-              
-              <div className="space-y-6 p-4">
-                <FilterSection title="Product Type">
-                  {categories.map(category => (
-                    <div key={category.id} className="flex items-center space-x-2">
-                      <Checkbox 
-                        id={`mobile-category-${category.id}`} 
-                        checked={selectedCategories.includes(category.id)}
-                        onCheckedChange={() => toggleCategory(category.id)}
-                        className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                      />
-                      <label 
-                        htmlFor={`mobile-category-${category.id}`}
-                        className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        {category.label}
-                      </label>
-                    </div>
-                  ))}
-                </FilterSection>
-                
-                <FilterSection title="Benefits">
-                  {benefits.map(benefit => (
-                    <div key={benefit.id} className="flex items-center space-x-2">
-                      <Checkbox 
-                        id={`mobile-benefit-${benefit.id}`}
-                        checked={selectedBenefits.includes(benefit.id)}
-                        onCheckedChange={() => toggleBenefit(benefit.id)}
-                        className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                      />
-                      <label 
-                        htmlFor={`mobile-benefit-${benefit.id}`}
-                        className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        {benefit.label}
-                      </label>
-                    </div>
-                  ))}
-                </FilterSection>
-                
-                <FilterSection title="Fragrance Intensity">
-                  {fragranceIntensities.map(intensity => (
-                    <div key={intensity.id} className="flex items-center space-x-2">
-                      <Checkbox 
-                        id={`mobile-intensity-${intensity.id}`}
-                        checked={selectedIntensities.includes(intensity.id)}
-                        onCheckedChange={() => toggleIntensity(intensity.id)}
-                        className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                      />
-                      <label 
-                        htmlFor={`mobile-intensity-${intensity.id}`}
-                        className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        {intensity.label}
-                      </label>
-                    </div>
-                  ))}
-                </FilterSection>
-              </div>
-            </div>
-          </div>
+          <MobileFilters
+            onClose={toggleMobileFilters}
+            toggleCategory={(id) =>
+              toggle(id, selectedCategories, setSelectedCategories)
+            }
+            toggleBenefit={(id) =>
+              toggle(id, selectedBenefits, setSelectedBenefits)
+            }
+            toggleIntensity={(id) =>
+              toggle(id, selectedIntensities, setSelectedIntensities)
+            }
+            selectedCategories={selectedCategories}
+            selectedBenefits={selectedBenefits}
+            selectedIntensities={selectedIntensities}
+            clearAllFilters={clearAllFilters}
+            hasActiveFilters={hasActiveFilters}
+          />
         )}
-        
-        {/* Desktop filters */}
+
         <div className="hidden lg:block lg:col-span-3">
-          <div className="sticky top-20 space-y-6">
-            {hasActiveFilters && (
-              <div className="mb-4">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={clearAllFilters}
-                  className="w-full justify-center text-primary border-primary hover:bg-primary/5"
-                >
-                  Clear all filters
-                </Button>
-              </div>
-            )}
-            
-            <FilterSection title="Product Type">
-              {categories.map(category => (
-                <div key={category.id} className="flex items-center space-x-2">
-                  <Checkbox 
-                    id={`category-${category.id}`} 
-                    checked={selectedCategories.includes(category.id)}
-                    onCheckedChange={() => toggleCategory(category.id)}
-                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                  />
-                  <label 
-                    htmlFor={`category-${category.id}`}
-                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {category.label}
-                  </label>
-                </div>
-              ))}
-            </FilterSection>
-            
-            <FilterSection title="Benefits">
-              {benefits.map(benefit => (
-                <div key={benefit.id} className="flex items-center space-x-2">
-                  <Checkbox 
-                    id={`benefit-${benefit.id}`}
-                    checked={selectedBenefits.includes(benefit.id)}
-                    onCheckedChange={() => toggleBenefit(benefit.id)}
-                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                  />
-                  <label 
-                    htmlFor={`benefit-${benefit.id}`}
-                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {benefit.label}
-                  </label>
-                </div>
-              ))}
-            </FilterSection>
-            
-            <FilterSection title="Fragrance Intensity">
-              {fragranceIntensities.map(intensity => (
-                <div key={intensity.id} className="flex items-center space-x-2">
-                  <Checkbox 
-                    id={`intensity-${intensity.id}`}
-                    checked={selectedIntensities.includes(intensity.id)}
-                    onCheckedChange={() => toggleIntensity(intensity.id)}
-                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                  />
-                  <label 
-                    htmlFor={`intensity-${intensity.id}`}
-                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {intensity.label}
-                  </label>
-                </div>
-              ))}
-            </FilterSection>
-          </div>
+          <SidebarFilters
+            toggleCategory={(id) =>
+              toggle(id, selectedCategories, setSelectedCategories)
+            }
+            toggleBenefit={(id) =>
+              toggle(id, selectedBenefits, setSelectedBenefits)
+            }
+            toggleIntensity={(id) =>
+              toggle(id, selectedIntensities, setSelectedIntensities)
+            }
+            selectedCategories={selectedCategories}
+            selectedBenefits={selectedBenefits}
+            selectedIntensities={selectedIntensities}
+            clearAllFilters={clearAllFilters}
+            hasActiveFilters={hasActiveFilters}
+          />
         </div>
-        
-        {/* Product grid */}
+
         <div className="mt-6 lg:mt-0 lg:col-span-9">
-          {sortedProducts.length === 0 ? (
+          {isLoading ? (
+            <div>Loading...</div>
+          ) : isError ? (
+            <div>Error loading products.</div>
+          ) : sortedProducts.length === 0 ? (
             <div className="text-center py-12">
               <div className="bg-secondary/30 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Filter className="h-6 w-6 text-muted-foreground" />
               </div>
               <h3 className="text-lg font-medium mb-2">No products found</h3>
               <p className="text-muted-foreground mb-4">
-                Try adjusting your filters to find what you're looking for.
+                Try adjusting your filters.
               </p>
               <Button onClick={clearAllFilters}>Clear all filters</Button>
             </div>
@@ -475,48 +376,168 @@ export default function Products() {
   );
 }
 
-const FilterSection = ({ 
-  title, 
-  children 
-}: { 
-  title: string, 
-  children: React.ReactNode 
+const SidebarFilters = ({
+  toggleCategory,
+  toggleBenefit,
+  toggleIntensity,
+  selectedCategories,
+  selectedBenefits,
+  selectedIntensities,
+  clearAllFilters,
+  hasActiveFilters,
+}: any) => (
+  <div className="sticky top-20 space-y-6">
+    {hasActiveFilters && (
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={clearAllFilters}
+        className="w-full justify-center text-primary border-primary hover:bg-primary/5"
+      >
+        Clear all filters
+      </Button>
+    )}
+
+    <FilterGroup
+      title="Product Type"
+      options={productTypes.map((pt, i) => ({ id: pt, label: pt }))}
+      selected={selectedCategories}
+      toggle={toggleCategory}
+    />
+    {/* <FilterGroup
+      title="Benefits"
+      options={benefits}
+      selected={selectedBenefits}
+      toggle={toggleBenefit}
+    />
+    <FilterGroup
+      title="Fragrance Intensity"
+      options={fragranceIntensities}
+      selected={selectedIntensities}
+      toggle={toggleIntensity}
+    /> */}
+  </div>
+);
+
+const MobileFilters = ({
+  onClose,
+  toggleCategory,
+  toggleBenefit,
+  toggleIntensity,
+  selectedCategories,
+  selectedBenefits,
+  selectedIntensities,
+  clearAllFilters,
+  hasActiveFilters,
+}: any) => (
+  <div className="fixed inset-0 z-40 flex lg:hidden">
+    <div
+      className="fixed inset-0 bg-black bg-opacity-25"
+      onClick={onClose}
+    ></div>
+    <div className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl">
+      <div className="flex items-center justify-between px-4 pb-4 border-b border-border">
+        <h2 className="text-lg font-medium">Filters</h2>
+        <button type="button" onClick={onClose}>
+          <X className="h-5 w-5" />
+        </button>
+      </div>
+
+      {hasActiveFilters && (
+        <div className="px-4 py-4 border-b border-border">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={clearAllFilters}
+            className="w-full justify-center text-primary border-primary hover:bg-primary/5"
+          >
+            Clear all filters
+          </Button>
+        </div>
+      )}
+
+      <div className="space-y-6 p-4">
+        <FilterGroup
+          title="Product Type"
+          options={productTypes.map((pt, i) => ({ id: pt, label: pt }))}
+          selected={selectedCategories}
+          toggle={toggleCategory}
+        />
+        {/* <FilterGroup
+          title="Benefits"
+          options={benefits}
+          selected={selectedBenefits}
+          toggle={toggleBenefit}
+        />
+        <FilterGroup
+          title="Fragrance Intensity"
+          options={fragranceIntensities}
+          selected={selectedIntensities}
+          toggle={toggleIntensity} 
+        />*/}
+      </div>
+    </div>
+  </div>
+);
+
+const FilterGroup = ({
+  title,
+  options,
+  selected,
+  toggle,
+}: {
+  title: string;
+  options: { id: string; label: string }[];
+  selected: string[];
+  toggle: (id: string) => void;
 }) => {
   const [expanded, setExpanded] = useState(true);
-  
+
   return (
     <div className="border-b border-border pb-6">
-      <button 
+      <button
         className="flex w-full items-center justify-between text-sm font-medium mb-2"
         onClick={() => setExpanded(!expanded)}
       >
         {title}
-        <ChevronDown 
-          className={`h-4 w-4 transition-transform ${expanded ? 'rotate-180' : ''}`} 
+        <ChevronDown
+          className={`h-4 w-4 transition-transform ${
+            expanded ? "rotate-180" : ""
+          }`}
         />
       </button>
-      
       {expanded && (
         <div className="space-y-4 pt-2">
-          {children}
+          {options.map((opt) => (
+            <div key={opt.id} className="flex items-center space-x-2">
+              <Checkbox
+                id={opt.id}
+                checked={selected.includes(opt.id)}
+                onCheckedChange={() => toggle(opt.id)}
+              />
+              <label htmlFor={opt.id} className="text-sm">
+                {opt.label}
+              </label>
+            </div>
+          ))}
         </div>
       )}
     </div>
   );
 };
 
-const ProductCard = ({ product }: { product: typeof allProducts[number] }) => {
+const ProductCard = ({ product }: { product: PublicProduct }) => {
   const { addToCart } = useCart();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
     addToCart({
-      id: product.id,
+      productId: product.id,
       name: product.name,
       price: product.price,
-      image: product.image,
+      image: product.images.filter((img) => img.isPrimary)[0].url,
+      sku: product.sku,
     });
   };
 
@@ -524,37 +545,43 @@ const ProductCard = ({ product }: { product: typeof allProducts[number] }) => {
     <Link to={`/product/${product.id}`} className="block">
       <div className="product-card bg-white rounded-lg overflow-hidden border border-border hover:border-primary/30 shadow-sm">
         <div className="aspect-square bg-secondary/30 relative overflow-hidden">
-          <img 
-            src={product.image} 
-            alt={product.name} 
+          <img
+            src={product.images.filter((img) => img.isPrimary)[0].url}
+            alt={product.name}
             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
           />
-          
-          {product.new && (
+          {product.tags.includes("new") && (
             <span className="absolute top-2 right-2 bg-primary text-white text-xs px-2 py-1 rounded">
               New
             </span>
           )}
         </div>
-        
         <div className="p-4">
-          <h3 className="font-medium hover:underline hover:text-primary transition-colors">{product.name}</h3>
-          
+          <h3 className="font-medium hover:underline hover:text-primary transition-colors">
+            {product.name}
+          </h3>
           <div className="flex items-center gap-1 mt-1 mb-2">
             {[...Array(5)].map((_, i) => (
-              <Star 
-                key={i} 
-                className={`h-3 w-3 ${i < Math.floor(product.rating) ? 'fill-primary text-primary' : 'text-gray-300'}`} 
+              <Star
+                key={i}
+                className={`h-3 w-3 ${
+                  i < Math.floor(product.ratings.average)
+                    ? "fill-primary text-primary"
+                    : "text-gray-300"
+                }`}
               />
             ))}
-            <span className="text-xs text-muted-foreground ml-1">({product.reviewCount})</span>
+            <span className="text-xs text-muted-foreground ml-1">
+              ({product.ratings.count})
+            </span>
           </div>
-          
           <div className="flex justify-between items-center">
-            <span className="font-medium">{formatINRWithPaisa(product.price)}</span>
-            <Button 
-              size="sm" 
-              variant="outline" 
+            <span className="font-medium">
+              {formatINRWithPaisa(product.price.sp * 100)}
+            </span>
+            <Button
+              size="sm"
+              variant="outline"
               className="gap-1 text-primary border-primary hover:bg-primary/5"
               onClick={handleAddToCart}
             >

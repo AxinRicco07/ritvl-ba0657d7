@@ -28,6 +28,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchPrefix } from "@/utils/fetch";
 import { HomeProduct } from "@/types/product";
 import HeroCarousel from "@/components/HeroCarousel";
+import HomePageSkeleton from "@/components/skeletons/HomePageSkeleton";
 
 
 
@@ -150,7 +151,7 @@ const Index = () => {
   //   "Himalayan Flower",
   // ];
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <HomePageSkeleton />
   if (isError) return <div>Error: {(error as Error).message}</div>;
 
   return (
@@ -208,52 +209,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Shop By Category Section */}
-      {/* <section className="py-16 bg-white">
-        <div className="container max-w-7xl mx-auto px-4 md:px-6">
-          <h2 className="text-3xl font-display text-center mb-2 font-bold animate-fade-in">
-            Shop By Categories
-          </h2>
-          <p
-            className="text-center text-muted-foreground max-w-2xl mx-auto mb-12 animate-fade-in"
-            style={{ animationDelay: "0.2s" }}
-          >
-            Discover our curated collection of natural salt blends designed to
-            enhance your daily rituals
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categories.map((category, idx) => (
-              <Link
-                key={category.id}
-                to={category.link}
-                className={`group relative overflow-hidden rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg animate-fade-in zoom-hover`}
-                style={{ animationDelay: `${0.2 + idx * 0.1}s` }}
-              >
-                <div className="aspect-[1/1.2] overflow-hidden">
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60 flex flex-col justify-end p-6">
-                    <h3 className="text-white text-xl font-bold mb-2">
-                      {category.name}
-                    </h3>
-                    <span className="text-white text-sm font-medium opacity-90 mb-2">
-                      {category.items} Products
-                    </span>
-                    <span className="inline-flex items-center text-white text-sm font-medium bg-white/20 backdrop-blur-sm py-1 px-3 rounded-full w-fit">
-                      Explore{" "}
-                      <ArrowRight className="h-4 w-4 ml-1 group-hover:animate-bounce" />
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section> */}
+      
 
       {/* Featured Products - First Row */}
       <section className="py-12 px-4 md:py-16 bg-secondary/10">

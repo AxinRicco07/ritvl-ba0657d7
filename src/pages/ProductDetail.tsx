@@ -12,7 +12,7 @@ import { fetchPrefix } from "@/utils/fetch";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ProductReviews } from "@/components/ProductReivew";
 import { Review } from "@/types/reviews";
-import ProductDetailSkeleton from "@/components/ProductDetailSkeleton";
+import ProductDetailSkeleton from "@/components/skeletons/ProductDetailSkeleton";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -176,7 +176,7 @@ export default function ProductDetail() {
           </div>
 
           <div className="grid grid-cols-4 gap-2">
-            {product.images.map((image, index) => (
+            {product.images.length > 1 && product.images.map((image, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedImage(index)}
