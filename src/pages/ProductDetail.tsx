@@ -12,6 +12,7 @@ import { fetchPrefix } from "@/utils/fetch";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ProductReviews } from "@/components/ProductReivew";
 import { Review } from "@/types/reviews";
+import ProductDetailSkeleton from "@/components/ProductDetailSkeleton";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -149,7 +150,7 @@ export default function ProductDetail() {
     );
   };
 
-  if (isProductDetailLoading) return <span>Loading...</span>;
+  if (isProductDetailLoading) return <ProductDetailSkeleton />;
 
   return (
     <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
@@ -204,7 +205,7 @@ export default function ProductDetail() {
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className={`h-4 w-4 ${
+                className={`h-4 w-4 ${
                     i < Math.floor(product.ratings.average)
                       ? "fill-primary text-primary"
                       : "text-gray-300"
@@ -213,7 +214,7 @@ export default function ProductDetail() {
               ))}
             </div>
             <span className="text-sm text-muted-foreground">
-              {product.ratings.average} ({product.ratings.count} reviews)
+              {Math.round(product.ratings.average * 10)/10} ({product.ratings.count} reviews)
             </span>
           </div>
 
@@ -366,7 +367,7 @@ export default function ProductDetail() {
               </div>
               <div className="p-2">
                 <h3 className="font-medium text-[13px] mb-1 hover:text-primary line-clamp-2">
-                  {item.name}
+                  <Link to={`/product/${item.id}`}>{item.name}</Link>
                 </h3>
                 <div className="flex justify-between items-center">
                   <span className="text-[12px] font-semibold">
@@ -378,7 +379,8 @@ export default function ProductDetail() {
                     variant="outline"
                     className="text-primary border-primary hover:bg-primary/5 px-2 py-1 text-[11px]"
                   >
-                    <a href={`/product/${item.id}`}>Buy</a>
+                    {/* <a href={`/product/${item.id}`}>Buy</a> */}
+                    <Link to={`/product/${item.id}`}>Buy</Link>
                   </Button>
                 </div>
               </div>

@@ -7,6 +7,26 @@ export type Price = {
     discount: number;
 }
 
+export type HomeProduct = {
+  productId: string;
+  description: string;
+  name: string;
+  price: {
+    sp: number;
+    mrp: number;
+    discount: number;
+  };
+  images: {
+    url: string;
+    isPrimary: boolean;
+    altText?: string | undefined;
+  }[];
+  ratings: {
+    average: number;
+    count: number;
+  };
+};
+
 
 export type PublicProduct = {
     id: string;

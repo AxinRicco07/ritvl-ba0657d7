@@ -26,33 +26,17 @@ import ethics from "../assets/7942.jpg";
 import { formatINRWithPaisa } from "@/utils/currency";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPrefix } from "@/utils/fetch";
+import { HomeProduct } from "@/types/product";
+import HeroCarousel from "@/components/HeroCarousel";
 
-type HomeProduct = {
-  productId: string;
-  description: string;
-  name: string;
-  price: {
-    sp: number;
-    mrp: number;
-    discount: number;
-  };
-  images: {
-    url: string;
-    isPrimary: boolean;
-    altText?: string | undefined;
-  }[];
-  ratings: {
-    average: number;
-    count: number;
-  }
-};
+
 
 const fetchProductsData = async (): Promise<{
   featuredProducts: HomeProduct[];
   bestSellingProducts: HomeProduct[];
 }> => {
   const res = await fetch(`${fetchPrefix}/api/home`, {
-    method: "GET"
+    method: "GET",
   }); // Change to your actual endpoint
   if (!res.ok) {
     console.log("Fetch error");
@@ -71,7 +55,10 @@ const ListProducts = function ({ products }: { products: HomeProduct[] }) {
     >
       <Card className="product-card border-none shadow-md hover:shadow-lg transition-all duration-300">
         <div className="overflow-hidden">
-          <AspectRatio ratio={1 / 1} className="zoom-hover p-2 bg-slate-100 rounded-t-md">
+          <AspectRatio
+            ratio={1 / 1}
+            className="zoom-hover p-2 bg-slate-100 rounded-t-md"
+          >
             <img
               src={product.images[0].url}
               alt={product.name}
@@ -89,14 +76,20 @@ const ListProducts = function ({ products }: { products: HomeProduct[] }) {
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1 mt-1 mb-2">
-            {[...Array(5)].map((_, i) => (
-              <Star 
-                key={i} 
-                className={`h-3 w-3 ${i < Math.floor(product.ratings.average) ? 'fill-primary text-primary' : 'text-gray-300'}`} 
-              />
-            ))}
-            <span className="text-xs text-muted-foreground ml-1">({product.ratings.count})</span>
-          </div>
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  className={`h-3 w-3 ${
+                    i < Math.floor(product.ratings.average)
+                      ? "fill-primary text-primary"
+                      : "text-gray-300"
+                  }`}
+                />
+              ))}
+              <span className="text-xs text-muted-foreground ml-1">
+                ({product.ratings.count})
+              </span>
+            </div>
             <Button
               size="lg"
               className="bg-blue-600 hover:bg-blue-500 sparkle-button"
@@ -113,6 +106,7 @@ const ListProducts = function ({ products }: { products: HomeProduct[] }) {
 const Index = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [heroImages, setHeroImages] = useState<HomeProduct[]>([]);
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["homeData"],
@@ -132,17 +126,29 @@ const Index = () => {
     // Auto-slide for hero carousel
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % 3);
-    }, 5000);
+    }, 10000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const heroImages = [p2, p3, p1];
-  const heroTitles = [
-    "Dreamer's Galaxy",
-    "Rose's Mist Bath",
-    "Himalayan Flower",
-  ];
+  useEffect(() => {
+    if (data) {
+      const { bestSellingProducts, featuredProducts } = data;
+
+      setHeroImages([
+        featuredProducts[0],
+        bestSellingProducts[0],
+        bestSellingProducts[1] || bestSellingProducts[0],
+      ]);
+    }
+  }, [data]);
+
+  // const heroImages = [p2, p3, p1];
+  // const heroTitles = [
+  //   "Dreamer's Galaxy",
+  //   "Rose's Mist Bath",
+  //   "Himalayan Flower",
+  // ];
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error: {(error as Error).message}</div>;
@@ -198,64 +204,7 @@ const Index = () => {
             </div>
           </div>
 
-          <div className="relative">
-            <div
-              className={`overflow-hidden rounded-lg ${
-                isVisible ? "animate-slide-in-right" : "opacity-0"
-              }`}
-              style={{ animationDelay: "0.4s" }}
-            >
-              <div className="relative aspect-[4/3]">
-                {heroImages.map((img, index) => (
-                  <div
-                    key={index}
-                    className={`absolute inset-0 transition-opacity duration-1000 ${
-                      currentSlide === index ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    <img
-                      src={img}
-                      alt={`Featured Product ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40 flex flex-col items-center justify-end p-6 text-center">
-                      <span className="text-white text-lg font-medium bg-white/20 backdrop-blur-sm px-3 py-1 mb-2 rounded-md animate-fade-in">
-                        {index === 0
-                          ? "Featured"
-                          : index === 1
-                          ? "Bestseller"
-                          : "New Arrival"}
-                      </span>
-                      <h3 className="text-white text-xl font-bold animate-fade-in">
-                        {heroTitles[index]}
-                      </h3>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        className="mt-2 animate-fade-in"
-                      >
-                        <Link to={`/product/${index + 1}`}>View Details</Link>
-                      </Button>
-                    </div>
-                    <SaltSparkle />
-                  </div>
-                ))}
-              </div>
-
-              <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
-                {[0, 1, 2].map((dot) => (
-                  <button
-                    key={dot}
-                    onClick={() => setCurrentSlide(dot)}
-                    className={`w-3 h-3 rounded-full transition-colors ${
-                      currentSlide === dot ? "bg-white" : "bg-white/40"
-                    }`}
-                    aria-label={`Go to slide ${dot + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
+          <HeroCarousel heroImages={heroImages}/>
         </div>
       </section>
 
