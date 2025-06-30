@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { formatINRWithPaisa } from "@/utils/currency";
 import { toast } from "sonner";
+import { fetchPrefix } from "@/utils/fetch";
 
 interface CheckoutFormData {
   billingAddress: {
@@ -31,12 +31,15 @@ interface CheckoutFormData {
     state: string;
     pincode: string;
   };
-  paymentMethod: "cod" | "upi";
+  paymentMethod: "COD" | "UPI";
 }
 
 export default function Checkout() {
   const navigate = useNavigate();
   const { cartItems, getCartTotal, clearCart } = useCart();
+
+  const [isShippingChargesLoading, setIsShippingChargesLoading] =
+    useState(false);
 
   const [formData, setFormData] = useState<CheckoutFormData>({
     billingAddress: {
@@ -57,12 +60,43 @@ export default function Checkout() {
       state: "",
       pincode: "",
     },
-    paymentMethod: "cod",
+    paymentMethod: "COD",
   });
+
+  useEffect(() => {
+    if (formData.shippingAddress.pincode.length === 6) {
+      setIsShippingChargesLoading(true);
+      fetch(`${fetchPrefix}/api/shipments/check-cart-serviceability`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          delivery_postcode: formData.shippingAddress.pincode,
+          cartItems: cartItems.map((item) => ({
+            sku: item.sku,
+            quantity: item.quantity,
+          })),
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setShippingCharges(data.rate);
+          setIsShippingChargesLoading(false);
+        })
+        .catch((err) => {
+          alert(err.message);
+          setIsShippingChargesLoading(false);
+        });
+    } else {
+      setIsShippingChargesLoading(false);
+    }
+  }, [formData.shippingAddress.pincode]);
 
   const subtotal = getCartTotal();
   const taxes = Math.round(subtotal * 0.18); // 18% GST
-  const shippingCharges = subtotal > 50000 ? 0 : 599; // Free shipping above ₹500
+  // const shippingCharges = subtotal > 50000 ? 0 : 599; // Free shipping above ₹500
+  const [shippingCharges, setShippingCharges] = useState(0);
   const total = subtotal + taxes + shippingCharges;
 
   const handleInputChange = (
@@ -98,9 +132,17 @@ export default function Checkout() {
 
   const validateForm = () => {
     const { billingAddress, shippingAddress, isShippingSameBilling } = formData;
-    
+
     // Validate billing address
-    const requiredBillingFields = ["name", "email", "phone", "address", "city", "state", "pincode"];
+    const requiredBillingFields = [
+      "name",
+      "email",
+      "phone",
+      "address",
+      "city",
+      "state",
+      "pincode",
+    ];
     for (const field of requiredBillingFields) {
       if (!billingAddress[field as keyof typeof billingAddress]) {
         toast.error(`Please fill in billing ${field}`);
@@ -110,7 +152,14 @@ export default function Checkout() {
 
     // Validate shipping address if different from billing
     if (!isShippingSameBilling) {
-      const requiredShippingFields = ["name", "phone", "address", "city", "state", "pincode"];
+      const requiredShippingFields = [
+        "name",
+        "phone",
+        "address",
+        "city",
+        "state",
+        "pincode",
+      ];
       for (const field of requiredShippingFields) {
         if (!shippingAddress[field as keyof typeof shippingAddress]) {
           toast.error(`Please fill in shipping ${field}`);
@@ -122,45 +171,69 @@ export default function Checkout() {
     return true;
   };
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (!validateForm()) return;
 
     // Create order object
     const order = {
-      id: `ORD-${Date.now()}`,
-      items: cartItems.map(item => ({
-        id: item.productId,
+      items: cartItems.map((item) => ({
+        sku: item.sku,
         name: item.name,
         price: item.price.sp,
         quantity: item.quantity,
-        image: item.image,
       })),
       subtotal,
       taxes,
       deliveryCharges: shippingCharges,
       total,
-      paymentMethod: formData.paymentMethod === "cod" ? "Cash on Delivery" : "UPI",
-      deliveryAddress: formData.isShippingSameBilling ? {
+      paymentMethod:
+        formData.paymentMethod === "COD" ? "COD" : "UPI",
+      billingAddress: {
         name: formData.billingAddress.name,
+        email: formData.billingAddress.email,
+        phone: formData.billingAddress.phone,
         address: formData.billingAddress.address,
         city: formData.billingAddress.city,
+        state: formData.billingAddress.state,
         pincode: formData.billingAddress.pincode,
-        phone: formData.billingAddress.phone,
-      } : {
+        country: "India",
+      },
+      deliveryAddress: {
         name: formData.shippingAddress.name,
+        phone: formData.shippingAddress.phone,
         address: formData.shippingAddress.address,
         city: formData.shippingAddress.city,
+        state: formData.shippingAddress.state,
         pincode: formData.shippingAddress.pincode,
-        phone: formData.shippingAddress.phone,
+        country: "India",
+        email: formData.billingAddress.email, // Use billing email for delivery
       },
-      orderDate: new Date().toISOString().split('T')[0],
-      status: "Processing",
+      orderDate: new Date().toISOString().split("T")[0],
     };
 
+    try {
+      const res = await fetch(`${fetchPrefix}/api/orders/new`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(order),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to place order");
+      }
+    } catch (error) {
+      toast.error(error.message);
+      return ;
+    }
+
     // Save order to localStorage
-    const existingOrders = JSON.parse(localStorage.getItem('ritvl-orders') || '[]');
+    const existingOrders = JSON.parse(
+      localStorage.getItem("ritvl-orders") || "[]"
+    );
     existingOrders.unshift(order);
-    localStorage.setItem('ritvl-orders', JSON.stringify(existingOrders));
+    localStorage.setItem("ritvl-orders", JSON.stringify(existingOrders));
 
     // Clear cart
     clearCart();
@@ -185,7 +258,11 @@ export default function Checkout() {
   }
 
   return (
-    <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
+    <div
+      className={`container max-w-7xl mx-auto py-8 px-4 md:px-8 ${
+        isShippingChargesLoading ? "pointer-events-none" : ""
+      }`}
+    >
       <h1 className="text-3xl font-serif mb-8">Checkout</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -204,7 +281,13 @@ export default function Checkout() {
                     id="billing-name"
                     type="text"
                     value={formData.billingAddress.name}
-                    onChange={(e) => handleInputChange("billingAddress", "name", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange(
+                        "billingAddress",
+                        "name",
+                        e.target.value
+                      )
+                    }
                     required
                   />
                 </div>
@@ -214,7 +297,13 @@ export default function Checkout() {
                     id="billing-email"
                     type="email"
                     value={formData.billingAddress.email}
-                    onChange={(e) => handleInputChange("billingAddress", "email", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange(
+                        "billingAddress",
+                        "email",
+                        e.target.value
+                      )
+                    }
                     required
                   />
                 </div>
@@ -225,7 +314,9 @@ export default function Checkout() {
                   id="billing-phone"
                   type="tel"
                   value={formData.billingAddress.phone}
-                  onChange={(e) => handleInputChange("billingAddress", "phone", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("billingAddress", "phone", e.target.value)
+                  }
                   required
                 />
               </div>
@@ -234,7 +325,13 @@ export default function Checkout() {
                 <Textarea
                   id="billing-address"
                   value={formData.billingAddress.address}
-                  onChange={(e) => handleInputChange("billingAddress", "address", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange(
+                      "billingAddress",
+                      "address",
+                      e.target.value
+                    )
+                  }
                   required
                 />
               </div>
@@ -245,7 +342,13 @@ export default function Checkout() {
                     id="billing-city"
                     type="text"
                     value={formData.billingAddress.city}
-                    onChange={(e) => handleInputChange("billingAddress", "city", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange(
+                        "billingAddress",
+                        "city",
+                        e.target.value
+                      )
+                    }
                     required
                   />
                 </div>
@@ -255,7 +358,13 @@ export default function Checkout() {
                     id="billing-state"
                     type="text"
                     value={formData.billingAddress.state}
-                    onChange={(e) => handleInputChange("billingAddress", "state", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange(
+                        "billingAddress",
+                        "state",
+                        e.target.value
+                      )
+                    }
                     required
                   />
                 </div>
@@ -265,7 +374,13 @@ export default function Checkout() {
                     id="billing-pincode"
                     type="text"
                     value={formData.billingAddress.pincode}
-                    onChange={(e) => handleInputChange("billingAddress", "pincode", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange(
+                        "billingAddress",
+                        "pincode",
+                        e.target.value
+                      )
+                    }
                     required
                   />
                 </div>
@@ -297,7 +412,13 @@ export default function Checkout() {
                         id="shipping-name"
                         type="text"
                         value={formData.shippingAddress.name}
-                        onChange={(e) => handleInputChange("shippingAddress", "name", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "shippingAddress",
+                            "name",
+                            e.target.value
+                          )
+                        }
                         required
                       />
                     </div>
@@ -307,7 +428,13 @@ export default function Checkout() {
                         id="shipping-phone"
                         type="tel"
                         value={formData.shippingAddress.phone}
-                        onChange={(e) => handleInputChange("shippingAddress", "phone", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "shippingAddress",
+                            "phone",
+                            e.target.value
+                          )
+                        }
                         required
                       />
                     </div>
@@ -317,7 +444,13 @@ export default function Checkout() {
                     <Textarea
                       id="shipping-address"
                       value={formData.shippingAddress.address}
-                      onChange={(e) => handleInputChange("shippingAddress", "address", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "shippingAddress",
+                          "address",
+                          e.target.value
+                        )
+                      }
                       required
                     />
                   </div>
@@ -328,7 +461,13 @@ export default function Checkout() {
                         id="shipping-city"
                         type="text"
                         value={formData.shippingAddress.city}
-                        onChange={(e) => handleInputChange("shippingAddress", "city", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "shippingAddress",
+                            "city",
+                            e.target.value
+                          )
+                        }
                         required
                       />
                     </div>
@@ -338,7 +477,13 @@ export default function Checkout() {
                         id="shipping-state"
                         type="text"
                         value={formData.shippingAddress.state}
-                        onChange={(e) => handleInputChange("shippingAddress", "state", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "shippingAddress",
+                            "state",
+                            e.target.value
+                          )
+                        }
                         required
                       />
                     </div>
@@ -348,7 +493,13 @@ export default function Checkout() {
                         id="shipping-pincode"
                         type="text"
                         value={formData.shippingAddress.pincode}
-                        onChange={(e) => handleInputChange("shippingAddress", "pincode", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "shippingAddress",
+                            "pincode",
+                            e.target.value
+                          )
+                        }
                         required
                       />
                     </div>
@@ -371,8 +522,13 @@ export default function Checkout() {
                     id="cod"
                     name="payment"
                     value="cod"
-                    checked={formData.paymentMethod === "cod"}
-                    onChange={(e) => setFormData(prev => ({ ...prev, paymentMethod: e.target.value as "cod" }))}
+                    checked={formData.paymentMethod === "COD"}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        paymentMethod: e.target.value as "COD",
+                      }))
+                    }
                   />
                   <Label htmlFor="cod">Cash on Delivery (COD)</Label>
                 </div>
@@ -384,7 +540,9 @@ export default function Checkout() {
                     value="upi"
                     disabled
                   />
-                  <Label htmlFor="upi" className="text-muted-foreground">UPI (Coming Soon)</Label>
+                  <Label htmlFor="upi" className="text-muted-foreground">
+                    UPI (Coming Soon)
+                  </Label>
                 </div>
               </div>
             </CardContent>
@@ -401,7 +559,10 @@ export default function Checkout() {
               {/* Cart Items */}
               <div className="space-y-3">
                 {cartItems.map((item) => (
-                  <div key={`${item.productId}-${item.sku}`} className="flex items-center gap-3">
+                  <div
+                    key={`${item.productId}-${item.sku}`}
+                    className="flex items-center gap-3"
+                  >
                     <div className="w-12 h-12 bg-secondary rounded-md overflow-hidden">
                       <img
                         src={item.image}
@@ -411,11 +572,15 @@ export default function Checkout() {
                     </div>
                     <div className="flex-1">
                       <h4 className="text-sm font-medium">{item.name}</h4>
-                      <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Qty: {item.quantity}
+                      </p>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-medium">
-                        {formatINRWithPaisa(item.price.sp * item.quantity)}
+                        {formatINRWithPaisa(
+                          item.price.sp * item.quantity * 100
+                        )}
                       </p>
                     </div>
                   </div>
@@ -428,26 +593,31 @@ export default function Checkout() {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span>{formatINRWithPaisa(subtotal)}</span>
+                  <span>{formatINRWithPaisa(subtotal * 100)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Taxes (18% GST)</span>
-                  <span>{formatINRWithPaisa(taxes)}</span>
+                  <span>{formatINRWithPaisa(taxes * 100)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Shipping</span>
-                  <span>{shippingCharges === 0 ? "Free" : formatINRWithPaisa(shippingCharges)}</span>
+                  <span>
+                    {shippingCharges === 0
+                      ? "Free"
+                      : formatINRWithPaisa(shippingCharges * 100)}
+                  </span>
                 </div>
                 <Separator />
                 <div className="flex justify-between font-semibold text-lg">
                   <span>Total</span>
-                  <span>{formatINRWithPaisa(total)}</span>
+                  <span>{formatINRWithPaisa(total * 100)}</span>
                 </div>
               </div>
 
-              <Button 
-                onClick={handlePlaceOrder} 
-                className="w-full" 
+              <Button
+                disabled={!shippingCharges}
+                onClick={handlePlaceOrder}
+                className="w-full"
                 size="lg"
               >
                 Place Order

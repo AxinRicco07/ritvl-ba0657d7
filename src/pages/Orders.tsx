@@ -146,9 +146,9 @@ export default function Orders() {
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium">{formatINRWithPaisa(item.price * item.quantity)}</p>
+                        <p className="font-medium">{formatINRWithPaisa(item.price * item.quantity * 100)}</p>
                         <p className="text-sm text-muted-foreground">
-                          {formatINRWithPaisa(item.price)} each
+                          {formatINRWithPaisa(item.price * 100)} each
                         </p>
                       </div>
                     </div>
@@ -191,20 +191,20 @@ export default function Orders() {
                 <div className="space-y-2 bg-secondary/30 p-4 rounded-lg">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Subtotal</span>
-                    <span>{formatINRWithPaisa(order.subtotal)}</span>
+                    <span>{formatINRWithPaisa(order.subtotal * 100)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Taxes</span>
-                    <span>{formatINRWithPaisa(order.taxes)}</span>
+                    <span>{formatINRWithPaisa(order.taxes * 100)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Delivery Charges</span>
-                    <span>{formatINRWithPaisa(order.deliveryCharges)}</span>
+                    <span>{formatINRWithPaisa(order.deliveryCharges * 100)}</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between font-medium">
                     <span>Total</span>
-                    <span>{formatINRWithPaisa(order.total)}</span>
+                    <span>{formatINRWithPaisa(order.total * 100)}</span>
                   </div>
                 </div>
               </div>
