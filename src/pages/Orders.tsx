@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Phone, Package, MapPin, CreditCard, MoreVertical, X } from "lucide-react";
+import { Phone, Package, MapPin, CreditCard, MoreVertical } from "lucide-react";
 import { formatINRWithPaisa } from "@/utils/currency";
 
 interface OrderItem {
@@ -40,37 +40,18 @@ export default function Orders() {
   const [showCancelMenu, setShowCancelMenu] = useState<string | null>(null);
 
   useEffect(() => {
-    // Load orders from localStorage or create mock data if none exists
+    // Load orders from localStorage
     const savedOrders = localStorage.getItem('ritvl-orders');
     if (savedOrders) {
-      setOrders(JSON.parse(savedOrders));
+      try {
+        const parsedOrders = JSON.parse(savedOrders);
+        setOrders(parsedOrders);
+      } catch (error) {
+        console.error("Error loading orders from localStorage:", error);
+        setOrders([]);
+      }
     } else {
-      // Mock data for demonstration
-      const mockOrders: Order[] = [
-        {
-          id: "ORD-2024-001",
-          items: [
-            { id: "1", name: "Lavender Epsom Salt", price: 2500, quantity: 2, image: "/placeholder.svg" },
-            { id: "2", name: "Rose Epsom Salt", price: 2800, quantity: 1, image: "/placeholder.svg" }
-          ],
-          subtotal: 7800,
-          taxes: 1404,
-          deliveryCharges: 599,
-          total: 9803,
-          paymentMethod: "UPI",
-          deliveryAddress: {
-            name: "John Doe",
-            address: "123 Main Street, Apartment 4B",
-            city: "Mumbai",
-            pincode: "400001",
-            phone: "+91 9876543210"
-          },
-          orderDate: "2024-01-15",
-          status: "In Transit"
-        }
-      ];
-      setOrders(mockOrders);
-      localStorage.setItem('ritvl-orders', JSON.stringify(mockOrders));
+      setOrders([]);
     }
   }, []);
 
