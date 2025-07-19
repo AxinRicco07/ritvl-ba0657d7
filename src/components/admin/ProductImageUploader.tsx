@@ -135,9 +135,9 @@ const ProductImageUploader: React.FC<ProductImageUploaderProps> = ({ images, onC
       {images.length > 0 && (
         <div className="mt-6">
           <Label className="mb-3 block">Product Images</Label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-4">
             {images.map((image) => (
-              <Card key={image.id} className={`relative overflow-hidden group ${image.isMain ? 'ring-2 ring-blue-500' : ''}`}>
+              <Card key={image.id} className={`relative overflow-hidden  group ${image.isMain ? 'ring-2 ring-blue-500' : ''}`}>
                 <CardContent className="p-0">
                   <div className="aspect-square relative">
                     <img 

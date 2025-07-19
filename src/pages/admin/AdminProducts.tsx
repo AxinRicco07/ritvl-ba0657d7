@@ -12,6 +12,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import { PackagePlus } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const AdminProducts: React.FC = () => {
   const { toast } = useToast();
@@ -217,7 +219,7 @@ const AdminProducts: React.FC = () => {
       stock: 8,
       status: "Low Stock",
       created: "2025-01-28",
-    }
+    },
   ];
 
   const getStatusColor = (status: string) => {
@@ -260,7 +262,7 @@ const AdminProducts: React.FC = () => {
 
       <Tabs defaultValue="all" className="flex flex-col flex-1 min-h-0">
         <TabsList className="mb-4">
-          <TabsTrigger value="all">All Products</TabsTrigger>
+          <TabsTrigger value="all">List Products</TabsTrigger>
           <TabsTrigger value="active">Active</TabsTrigger>
           <TabsTrigger value="low-stock">Low Stock</TabsTrigger>
           <TabsTrigger value="out-of-stock">Out of Stock</TabsTrigger>
@@ -268,8 +270,18 @@ const AdminProducts: React.FC = () => {
 
         <TabsContent value="all" className="flex-1 min-h-0 overflow-hidden">
           <Card className="h-full flex flex-col">
-            <CardHeader>
-              <CardTitle>All Products</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>
+                <div>All Products</div>
+              </CardTitle>
+              <div>
+                <Button variant="outline">
+                  <Link className="inline-flex items-center justify-center space-x-2" to="add">
+                    <PackagePlus />
+                    <span>Add Product</span>
+                  </Link>
+                </Button>
+              </div>
             </CardHeader>
             <CardContent className="pb-6 max-h-full flex-1 overflow-hidden rounded-md">
               <div className="rounded-md border h-full overflow-hidden overflow-y-auto">
@@ -331,11 +343,20 @@ const AdminProducts: React.FC = () => {
         </TabsContent>
 
         {["active", "low-stock", "out-of-stock"].map((tab) => (
-          <TabsContent key={tab} value={tab} className="flex-1 min-h-0 overflow-hidden">
+          <TabsContent
+            key={tab}
+            value={tab}
+            className="flex-1 min-h-0 overflow-hidden"
+          >
             <Card className="h-full flex flex-col">
               <CardHeader>
                 <CardTitle>
-                  {tab === "low-stock" ? "Low Stock" : tab === "out-of-stock" ? "Out of Stock" : "Active"} Products
+                  {tab === "low-stock"
+                    ? "Low Stock"
+                    : tab === "out-of-stock"
+                    ? "Out of Stock"
+                    : "Active"}{" "}
+                  Products
                 </CardTitle>
               </CardHeader>
               <CardContent className="pb-6 max-h-full flex-1 overflow-hidden rounded-md">
@@ -356,9 +377,12 @@ const AdminProducts: React.FC = () => {
                     <TableBody>
                       {products
                         .filter((product) => {
-                          if (tab === "active") return product.status === "Active";
-                          if (tab === "low-stock") return product.status === "Low Stock";
-                          if (tab === "out-of-stock") return product.status === "Out of Stock";
+                          if (tab === "active")
+                            return product.status === "Active";
+                          if (tab === "low-stock")
+                            return product.status === "Low Stock";
+                          if (tab === "out-of-stock")
+                            return product.status === "Out of Stock";
                           return true;
                         })
                         .map((product) => (

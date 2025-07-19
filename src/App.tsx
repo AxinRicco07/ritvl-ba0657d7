@@ -31,7 +31,8 @@ const queryClient = new QueryClient();
 //  Wrapper to protect admin routes
 const RequireAuth = () => {
   const isAuthenticated = localStorage.getItem("isAuthenticated");
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  // return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  return <Outlet />
 };
 
 const App = () => (
