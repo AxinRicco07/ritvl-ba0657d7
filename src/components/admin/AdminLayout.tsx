@@ -1,7 +1,12 @@
-
 import React from "react";
 import { Outlet, NavLink } from "react-router-dom";
-import { LayoutDashboard, Package, ShoppingCart, Users, LogOut } from "lucide-react";
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  Users,
+  LogOut,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
@@ -20,13 +25,13 @@ const AdminLayout: React.FC = () => {
       title: "Logged out",
       description: "You have been logged out successfully",
     });
-    // In a real app, this would handle actual logout functionality
+    // Add your logout logic here
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Admin header */}
-      <header className="bg-white shadow-sm">
+    <div className="flex flex-col h-screen">
+      {/* Header */}
+      <header className="bg-white shadow-sm z-10">
         <div className="flex items-center justify-between px-6 py-3">
           <div className="flex items-center">
             <NavLink to="/" className="mr-6">
@@ -41,10 +46,11 @@ const AdminLayout: React.FC = () => {
         </div>
       </header>
 
-      <div className="flex flex-col md:flex-row">
+      {/* Body */}
+      <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-full md:w-64 bg-white shadow-sm">
-          <nav className="p-4">
+        <aside className="w-64 bg-white shadow-sm flex-shrink-0 overflow-y-auto">
+          <nav className="h-full p-4">
             <ul className="space-y-2">
               {navItems.map((item) => (
                 <li key={item.path}>
@@ -68,8 +74,8 @@ const AdminLayout: React.FC = () => {
           </nav>
         </aside>
 
-        {/* Main content */}
-        <main className="flex-1 p-6">
+        {/* Main Content */}
+        <main className="flex-1 max-h-full relative px-6 py-4 bg-gray-50">
           <Outlet />
         </main>
       </div>

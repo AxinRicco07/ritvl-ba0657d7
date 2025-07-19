@@ -1,6 +1,12 @@
-
 import React from "react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,91 +15,258 @@ import { useToast } from "@/hooks/use-toast";
 
 const AdminOrders: React.FC = () => {
   const { toast } = useToast();
-  
+
   // Mock data for orders
   const orders = [
-    { 
-      id: "ORD-001", 
-      customer: "John Doe", 
-      email: "john@example.com", 
-      date: "2025-05-15", 
-      status: "Delivered", 
-      total: 85.00,
-      items: 3
+    {
+      id: "ORD-001",
+      customer: "John Doe",
+      email: "john@example.com",
+      date: "2025-05-15",
+      status: "Delivered",
+      total: 85.0,
+      items: 3,
     },
-    { 
-      id: "ORD-002", 
-      customer: "Jane Smith", 
-      email: "jane@example.com", 
-      date: "2025-05-14", 
-      status: "Processing", 
-      total: 142.50,
-      items: 2
+    {
+      id: "ORD-002",
+      customer: "Jane Smith",
+      email: "jane@example.com",
+      date: "2025-05-14",
+      status: "Processing",
+      total: 142.5,
+      items: 2,
     },
-    { 
-      id: "ORD-003", 
-      customer: "Michael Brown", 
-      email: "michael@example.com", 
-      date: "2025-05-14", 
-      status: "Shipped", 
+    {
+      id: "ORD-003",
+      customer: "Michael Brown",
+      email: "michael@example.com",
+      date: "2025-05-14",
+      status: "Shipped",
       total: 67.25,
-      items: 1
+      items: 1,
     },
-    { 
-      id: "ORD-004", 
-      customer: "Sarah Wilson", 
-      email: "sarah@example.com", 
-      date: "2025-05-13", 
-      status: "Processing", 
+    {
+      id: "ORD-004",
+      customer: "Sarah Wilson",
+      email: "sarah@example.com",
+      date: "2025-05-13",
+      status: "Processing",
       total: 129.99,
-      items: 4
+      items: 4,
     },
-    { 
-      id: "ORD-005", 
-      customer: "Robert Jones", 
-      email: "robert@example.com", 
-      date: "2025-05-12", 
-      status: "Delivered", 
+    {
+      id: "ORD-005",
+      customer: "Robert Jones",
+      email: "robert@example.com",
+      date: "2025-05-12",
+      status: "Delivered",
       total: 94.75,
-      items: 2
+      items: 2,
     },
-    { 
-      id: "ORD-006", 
-      customer: "Emily Davis", 
-      email: "emily@example.com", 
-      date: "2025-05-11", 
-      status: "Cancelled", 
+    {
+      id: "ORD-006",
+      customer: "Emily Davis",
+      email: "emily@example.com",
+      date: "2025-05-11",
+      status: "Cancelled",
       total: 56.25,
-      items: 1
+      items: 1,
     },
-    { 
-      id: "ORD-007", 
-      customer: "David Miller", 
-      email: "david@example.com", 
-      date: "2025-05-10", 
-      status: "Delivered", 
-      total: 112.30,
-      items: 3
+    {
+      id: "ORD-007",
+      customer: "David Miller",
+      email: "david@example.com",
+      date: "2025-05-10",
+      status: "Delivered",
+      total: 112.3,
+      items: 3,
     },
+    {
+      id: "ORD-008",
+      customer: "Jane Smith",
+      email: "jane@example.com",
+      date: "2025-05-14",
+      status: "Processing",
+      total: 142.5,
+      items: 2,
+    },
+    {
+      id: "ORD-009",
+      customer: "Michael Brown",
+      email: "michael@example.com",
+      date: "2025-05-14",
+      status: "Shipped",
+      total: 67.25,
+      items: 1,
+    },
+    {
+      id: "ORD-010",
+      customer: "Sarah Wilson",
+      email: "sarah@example.com",
+      date: "2025-05-13",
+      status: "Processing",
+      total: 129.99,
+      items: 4,
+    },
+    {
+      id: "ORD-011",
+      customer: "Robert Jones",
+      email: "robert@example.com",
+      date: "2025-05-12",
+      status: "Delivered",
+      total: 94.75,
+      items: 2,
+    },
+    {
+      id: "ORD-012",
+      customer: "Emily Davis",
+      email: "emily@example.com",
+      date: "2025-05-11",
+      status: "Cancelled",
+      total: 56.25,
+      items: 1,
+    },
+    {
+      id: "ORD-013",
+      customer: "David Miller",
+      email: "david@example.com",
+      date: "2025-05-10",
+      status: "Delivered",
+      total: 112.3,
+      items: 3,
+    },
+    {
+      id: "ORD-014",
+      customer: "Jane Smith",
+      email: "jane@example.com",
+      date: "2025-05-14",
+      status: "Processing",
+      total: 142.5,
+      items: 2,
+    },
+    {
+      id: "ORD-015",
+      customer: "Michael Brown",
+      email: "michael@example.com",
+      date: "2025-05-14",
+      status: "Shipped",
+      total: 67.25,
+      items: 1,
+    },
+    {
+      id: "ORD-016",
+      customer: "Sarah Wilson",
+      email: "sarah@example.com",
+      date: "2025-05-13",
+      status: "Processing",
+      total: 129.99,
+      items: 4,
+    },
+    {
+      id: "ORD-017",
+      customer: "Robert Jones",
+      email: "robert@example.com",
+      date: "2025-05-12",
+      status: "Delivered",
+      total: 94.75,
+      items: 2,
+    },
+    {
+      id: "ORD-018",
+      customer: "Emily Davis",
+      email: "emily@example.com",
+      date: "2025-05-11",
+      status: "Cancelled",
+      total: 56.25,
+      items: 1,
+    },
+    {
+      id: "ORD-019",
+      customer: "David Miller",
+      email: "david@example.com",
+      date: "2025-05-10",
+      status: "Delivered",
+      total: 112.3,
+      items: 3,
+    },
+    {
+      id: "ORD-020",
+      customer: "Jane Smith",
+      email: "jane@example.com",
+      date: "2025-05-14",
+      status: "Processing",
+      total: 142.5,
+      items: 2,
+    },
+    {
+      id: "ORD-021",
+      customer: "Michael Brown",
+      email: "michael@example.com",
+      date: "2025-05-14",
+      status: "Shipped",
+      total: 67.25,
+      items: 1,
+    },
+    {
+      id: "ORD-022",
+      customer: "Sarah Wilson",
+      email: "sarah@example.com",
+      date: "2025-05-13",
+      status: "Processing",
+      total: 129.99,
+      items: 4,
+    },
+    {
+      id: "ORD-023",
+      customer: "Robert Jones",
+      email: "robert@example.com",
+      date: "2025-05-12",
+      status: "Delivered",
+      total: 94.75,
+      items: 2,
+    },
+    {
+      id: "ORD-024",
+      customer: "Emily Davis",
+      email: "emily@example.com",
+      date: "2025-05-11",
+      status: "Cancelled",
+      total: 56.25,
+      items: 1,
+    },
+    {
+      id: "ORD-025",
+      customer: "David Miller",
+      email: "david@example.com",
+      date: "2025-05-10",
+      status: "Delivered",
+      total: 112.3,
+      items: 3,
+    }
   ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Delivered": return "default";
-      case "Processing": return "secondary";
-      case "Shipped": return "secondary";
-      case "Cancelled": return "destructive";
-      default: return "default";
+      case "Delivered":
+        return "default";
+      case "Processing":
+        return "secondary";
+      case "Shipped":
+        return "secondary";
+      case "Cancelled":
+        return "destructive";
+      default:
+        return "default";
     }
   };
-  
+
   const handleViewOrder = (id: string) => {
     toast({
       title: "View Order",
       description: `Viewing details for order: ${id}`,
     });
   };
-  
+
   const handleUpdateStatus = (id: string) => {
     toast({
       title: "Update Status",
@@ -102,13 +275,15 @@ const AdminOrders: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-h-full h-full overflow-hidden flex flex-col">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Orders</h1>
-        <p className="text-muted-foreground">Manage customer orders and track shipments.</p>
+        <p className="text-muted-foreground">
+          Manage customer orders and track shipments.
+        </p>
       </div>
-      
-      <Tabs defaultValue="all">
+
+      <Tabs defaultValue="all" className="flex flex-col flex-1 min-h-0">
         <TabsList className="mb-4">
           <TabsTrigger value="all">All Orders</TabsTrigger>
           <TabsTrigger value="processing">Processing</TabsTrigger>
@@ -116,16 +291,16 @@ const AdminOrders: React.FC = () => {
           <TabsTrigger value="delivered">Delivered</TabsTrigger>
           <TabsTrigger value="cancelled">Cancelled</TabsTrigger>
         </TabsList>
-        
-        <TabsContent value="all">
-          <Card>
+
+        <TabsContent value="all" className="flex-1 min-h-0 overflow-hidden">
+          <Card className="h-full flex flex-col">
             <CardHeader>
               <CardTitle>All Orders</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="rounded-md border">
+            <CardContent className="pb-6 max-h-full flex-1 overflow-hidden rounded-md">
+              <div className="rounded-md border h-full overflow-hidden overflow-y-auto">
                 <Table>
-                  <TableHeader>
+                  <TableHeader className="sticky top-0 bg-background z-10">
                     <TableRow>
                       <TableHead>Order ID</TableHead>
                       <TableHead>Customer</TableHead>
@@ -139,10 +314,14 @@ const AdminOrders: React.FC = () => {
                   <TableBody>
                     {orders.map((order) => (
                       <TableRow key={order.id}>
-                        <TableCell className="font-medium">{order.id}</TableCell>
+                        <TableCell className="font-medium">
+                          {order.id}
+                        </TableCell>
                         <TableCell>
                           <div>{order.customer}</div>
-                          <div className="text-sm text-muted-foreground">{order.email}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {order.email}
+                          </div>
                         </TableCell>
                         <TableCell>{order.date}</TableCell>
                         <TableCell>{order.items}</TableCell>
@@ -177,17 +356,19 @@ const AdminOrders: React.FC = () => {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         {["processing", "shipped", "delivered", "cancelled"].map((tab) => (
-          <TabsContent key={tab} value={tab}>
-            <Card>
+          <TabsContent key={tab} value={tab} className="flex-1 min-h-0 overflow-hidden">
+            <Card className="h-full flex flex-col">
               <CardHeader>
-                <CardTitle>{tab.charAt(0).toUpperCase() + tab.slice(1)} Orders</CardTitle>
+                <CardTitle>
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)} Orders
+                </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="rounded-md border">
+              <CardContent className="pb-6 max-h-full flex-1 overflow-hidden rounded-md">
+                <div className="rounded-md border h-full overflow-hidden overflow-y-auto">
                   <Table>
-                    <TableHeader>
+                    <TableHeader className="sticky top-0 bg-background z-10">
                       <TableRow>
                         <TableHead>Order ID</TableHead>
                         <TableHead>Customer</TableHead>
@@ -200,13 +381,17 @@ const AdminOrders: React.FC = () => {
                     </TableHeader>
                     <TableBody>
                       {orders
-                        .filter(order => order.status.toLowerCase() === tab)
+                        .filter((order) => order.status.toLowerCase() === tab)
                         .map((order) => (
                           <TableRow key={order.id}>
-                            <TableCell className="font-medium">{order.id}</TableCell>
+                            <TableCell className="font-medium">
+                              {order.id}
+                            </TableCell>
                             <TableCell>
                               <div>{order.customer}</div>
-                              <div className="text-sm text-muted-foreground">{order.email}</div>
+                              <div className="text-sm text-muted-foreground">
+                                {order.email}
+                              </div>
                             </TableCell>
                             <TableCell>{order.date}</TableCell>
                             <TableCell>{order.items}</TableCell>

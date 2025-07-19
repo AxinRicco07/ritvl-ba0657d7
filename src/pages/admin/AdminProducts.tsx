@@ -1,244 +1,410 @@
-
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import React from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Trash, Plus, Search } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-
-// Define the product image type
-interface ProductImage {
-  id: string;
-  url: string;
-  isMain?: boolean;
-}
-
-// Define the product type
-interface Product {
-  id: number;
-  name: string;
-  category: string;
-  price: number;
-  stock: number;
-  status: string;
-  images: ProductImage[];
-}
 
 const AdminProducts: React.FC = () => {
   const { toast } = useToast();
-  const [searchTerm, setSearchTerm] = useState("");
-  
-  // Mock data for products with images and INR prices
-  const products: Product[] = [
-    { 
-      id: 1, 
-      name: "Sea Salt Body Scrub", 
-      category: "Salts Types", 
-      price: 2099, 
-      stock: 45, 
-      status: "In Stock",
-      images: [
-        { id: "1", url: "https://images.unsplash.com/photo-1500673922987-e212871fec22", isMain: true }
-      ]
+
+  // Mock data for products
+  const products = [
+    {
+      id: "PROD-001",
+      name: "Wireless Bluetooth Headphones",
+      sku: "WBH-001",
+      category: "Electronics",
+      price: 89.99,
+      stock: 45,
+      status: "Active",
+      created: "2025-04-15",
     },
-    { 
-      id: 2, 
-      name: "Lavender Bath Salt", 
-      category: "Lavender", 
-      price: 1550, 
-      stock: 32, 
-      status: "In Stock",
-      images: [
-        { id: "1", url: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21", isMain: true }
-      ]
+    {
+      id: "PROD-002",
+      name: "Smart Watch Pro",
+      sku: "SWP-002",
+      category: "Wearables",
+      price: 299.99,
+      stock: 23,
+      status: "Active",
+      created: "2025-04-10",
     },
-    { 
-      id: 3, 
-      name: "Rose Face Mask", 
-      category: "Rose", 
-      price: 2499, 
-      stock: 12, 
-      status: "Low Stock",
-      images: [
-        { id: "1", url: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9", isMain: true }
-      ] 
-    },
-    { 
-      id: 4, 
-      name: "Jasmine Shower Steamer", 
-      category: "Jasmine", 
-      price: 1339, 
-      stock: 0, 
+    {
+      id: "PROD-003",
+      name: "Gaming Mouse X1",
+      sku: "GMX-003",
+      category: "Gaming",
+      price: 45.99,
+      stock: 0,
       status: "Out of Stock",
-      images: [
-        { id: "1", url: "https://images.unsplash.com/photo-1582562124811-c09040d0a901", isMain: true }
-      ]
+      created: "2025-04-08",
     },
-    { 
-      id: 5, 
-      name: "Mogra Water Toner", 
-      category: "Mogra", 
-      price: 1875, 
-      stock: 28, 
-      status: "In Stock",
-      images: [
-        { id: "1", url: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07", isMain: true }
-      ]
+    {
+      id: "PROD-004",
+      name: "USB-C Hub",
+      sku: "UCH-004",
+      category: "Accessories",
+      price: 34.99,
+      stock: 67,
+      status: "Active",
+      created: "2025-04-05",
     },
-    { 
-      id: 6, 
-      name: "Lemon Grass Salt Soap", 
-      category: "Lemon Grass", 
-      price: 1083, 
-      stock: 50, 
-      status: "In Stock",
-      images: []
-    },
-    { 
-      id: 7, 
-      name: "Ocean Blue Bath Set", 
-      category: "Ocean Blue", 
-      price: 3750, 
-      stock: 15, 
-      status: "In Stock",
-      images: []
-    },
-    { 
-      id: 8, 
-      name: "Geranium Salt Scrub", 
-      category: "Geranium", 
-      price: 2249, 
-      stock: 8, 
+    {
+      id: "PROD-005",
+      name: "Mechanical Keyboard",
+      sku: "MKB-005",
+      category: "Computing",
+      price: 129.99,
+      stock: 15,
       status: "Low Stock",
-      images: []
+      created: "2025-04-02",
     },
+    {
+      id: "PROD-006",
+      name: "Portable Speaker",
+      sku: "PSP-006",
+      category: "Audio",
+      price: 79.99,
+      stock: 89,
+      status: "Active",
+      created: "2025-03-28",
+    },
+    {
+      id: "PROD-007",
+      name: "Laptop Stand",
+      sku: "LPS-007",
+      category: "Accessories",
+      price: 25.99,
+      stock: 156,
+      status: "Active",
+      created: "2025-03-25",
+    },
+    {
+      id: "PROD-008",
+      name: "Wireless Charger",
+      sku: "WCH-008",
+      category: "Charging",
+      price: 39.99,
+      stock: 3,
+      status: "Low Stock",
+      created: "2025-03-20",
+    },
+    {
+      id: "PROD-009",
+      name: "4K Webcam",
+      sku: "4KW-009",
+      category: "Video",
+      price: 159.99,
+      stock: 28,
+      status: "Active",
+      created: "2025-03-15",
+    },
+    {
+      id: "PROD-010",
+      name: "Phone Case Pro",
+      sku: "PCP-010",
+      category: "Accessories",
+      price: 19.99,
+      stock: 234,
+      status: "Active",
+      created: "2025-03-12",
+    },
+    {
+      id: "PROD-011",
+      name: "Bluetooth Earbuds",
+      sku: "BTE-011",
+      category: "Audio",
+      price: 69.99,
+      stock: 0,
+      status: "Out of Stock",
+      created: "2025-03-08",
+    },
+    {
+      id: "PROD-012",
+      name: "Tablet Stand",
+      sku: "TBS-012",
+      category: "Accessories",
+      price: 29.99,
+      stock: 78,
+      status: "Active",
+      created: "2025-03-05",
+    },
+    {
+      id: "PROD-013",
+      name: "Gaming Headset",
+      sku: "GHS-013",
+      category: "Gaming",
+      price: 99.99,
+      stock: 12,
+      status: "Low Stock",
+      created: "2025-03-01",
+    },
+    {
+      id: "PROD-014",
+      name: "Monitor Arm",
+      sku: "MNA-014",
+      category: "Computing",
+      price: 79.99,
+      stock: 45,
+      status: "Active",
+      created: "2025-02-25",
+    },
+    {
+      id: "PROD-015",
+      name: "Cable Organizer",
+      sku: "CBO-015",
+      category: "Organization",
+      price: 14.99,
+      stock: 189,
+      status: "Active",
+      created: "2025-02-20",
+    },
+    {
+      id: "PROD-016",
+      name: "Power Bank 20000mAh",
+      sku: "PB2-016",
+      category: "Charging",
+      price: 49.99,
+      stock: 56,
+      status: "Active",
+      created: "2025-02-15",
+    },
+    {
+      id: "PROD-017",
+      name: "Smart Light Bulb",
+      sku: "SLB-017",
+      category: "Smart Home",
+      price: 24.99,
+      stock: 123,
+      status: "Active",
+      created: "2025-02-10",
+    },
+    {
+      id: "PROD-018",
+      name: "Desk Pad XXL",
+      sku: "DPX-018",
+      category: "Accessories",
+      price: 34.99,
+      stock: 67,
+      status: "Active",
+      created: "2025-02-05",
+    },
+    {
+      id: "PROD-019",
+      name: "Car Phone Mount",
+      sku: "CPM-019",
+      category: "Automotive",
+      price: 22.99,
+      stock: 145,
+      status: "Active",
+      created: "2025-02-01",
+    },
+    {
+      id: "PROD-020",
+      name: "Noise Cancelling Headphones",
+      sku: "NCH-020",
+      category: "Audio",
+      price: 199.99,
+      stock: 8,
+      status: "Low Stock",
+      created: "2025-01-28",
+    }
   ];
 
-  const filteredProducts = products.filter(product => 
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  
-  const handleDeleteProduct = (id: number) => {
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "Active":
+        return "default";
+      case "Low Stock":
+        return "secondary";
+      case "Out of Stock":
+        return "destructive";
+      case "Discontinued":
+        return "destructive";
+      default:
+        return "default";
+    }
+  };
+
+  const handleViewProduct = (id: string) => {
     toast({
-      title: "Delete Product",
-      description: `Product with ID: ${id} would be deleted`,
-      variant: "destructive",
+      title: "View Product",
+      description: `Viewing details for product: ${id}`,
+    });
+  };
+
+  const handleEditProduct = (id: string) => {
+    toast({
+      title: "Edit Product",
+      description: `Editing product: ${id}`,
     });
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-h-full h-full overflow-hidden flex flex-col">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Products</h1>
-        <p className="text-muted-foreground">Manage your product inventory.</p>
+        <p className="text-muted-foreground">
+          Manage your product catalog and inventory.
+        </p>
       </div>
-      
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>All Products</CardTitle>
-          <Button asChild className="bg-blue-600 hover:bg-blue-500">
-            <Link to="/admin/products/add">
-              <Plus className="mr-2 h-4 w-4" />
-              Add Product
-            </Link>
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center mb-4">
-            <div className="relative w-full max-w-xs">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search products..."
-                className="pl-8 focus-visible:ring-blue-500"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-          </div>
-          
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Image</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Stock</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredProducts.map((product) => (
-                  <TableRow key={product.id}>
-                    <TableCell>
-                      <div className="w-12 h-12 rounded-md overflow-hidden">
-                        {product.images.length > 0 ? (
-                          <AspectRatio ratio={1 / 1}>
-                            <img 
-                              src={product.images.find(img => img.isMain)?.url || product.images[0].url} 
-                              alt={product.name} 
-                              className="object-cover w-full h-full"
-                            />
-                          </AspectRatio>
-                        ) : (
-                          <div className="w-full h-full bg-blue-100 flex items-center justify-center">
-                            <span className="text-blue-500 text-xs">No image</span>
-                          </div>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium">{product.name}</TableCell>
-                    <TableCell>{product.category}</TableCell>
-                    <TableCell>₹{product.price.toFixed(0)}</TableCell>
-                    <TableCell>{product.stock}</TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          product.status === "In Stock"
-                            ? "default"
-                            : product.status === "Low Stock"
-                            ? "secondary"
-                            : "destructive"
-                        }
-                        className={product.status === "In Stock" ? "bg-blue-600 hover:bg-blue-500" : ""}
-                      >
-                        {product.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        asChild
-                        className="hover:text-blue-600"
-                      >
-                        <Link to={`/admin/products/edit/${product.id}`}>
-                          <Edit className="h-4 w-4" />
-                        </Link>
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteProduct(product.id)}
-                        className="hover:text-destructive"
-                      >
-                        <Trash className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+
+      <Tabs defaultValue="all" className="flex flex-col flex-1 min-h-0">
+        <TabsList className="mb-4">
+          <TabsTrigger value="all">All Products</TabsTrigger>
+          <TabsTrigger value="active">Active</TabsTrigger>
+          <TabsTrigger value="low-stock">Low Stock</TabsTrigger>
+          <TabsTrigger value="out-of-stock">Out of Stock</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="all" className="flex-1 min-h-0 overflow-hidden">
+          <Card className="h-full flex flex-col">
+            <CardHeader>
+              <CardTitle>All Products</CardTitle>
+            </CardHeader>
+            <CardContent className="pb-6 max-h-full flex-1 overflow-hidden rounded-md">
+              <div className="rounded-md border h-full overflow-hidden overflow-y-auto">
+                <Table>
+                  <TableHeader className="sticky top-0 bg-background z-10">
+                    <TableRow>
+                      <TableHead>Product ID</TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead>SKU</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead>Price</TableHead>
+                      <TableHead>Stock</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {products.map((product) => (
+                      <TableRow key={product.id}>
+                        <TableCell className="font-medium">
+                          {product.id}
+                        </TableCell>
+                        <TableCell>{product.name}</TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {product.sku}
+                        </TableCell>
+                        <TableCell>{product.category}</TableCell>
+                        <TableCell>${product.price.toFixed(2)}</TableCell>
+                        <TableCell>{product.stock}</TableCell>
+                        <TableCell>
+                          <Badge variant={getStatusColor(product.status)}>
+                            {product.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="mr-2"
+                            onClick={() => handleViewProduct(product.id)}
+                          >
+                            View
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEditProduct(product.id)}
+                          >
+                            Edit
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {["active", "low-stock", "out-of-stock"].map((tab) => (
+          <TabsContent key={tab} value={tab} className="flex-1 min-h-0 overflow-hidden">
+            <Card className="h-full flex flex-col">
+              <CardHeader>
+                <CardTitle>
+                  {tab === "low-stock" ? "Low Stock" : tab === "out-of-stock" ? "Out of Stock" : "Active"} Products
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pb-6 max-h-full flex-1 overflow-hidden rounded-md">
+                <div className="rounded-md border h-full overflow-hidden overflow-y-auto">
+                  <Table>
+                    <TableHeader className="sticky top-0 bg-background z-10">
+                      <TableRow>
+                        <TableHead>Product ID</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>SKU</TableHead>
+                        <TableHead>Category</TableHead>
+                        <TableHead>Price</TableHead>
+                        <TableHead>Stock</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {products
+                        .filter((product) => {
+                          if (tab === "active") return product.status === "Active";
+                          if (tab === "low-stock") return product.status === "Low Stock";
+                          if (tab === "out-of-stock") return product.status === "Out of Stock";
+                          return true;
+                        })
+                        .map((product) => (
+                          <TableRow key={product.id}>
+                            <TableCell className="font-medium">
+                              {product.id}
+                            </TableCell>
+                            <TableCell>{product.name}</TableCell>
+                            <TableCell className="text-sm text-muted-foreground">
+                              {product.sku}
+                            </TableCell>
+                            <TableCell>{product.category}</TableCell>
+                            <TableCell>${product.price.toFixed(2)}</TableCell>
+                            <TableCell>{product.stock}</TableCell>
+                            <TableCell>
+                              <Badge variant={getStatusColor(product.status)}>
+                                {product.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="mr-2"
+                                onClick={() => handleViewProduct(product.id)}
+                              >
+                                View
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleEditProduct(product.id)}
+                              >
+                                Edit
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        ))}
+      </Tabs>
     </div>
   );
 };

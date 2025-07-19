@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 import Index from "./pages/Index";
 import Products from "./pages/Products";
@@ -24,8 +24,15 @@ import AdminProducts from "./pages/admin/AdminProducts";
 import AdminProductForm from "./pages/admin/AdminProductForm";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminCustomers from "./pages/admin/AdminCustomers";
+import UserAuthPage from "./components/auth/UserAuth";
 
 const queryClient = new QueryClient();
+
+//  Wrapper to protect admin routes
+const RequireAuth = () => {
+  const isAuthenticated = localStorage.getItem("isAuthenticated");
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -34,7 +41,10 @@ const App = () => (
         <Toaster />
         <BrowserRouter>
           <Routes>
-            {/* Public Routes with Layout */}
+            {/* Login Page */}
+            <Route path="/login" element={<UserAuthPage />} />
+
+            {/* Public Routes */}
             <Route element={<Layout />}>
               <Route path="/" element={<Index />} />
               <Route path="/products" element={<Products />} />
@@ -42,23 +52,22 @@ const App = () => (
               <Route path="/cart" element={<Cart />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/orders" element={<Orders />} />
-              <Route
-                path="/tracking-order/:orderId"
-                element={<TrackingOrder />}
-              />
+              <Route path="/tracking-order/:orderId" element={<TrackingOrder />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
               <Route path="*" element={<NotFound />} />
             </Route>
 
-            {/* Admin Route with a different layout */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="products" element={<AdminProducts />} />
-              <Route path="products/add" element={<AdminProductForm />} />
-              <Route path="products/edit/:id" element={<AdminProductForm />} />
-              <Route path="orders" element={<AdminOrders />} />
-              <Route path="customers" element={<AdminCustomers />} />
+            {/*  Protected Admin Routes */}
+            <Route element={<RequireAuth />}>
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="products" element={<AdminProducts />} />
+                <Route path="products/add" element={<AdminProductForm />} />
+                <Route path="products/edit/:id" element={<AdminProductForm />} />
+                <Route path="orders" element={<AdminOrders />} />
+                <Route path="customers" element={<AdminCustomers />} />
+              </Route>
             </Route>
           </Routes>
         </BrowserRouter>

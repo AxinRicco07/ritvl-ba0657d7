@@ -220,11 +220,11 @@ export default function ProductDetail() {
 
           <div className="flex items-baseline gap-2 mb-6">
             <span className="text-2xl font-medium">
-              {formatINRWithPaisa(product.price.sp)}
+              {formatINRWithPaisa(product.price.sp * 100)}
             </span>
             {product.price.mrp && (
               <span className="text-sm text-muted-foreground line-through">
-                {formatINRWithPaisa(product.price.mrp)}
+                {formatINRWithPaisa(product.price.mrp * 100)}
               </span>
             )}
           </div>
