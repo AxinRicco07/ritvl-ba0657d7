@@ -1,7 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -10,156 +19,123 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { FlaskConical, ArrowLeft, Save, PackagePlus } from "lucide-react";
+import { Save, ArrowLeft, PackagePlus, FlaskConical } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ProductImageUploader from "@/components/admin/ProductImageUploader";
-
-// Types
-interface ProductImage {
-  id: string;
-  url: string;
-  file?: File;
-  isMain?: boolean;
-}
-
-interface Product {
-  id: number;
-  name: string;
-  category: string;
-  price: number;
-  stock: number;
-  status: string;
-  description?: string;
-  images: ProductImage[];
-}
+import { fetchPrefix } from "@/utils/fetch";
+import { CreateProduct, PublicProduct } from "@/types/product";
+import MultipleProductsSelect from "@/components/admin/RelatedProductSelect";
 
 const AdminProductForm: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { id } = useParams();
   const isEditMode = Boolean(id);
 
-  const [product, setProduct] = useState<Product>({
-    id: 0,
+  const [product, setProduct] = useState<CreateProduct>({
     name: "",
-    category: "",
-    price: 0,
-    stock: 0,
-    status: "In Stock",
     description: "",
+    shortDescription: "",
+    sku: "",
+    slug: "",
+    price: { sp: 0, mrp: 0, discount: 0 },
     images: [],
+    variants: { size: [], fragranceStrength: [] },
+    details: "",
+    ingredients: "",
+    howToUse: "",
+    benefits: [""],
+    ratings: { average: 0, count: 0 },
+    tags: [""],
+    category: { name: "" },
+    relatedProducts: [""],
+    packaging: {
+      weight: 1,
+      dimensions: { length: 1, width: 1, height: 1 },
+    },
+    productType: "salt",
+    inventoryId: "",
   });
+
+  const [qty, setQty] = useState(1);
+
+  const setProductPayload = useCallback(
+    (updater: (prev: CreateProduct) => CreateProduct) => {
+      setProduct(updater);
+    },
+    []
+  );
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const categories = [
-    "Salts Types",
-    "Mogra",
-    "Lavender",
-    "Rose",
-    "Jasmine",
-    "Lemon Grass",
-    "Cinnamon",
-    "Ocean Blue",
-    "Geranium",
-  ];
-
-  const mockProducts: Product[] = [
-    {
-      id: 1,
-      name: "Sea Salt Body Scrub",
-      category: "Salts Types",
-      price: 2099,
-      stock: 45,
-      status: "In Stock",
-      description: "Exfoliating scrub with sea salt minerals",
-      images: [
-        {
-          id: "1",
-          url: "https://images.unsplash.com/photo-1500673922987-e212871fec22",
-          isMain: true,
-        },
-        {
-          id: "2",
-          url: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21",
-        },
-      ],
+  const {
+    data: productsList = [],
+    isLoading: isRelatedProductsLoading,
+    isError,
+  } = useQuery<PublicProduct[]>({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const res = await fetch(`${fetchPrefix}/api/products`, {
+        method: "GET",
+      });
+      if (!res.ok) throw new Error("Failed to fetch products");
+      return res.json();
     },
-    {
-      id: 2,
-      name: "Lavender Bath Salt",
-      category: "Lavender",
-      price: 1550,
-      stock: 32,
-      status: "In Stock",
-      description: "Relaxing bath salt infused with lavender",
-      images: [
-        {
-          id: "1",
-          url: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9",
-          isMain: true,
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: "Rose Face Mask",
-      category: "Rose",
-      price: 2499,
-      stock: 12,
-      status: "Low Stock",
-      description: "Refreshing face mask with rose essence",
-      images: [
-        {
-          id: "1",
-          url: "https://images.unsplash.com/photo-1582562124811-c09040d0a901",
-          isMain: true,
-        },
-      ],
-    },
-  ];
+  });
 
-  useEffect(() => {
-    if (isEditMode && id) {
-      setIsLoading(true);
-      setTimeout(() => {
-        const foundProduct = mockProducts.find((p) => p.id === Number(id));
-        if (foundProduct) {
-          setProduct(foundProduct);
-        } else {
-          toast({
-            title: "Product not found",
-            description: `No product found with ID: ${id}`,
-            variant: "destructive",
-          });
-          navigate("/admin/products");
-        }
-        setIsLoading(false);
-      }, 500);
-    }
-  }, [id, isEditMode, navigate, toast]);
+  const inventoryMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`${fetchPrefix}/api/inventory`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sku: product.sku,
+          quantity: qty,
+          inStock: true,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to create inventory");
+      return res.json();
+    },
+  });
 
-  const handleChange = (
-    field: keyof Product,
-    value: string | number | ProductImage[]
-  ) => {
+  const productMutation = useMutation({
+    mutationFn: async (inventoryId: string) => {
+      const res = await fetch(`${fetchPrefix}/api/products`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...product, inventoryId }),
+      });
+      if (!res.ok) throw new Error("Failed to create product");
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Product Created",
+        description: `Product "${product.name}" created successfully!`,
+      });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      navigate("/admin/products");
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Something went wrong while creating product.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleChange = (field: string, value: any) => {
     setProduct((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
 
     if (product.images.length === 0) {
       toast({
@@ -167,20 +143,27 @@ const AdminProductForm: React.FC = () => {
         description: "Please add at least one product image",
         variant: "destructive",
       });
-      setIsLoading(false);
       return;
     }
 
-    setTimeout(() => {
+    setIsLoading(true);
+
+    try {
+      const inventory = await inventoryMutation.mutateAsync();
+      const newProduct = await productMutation.mutateAsync(inventory.id);
       toast({
-        title: isEditMode ? "Product Updated" : "Product Created",
-        description: isEditMode
-          ? `Product "${product.name}" was updated successfully`
-          : `Product "${product.name}" was created successfully`,
+        title: "Product Created",
+        description: `Product "${newProduct.id}" created successfully!`,
+      })
+    } catch (error) {
+      toast({
+        title: "Submission Failed",
+        description: String(error),
+        variant: "destructive",
       });
+    } finally {
       setIsLoading(false);
-      navigate("/admin/products");
-    }, 800);
+    }
   };
 
   return (
@@ -208,7 +191,7 @@ const AdminProductForm: React.FC = () => {
       </div>
 
       {/* Form Card */}
-      <Card className="border-blue-100">
+      <Card>
         <CardHeader className="bg-blue-50/50">
           <CardTitle className="flex items-center gap-2">
             {isEditMode ? (
@@ -233,124 +216,198 @@ const AdminProductForm: React.FC = () => {
 
             {/* Grid Inputs */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Product Name */}
-              <div className="space-y-2">
-                <Label htmlFor="name">Product Name</Label>
-                <Input
-                  id="name"
-                  value={product.name}
-                  onChange={(e) => handleChange("name", e.target.value)}
-                  placeholder="Enter product name"
-                  className="focus-visible:ring-blue-500"
-                  required
-                />
-              </div>
+              {[
+                { label: "Name", key: "name" },
+                { label: "SKU", key: "sku" },
+                { label: "Slug", key: "slug" },
+                { label: "Short Description", key: "shortDescription" },
+              ].map(({ label, key }) => (
+                <div key={key} className="space-y-2">
+                  <Label>{label}</Label>
+                  <Input
+                    value={(product as any)[key]}
+                    onChange={(e) => handleChange(key, e.target.value)}
+                    required
+                  />
+                </div>
+              ))}
 
               {/* Category */}
               <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
-                <Select
-                  value={product.category}
-                  onValueChange={(value) => handleChange("category", value)}
-                >
-                  <SelectTrigger
-                    id="category"
-                    className="focus-visible:ring-blue-500"
-                  >
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Price */}
-              <div className="space-y-2">
-                <Label htmlFor="price">Price (₹)</Label>
+                <Label>Category</Label>
                 <Input
-                  id="price"
-                  type="number"
-                  step="1"
-                  min="0"
-                  value={product.price}
+                  value={product.category.name}
                   onChange={(e) =>
-                    handleChange("price", parseInt(e.target.value))
+                    setProduct((prev) => ({
+                      ...prev,
+                      category: { name: e.target.value },
+                    }))
                   }
-                  className="focus-visible:ring-blue-500"
-                  required
                 />
               </div>
 
-              {/* Stock */}
-              <div className="space-y-2">
-                <Label htmlFor="stock">Stock</Label>
-                <Input
-                  id="stock"
-                  type="number"
-                  min="0"
-                  value={product.stock}
-                  onChange={(e) =>
-                    handleChange("stock", parseInt(e.target.value))
-                  }
-                  className="focus-visible:ring-blue-500"
-                  required
-                />
-              </div>
+              {/* Price fields */}
+              {["mrp", "sp", "discount"].map((priceKey) => (
+                <div key={priceKey} className="space-y-2">
+                  <Label>{priceKey.toUpperCase()}</Label>
+                  <Input
+                    step="0.01"
+                    type="number"
+                    value={
+                      product.price[priceKey as keyof typeof product.price]
+                    }
+                    onChange={(e) =>
+                      setProduct((prev) => ({
+                        ...prev,
+                        price: {
+                          ...prev.price,
+                          [priceKey]: parseFloat(e.target.value),
+                        },
+                      }))
+                    }
+                    min={0}
+                  />
+                </div>
+              ))}
 
-              {/* Status */}
+              {/* Product Type */}
               <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Select
-                  value={product.status}
-                  onValueChange={(value) => handleChange("status", value)}
-                >
-                  <SelectTrigger
-                    id="status"
-                    className="focus-visible:ring-blue-500"
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="In Stock">In Stock</SelectItem>
-                    <SelectItem value="Low Stock">Low Stock</SelectItem>
-                    <SelectItem value="Out of Stock">Out of Stock</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label>Product Type</Label>
+                <Input
+                  value={product.productType}
+                  onChange={(e) => handleChange("productType", e.target.value)}
+                />
               </div>
             </div>
 
-            {/* Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={product.description || ""}
-                onChange={(e) => handleChange("description", e.target.value)}
-                placeholder="Enter product description"
-                className="min-h-[100px] focus-visible:ring-blue-500"
-              />
+            {/* Textarea fields */}
+            {["description", "details", "ingredients", "howToUse"].map(
+              (key) => (
+                <div key={key} className="space-y-2">
+                  <Label>{key.replace(/([A-Z])/g, " $1")}</Label>
+                  <Textarea
+                    value={(product as any)[key]}
+                    onChange={(e) => handleChange(key, e.target.value)}
+                    className="min-h-[80px]"
+                  />
+                </div>
+              )
+            )}
+
+            {/* Arrays */}
+            {["Benefits", "Tags"].map((key) => (
+              <div key={key} className="space-y-2">
+                <Label>{key}</Label>
+                <Textarea
+                  placeholder="Separate values by comma"
+                  value={(
+                    (key.includes(".")
+                      ? key.split(".").reduce((a, b) => a[b], product)
+                      : (product as any)[key]) || []
+                  ).join(", ")}
+                  onChange={(e) => {
+                    const value = e.target.value
+                      .split(",")
+                      .map((v) => v.trim());
+                    if (key.includes(".")) {
+                      const [parent, child] = key.split(".");
+                      setProduct((prev) => ({
+                        ...prev,
+                        [parent]: {
+                          ...prev[parent as keyof typeof prev],
+                          [child]: value,
+                        },
+                      }));
+                    } else {
+                      handleChange(key, value);
+                    }
+                  }}
+                />
+              </div>
+            ))}
+
+            <MultipleProductsSelect
+              products={productsList.map((p) => {
+                return {
+                  id: p.id,
+                  name: p.name,
+                  image:
+                    p.images.filter((img) => img.isPrimary)[0]?.url ||
+                    "/placeholder.svg",
+                  price: p.price.sp,
+                  category: p.category.name,
+                  description: p.shortDescription || "",
+                };
+              })}
+              setProductPayload={setProductPayload}
+            />
+
+            {/* Packaging */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="space-y-2">
+                <Label>Weight (g)</Label>
+                <Input
+                  type="number"
+                  value={product.packaging.weight}
+                  onChange={(e) =>
+                    setProduct((prev) => ({
+                      ...prev,
+                      packaging: {
+                        ...prev.packaging,
+                        weight: parseFloat(e.target.value),
+                      },
+                    }))
+                  }
+                />
+              </div>
+              {["Length", "Width", "Height", "Quantity"].map((dim) => (
+                <div key={dim} className="space-y-2">
+                  <Label>{dim}</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={
+                     dim === "Quantity"
+                        ? qty
+                        : product.packaging.dimensions[dim.toLowerCase()]
+                    }
+                    min={dim === "Quantity" ? 1 : 0}
+                    onChange={(e) => {
+                      if (dim === "Quantity") {
+                        setQty(parseInt(e.target.value, 10));
+                      } else {
+                        setProduct((prev) => ({
+                        ...prev,
+                        packaging: {
+                          ...prev.packaging,
+                          dimensions: {
+                            ...prev.packaging.dimensions,
+                            [dim]: parseFloat(e.target.value),
+                          },
+                        },
+                      }))
+                      }
+                    }}
+                  />
+                </div>
+              ))}
             </div>
           </CardContent>
 
-          <CardFooter className="flex pt-4 justify-end space-x-4 bg-blue-50/30 border-t border-blue-100">
+          <CardFooter className="flex justify-end space-x-4 bg-blue-50/30 border-t border-blue-100 pt-4">
             <Button
               type="button"
               variant="outline"
               onClick={() => navigate("/admin/products")}
-              disabled={isLoading}
               className="border-blue-200 hover:bg-blue-50"
+              disabled={isLoading}
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              disabled={isLoading}
               className="bg-blue-600 hover:bg-blue-500 text-white flex gap-2"
+              disabled={isLoading}
             >
               <Save className="h-4 w-4" />
               {isLoading ? "Saving..." : "Save Product"}

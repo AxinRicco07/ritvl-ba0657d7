@@ -11,7 +11,7 @@ interface ProductImage {
   id: string;
   url: string;
   file?: File;
-  isMain?: boolean;
+  isPrimary?: boolean;
 }
 
 interface ProductImageUploaderProps {
@@ -34,7 +34,7 @@ const ProductImageUploader: React.FC<ProductImageUploaderProps> = ({ images, onC
           id: crypto.randomUUID(),
           url: imageUrl,
           file: file,
-          isMain: newImages.length === 0, // First image is main by default
+          isPrimary: newImages.length === 0, // First image is main by default
         });
       });
       
@@ -50,7 +50,7 @@ const ProductImageUploader: React.FC<ProductImageUploaderProps> = ({ images, onC
       const newImage = {
         id: crypto.randomUUID(),
         url: imageUrl,
-        isMain: images.length === 0, // First image is main by default
+        isPrimary: images.length === 0, // First image is main by default
       };
       
       onChange([...images, newImage]);
@@ -62,8 +62,8 @@ const ProductImageUploader: React.FC<ProductImageUploaderProps> = ({ images, onC
     const updatedImages = images.filter(img => img.id !== id);
     
     // If we removed the main image, set the first remaining image as main
-    if (images.find(img => img.id === id)?.isMain && updatedImages.length > 0) {
-      updatedImages[0].isMain = true;
+    if (images.find(img => img.id === id)?.isPrimary && updatedImages.length > 0) {
+      updatedImages[0].isPrimary = true;
     }
     
     onChange(updatedImages);
@@ -72,7 +72,7 @@ const ProductImageUploader: React.FC<ProductImageUploaderProps> = ({ images, onC
   const handleSetMainImage = (id: string) => {
     const updatedImages = images.map(img => ({
       ...img,
-      isMain: img.id === id
+      isPrimary: img.id === id
     }));
     
     onChange(updatedImages);
@@ -137,7 +137,7 @@ const ProductImageUploader: React.FC<ProductImageUploaderProps> = ({ images, onC
           <Label className="mb-3 block">Product Images</Label>
           <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-4">
             {images.map((image) => (
-              <Card key={image.id} className={`relative overflow-hidden  group ${image.isMain ? 'ring-2 ring-blue-500' : ''}`}>
+              <Card key={image.id} className={`relative overflow-hidden  group ${image.isPrimary ? 'ring-2 ring-blue-500' : ''}`}>
                 <CardContent className="p-0">
                   <div className="aspect-square relative">
                     <img 
@@ -146,7 +146,7 @@ const ProductImageUploader: React.FC<ProductImageUploaderProps> = ({ images, onC
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                      {!image.isMain && (
+                      {!image.isPrimary && (
                         <Button 
                           variant="secondary" 
                           size="sm"
@@ -165,7 +165,7 @@ const ProductImageUploader: React.FC<ProductImageUploaderProps> = ({ images, onC
                         <X className="h-4 w-4" />
                       </Button>
                     </div>
-                    {image.isMain && (
+                    {image.isPrimary && (
                       <span className="absolute top-1 right-1 bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded">
                         Main
                       </span>

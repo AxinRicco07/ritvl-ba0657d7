@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -14,221 +14,67 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { PackagePlus } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPrefix } from "@/utils/fetch";
+import { InventoryRecord, PublicProduct } from "@/types/product";
+
+type ProductInventoryRecord = PublicProduct & {
+  quantity: number;
+  status: 'active' | 'low-stock' | 'out-of-stock'
+};
+
+
 
 const AdminProducts: React.FC = () => {
   const { toast } = useToast();
 
-  // Mock data for products
-  const products = [
-    {
-      id: "PROD-001",
-      name: "Wireless Bluetooth Headphones",
-      sku: "WBH-001",
-      category: "Electronics",
-      price: 89.99,
-      stock: 45,
-      status: "Active",
-      created: "2025-04-15",
+  const {
+    data: productsList,
+    isFetching,
+    isError,
+  } = useQuery<PublicProduct[]>({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const res = await fetch(`${fetchPrefix}/api/products`);
+      if (!res.ok) throw new Error("Failed to fetch products");
+      return res.json();
     },
-    {
-      id: "PROD-002",
-      name: "Smart Watch Pro",
-      sku: "SWP-002",
-      category: "Wearables",
-      price: 299.99,
-      stock: 23,
-      status: "Active",
-      created: "2025-04-10",
+  });
+
+  const { data: inventoryList, isFetching: isInventoryFetching } = useQuery<InventoryRecord[]>({
+    queryKey: ["inventory"],
+    queryFn: async () => {
+      const res = await fetch(`${fetchPrefix}/api/inventory/list`);
+      if (!res.ok) throw new Error("Failed to fetch inventory");
+      return res.json();
     },
-    {
-      id: "PROD-003",
-      name: "Gaming Mouse X1",
-      sku: "GMX-003",
-      category: "Gaming",
-      price: 45.99,
-      stock: 0,
-      status: "Out of Stock",
-      created: "2025-04-08",
-    },
-    {
-      id: "PROD-004",
-      name: "USB-C Hub",
-      sku: "UCH-004",
-      category: "Accessories",
-      price: 34.99,
-      stock: 67,
-      status: "Active",
-      created: "2025-04-05",
-    },
-    {
-      id: "PROD-005",
-      name: "Mechanical Keyboard",
-      sku: "MKB-005",
-      category: "Computing",
-      price: 129.99,
-      stock: 15,
-      status: "Low Stock",
-      created: "2025-04-02",
-    },
-    {
-      id: "PROD-006",
-      name: "Portable Speaker",
-      sku: "PSP-006",
-      category: "Audio",
-      price: 79.99,
-      stock: 89,
-      status: "Active",
-      created: "2025-03-28",
-    },
-    {
-      id: "PROD-007",
-      name: "Laptop Stand",
-      sku: "LPS-007",
-      category: "Accessories",
-      price: 25.99,
-      stock: 156,
-      status: "Active",
-      created: "2025-03-25",
-    },
-    {
-      id: "PROD-008",
-      name: "Wireless Charger",
-      sku: "WCH-008",
-      category: "Charging",
-      price: 39.99,
-      stock: 3,
-      status: "Low Stock",
-      created: "2025-03-20",
-    },
-    {
-      id: "PROD-009",
-      name: "4K Webcam",
-      sku: "4KW-009",
-      category: "Video",
-      price: 159.99,
-      stock: 28,
-      status: "Active",
-      created: "2025-03-15",
-    },
-    {
-      id: "PROD-010",
-      name: "Phone Case Pro",
-      sku: "PCP-010",
-      category: "Accessories",
-      price: 19.99,
-      stock: 234,
-      status: "Active",
-      created: "2025-03-12",
-    },
-    {
-      id: "PROD-011",
-      name: "Bluetooth Earbuds",
-      sku: "BTE-011",
-      category: "Audio",
-      price: 69.99,
-      stock: 0,
-      status: "Out of Stock",
-      created: "2025-03-08",
-    },
-    {
-      id: "PROD-012",
-      name: "Tablet Stand",
-      sku: "TBS-012",
-      category: "Accessories",
-      price: 29.99,
-      stock: 78,
-      status: "Active",
-      created: "2025-03-05",
-    },
-    {
-      id: "PROD-013",
-      name: "Gaming Headset",
-      sku: "GHS-013",
-      category: "Gaming",
-      price: 99.99,
-      stock: 12,
-      status: "Low Stock",
-      created: "2025-03-01",
-    },
-    {
-      id: "PROD-014",
-      name: "Monitor Arm",
-      sku: "MNA-014",
-      category: "Computing",
-      price: 79.99,
-      stock: 45,
-      status: "Active",
-      created: "2025-02-25",
-    },
-    {
-      id: "PROD-015",
-      name: "Cable Organizer",
-      sku: "CBO-015",
-      category: "Organization",
-      price: 14.99,
-      stock: 189,
-      status: "Active",
-      created: "2025-02-20",
-    },
-    {
-      id: "PROD-016",
-      name: "Power Bank 20000mAh",
-      sku: "PB2-016",
-      category: "Charging",
-      price: 49.99,
-      stock: 56,
-      status: "Active",
-      created: "2025-02-15",
-    },
-    {
-      id: "PROD-017",
-      name: "Smart Light Bulb",
-      sku: "SLB-017",
-      category: "Smart Home",
-      price: 24.99,
-      stock: 123,
-      status: "Active",
-      created: "2025-02-10",
-    },
-    {
-      id: "PROD-018",
-      name: "Desk Pad XXL",
-      sku: "DPX-018",
-      category: "Accessories",
-      price: 34.99,
-      stock: 67,
-      status: "Active",
-      created: "2025-02-05",
-    },
-    {
-      id: "PROD-019",
-      name: "Car Phone Mount",
-      sku: "CPM-019",
-      category: "Automotive",
-      price: 22.99,
-      stock: 145,
-      status: "Active",
-      created: "2025-02-01",
-    },
-    {
-      id: "PROD-020",
-      name: "Noise Cancelling Headphones",
-      sku: "NCH-020",
-      category: "Audio",
-      price: 199.99,
-      stock: 8,
-      status: "Low Stock",
-      created: "2025-01-28",
-    },
-  ];
+  });
+
+  const [products, setProducts] = useState<ProductInventoryRecord[]>([]);
+
+  useEffect(() => {
+    if (productsList && inventoryList) {
+      const combinedData = productsList.map((product) => {
+        const inventoryItem = inventoryList.find(
+          (item: ProductInventoryRecord) => item.sku === product.sku
+        );
+        return {
+          ...product,
+          quantity: inventoryItem?.quantity || 0,
+          status: (inventoryItem.quantity >= (inventoryItem.fewStocks ??  100) && inventoryItem.inStock) ? 'active' : (inventoryItem.quantity < (inventoryItem.fewStocks ?? 100) && inventoryItem.inStock) ? 'low-stock' : 'out-of-stock'
+        };
+      });
+      setProducts(combinedData);
+    }
+  }, [productsList, inventoryList])
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Active":
+      case "active":
         return "default";
-      case "Low Stock":
+      case "low-stock":
         return "secondary";
-      case "Out of Stock":
+      case "out-of-stock":
         return "destructive";
       case "Discontinued":
         return "destructive";
@@ -276,7 +122,10 @@ const AdminProducts: React.FC = () => {
               </CardTitle>
               <div>
                 <Button variant="outline">
-                  <Link className="inline-flex items-center justify-center space-x-2" to="add">
+                  <Link
+                    className="inline-flex items-center justify-center space-x-2"
+                    to="add"
+                  >
                     <PackagePlus />
                     <span>Add Product</span>
                   </Link>
@@ -308,9 +157,9 @@ const AdminProducts: React.FC = () => {
                         <TableCell className="text-sm text-muted-foreground">
                           {product.sku}
                         </TableCell>
-                        <TableCell>{product.category}</TableCell>
-                        <TableCell>${product.price.toFixed(2)}</TableCell>
-                        <TableCell>{product.stock}</TableCell>
+                        <TableCell>{product.category.name}</TableCell>
+                        <TableCell>₹{product.price.sp}</TableCell>
+                        <TableCell>{product.quantity}</TableCell>
                         <TableCell>
                           <Badge variant={getStatusColor(product.status)}>
                             {product.status}
@@ -378,11 +227,11 @@ const AdminProducts: React.FC = () => {
                       {products
                         .filter((product) => {
                           if (tab === "active")
-                            return product.status === "Active";
+                            return product.status === "active";
                           if (tab === "low-stock")
-                            return product.status === "Low Stock";
+                            return product.status === "low-stock";
                           if (tab === "out-of-stock")
-                            return product.status === "Out of Stock";
+                            return product.status === "out-of-stock";
                           return true;
                         })
                         .map((product) => (
@@ -394,9 +243,9 @@ const AdminProducts: React.FC = () => {
                             <TableCell className="text-sm text-muted-foreground">
                               {product.sku}
                             </TableCell>
-                            <TableCell>{product.category}</TableCell>
-                            <TableCell>${product.price.toFixed(2)}</TableCell>
-                            <TableCell>{product.stock}</TableCell>
+                            <TableCell>{product.category.name}</TableCell>
+                            <TableCell>₹{product.price.sp.toFixed(2)}</TableCell>
+                            <TableCell>{product.quantity}</TableCell>
                             <TableCell>
                               <Badge variant={getStatusColor(product.status)}>
                                 {product.status}

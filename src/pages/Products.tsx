@@ -536,21 +536,24 @@ const ProductCard = ({ product }: { product: PublicProduct }) => {
       productId: product.id,
       name: product.name,
       price: product.price,
-      image: product.images.filter((img) => img.isPrimary)[0].url,
+      image: product.images.find((img) => img.isPrimary)?.url || "/fallback.jpg",
       sku: product.sku,
     });
   };
+
+  const primaryImage = product.images.find((img) => img.isPrimary)?.url || "/fallback.jpg";
+  const averageRating = Math.floor(product.ratings?.average || 0);
 
   return (
     <Link to={`/product/${product.id}`} className="block">
       <div className="product-card bg-white rounded-lg overflow-hidden border border-border hover:border-primary/30 shadow-sm">
         <div className="aspect-square bg-secondary/30 relative overflow-hidden">
           <img
-            src={product.images.filter((img) => img.isPrimary)[0].url}
+            src={primaryImage}
             alt={product.name}
             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
           />
-          {product.tags.includes("new") && (
+          {product.tags?.includes("new") && (
             <span className="absolute top-2 right-2 bg-primary text-white text-xs px-2 py-1 rounded">
               New
             </span>
@@ -565,19 +568,17 @@ const ProductCard = ({ product }: { product: PublicProduct }) => {
               <Star
                 key={i}
                 className={`h-3 w-3 ${
-                  i < Math.floor(product.ratings.average)
-                    ? "fill-primary text-primary"
-                    : "text-gray-300"
+                  i < averageRating ? "fill-primary text-primary" : "text-gray-300"
                 }`}
               />
             ))}
             <span className="text-xs text-muted-foreground ml-1">
-              ({product.ratings.count})
+              ({product.ratings?.count || 0})
             </span>
           </div>
           <div className="flex justify-between items-center">
             <span className="font-medium">
-              {formatINRWithPaisa(product.price.sp * 100)}
+              {formatINRWithPaisa(product.price?.sp * 100 || 0)}
             </span>
             <Button
               size="sm"
