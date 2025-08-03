@@ -25,13 +25,14 @@ import AdminProductForm from "./pages/admin/AdminProductForm";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminCustomers from "./pages/admin/AdminCustomers";
 import UserAuthPage from "./components/auth/UserAuth";
+import AdminAuth from "./pages/admin/AdminAuth";
 
 const queryClient = new QueryClient();
 
 //  Wrapper to protect admin routes
 const RequireAuth = () => {
   const isAuthenticated = localStorage.getItem("isAuthenticated");
-  // return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/admin/login" />;
   return <Outlet />
 };
 
@@ -63,6 +64,7 @@ const App = () => (
             <Route element={<RequireAuth />}>
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
+                <Route path="login" element={<AdminAuth />} />
                 <Route path="products" element={<AdminProducts />} />
                 <Route path="products/add" element={<AdminProductForm />} />
                 <Route path="products/edit/:id" element={<AdminProductForm />} />

@@ -77,6 +77,7 @@ interface Order {
   };
   orderDate: string;
   status: string;
+  shipmentId?: string; // Optional for future use
   trackingUrl?: string; // Optional for future use
 }
 
@@ -116,6 +117,7 @@ export default function Orders() {
             },
             orderDate: order.orderDate,
             trackingUrl: order.trackingUrl,
+            shipmentId: order.shipmentId,
             status: "Confirmed", // Default status
           };
         });
@@ -324,7 +326,7 @@ export default function Orders() {
               {/* Action Buttons */}
               <div className="flex gap-3 pt-4">
                 <Button asChild className="flex-1">
-                  <Link to={`/tracking-order/${order.id}`}>Track Order</Link>
+                  <Link to={`/tracking-order/${order.shipmentId}`}>Track Order</Link>
                 </Button>
               </div>
             </CardContent>
