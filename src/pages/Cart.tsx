@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Trash2, ShoppingCart } from "lucide-react";
+import { ArrowRight, Trash2, ShoppingCart, LoaderCircle } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { formatINRWithPaisa } from "@/utils/currency";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { fetchPrefix } from "@/utils/fetch";
+import { toast } from "sonner";
 
 export default function Cart() {
   const { cartItems, removeFromCart, updateQuantity, clearCart, getCartTotal } =
@@ -14,6 +15,9 @@ export default function Cart() {
   const subtotal = getCartTotal();
   const shipping = subtotal > 5000 ? 0 : 599; // Free shipping over ₹50 (5000 paisa)
   const total = subtotal + shipping;
+
+  const [dAvailableChecking, setDAvailableChecking] = useState(false);
+  const [isDeliveryAvailable, setIsDeliveryAvailable] = useState(false);
 
   const [pincode, setPincode] = useState("");
 
@@ -43,12 +47,19 @@ export default function Cart() {
       }
       return response.json();
     },
-    onSuccess: (data: {isServiceable: boolean, message: string}) => {
+    onSuccess: (data: { isServiceable: boolean; message: string }) => {
       if (data.isServiceable) {
-        alert("Delivery is available for this pincode!");
+        toast.success("Delivery is available for this pincode!");
       } else {
-        alert("Sorry, delivery is not available for this pincode.");
+        toast.error("Sorry, delivery is not available for this pincode.");
       }
+    },
+    onError(error, variables, context) {
+      toast.error("Failed to check delivery availability. Please try again.");
+      console.error("Error checking delivery:", error);
+    },
+    onSettled() {
+      setDAvailableChecking(false);
     },
   });
 
@@ -188,27 +199,35 @@ export default function Cart() {
             <div className="space-y-3 mb-6">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span>{formatINRWithPaisa(subtotal)}</span>
+                <span>{formatINRWithPaisa(subtotal * 100)}</span>
               </div>
-              <div className="flex justify-between">
+              {/* <div className="flex justify-between">
                 <span className="text-muted-foreground">Shipping</span>
                 <span>
-                  {shipping === 0 ? "Free" : formatINRWithPaisa(shipping)}
+                  {shipping === 0 ? "Free" : formatINRWithPaisa(shipping * 100)}
+                </span>
+              </div> */}
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Shipping</span>
+                <span className="text-sm text-foreground">
+                  Calculated at checkout
                 </span>
               </div>
               <div className="border-t border-border pt-3 flex justify-between font-medium">
                 <span>Total</span>
-                <span>{formatINRWithPaisa(total)}</span>
+                <span>{formatINRWithPaisa(total * 100)}</span>
               </div>
             </div>
 
             <Button asChild className="w-full" size="lg">
-              <Link to="/checkout">Checkout <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              <Link to="/checkout">
+                Checkout <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
 
-            <p className="text-center text-sm text-muted-foreground mt-4">
+            {/* <p className="text-center text-sm text-muted-foreground mt-4">
               Free shipping on orders over ₹50
-            </p>
+            </p> */}
 
             <div className="border-t border-border mt-6 pt-6">
               <h3 className="font-medium mb-2">Check Delivery available?</h3>
@@ -220,13 +239,24 @@ export default function Cart() {
                   placeholder="Enter pincode"
                   className="px-3 py-2 border border-input rounded-md flex-1 focus:outline-none focus:ring-1 focus:ring-black"
                 />
-                <Button onClick={async () => {
-                  if (pincode.trim() === "") {
-                    alert("Please enter a pincode");
-                    return;
-                  }
-                  checkDelivery(pincode);
-                }} variant="outline">Check</Button>
+                <Button
+                  onClick={async () => {
+                    if (pincode.trim() === "") {
+                      alert("Please enter a pincode");
+                      return;
+                    }
+                    setDAvailableChecking(true);
+                    setIsDeliveryAvailable(false);
+                    checkDelivery(pincode);
+                  }}
+                  variant="outline"
+                >
+                  {dAvailableChecking ? (
+                    <LoaderCircle className="animate-spin" />
+                  ) : (
+                    "Check"
+                  )}
+                </Button>
               </div>
             </div>
           </div>
