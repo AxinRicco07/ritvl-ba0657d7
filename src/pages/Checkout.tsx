@@ -38,7 +38,7 @@ export default function Checkout() {
   const navigate = useNavigate();
   const { cartItems, getCartTotal, clearCart } = useCart();
   const [isShippingChargesLoading, setIsShippingChargesLoading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); // For order submission
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<CheckoutFormData>({
     billingAddress: {
       name: "",
@@ -49,7 +49,8 @@ export default function Checkout() {
       state: "",
       pincode: "",
     },
-    isShippingSameBilling: true,
+    // Changed to false to make checkbox unchecked by default
+    isShippingSameBilling: false,
     shippingAddress: {
       name: "",
       phone: "",
@@ -68,7 +69,11 @@ export default function Checkout() {
 
   // Auto-fetch shipping charges when pincode is valid
   useEffect(() => {
-    const pincode = formData.shippingAddress.pincode;
+    // Determine which pincode to use based on checkbox state
+    const pincode = formData.isShippingSameBilling
+      ? formData.billingAddress.pincode
+      : formData.shippingAddress.pincode;
+
     if (pincode.length === 6 && /^\d{6}$/.test(pincode)) {
       setIsShippingChargesLoading(true);
       fetch(`${fetchPrefix}/api/shipments/check-cart-serviceability`, {
@@ -101,7 +106,12 @@ export default function Checkout() {
     } else if (pincode.length > 0) {
       setShippingCharges(0);
     }
-  }, [formData.shippingAddress.pincode, cartItems]);
+  }, [
+    formData.billingAddress.pincode,
+    formData.shippingAddress.pincode,
+    formData.isShippingSameBilling,
+    cartItems
+  ]);
 
   // Prevent accidental navigation during order processing
   useEffect(() => {
@@ -174,7 +184,6 @@ export default function Checkout() {
   const handlePlaceOrder = async () => {
     if (!validateForm() || isSubmitting) return;
 
-    // ✅ Get or generate idempotency key
     let idempotencyKey = localStorage.getItem("checkout:pendingIdempotencyKey");
     if (!idempotencyKey) {
       idempotencyKey = crypto.randomUUID();
@@ -184,6 +193,18 @@ export default function Checkout() {
     setIsSubmitting(true);
 
     try {
+      // Create delivery address based on checkbox state
+      const deliveryAddress = formData.isShippingSameBilling
+        ? {
+            ...formData.billingAddress,
+            country: "India",
+          }
+        : {
+            ...formData.shippingAddress,
+            country: "India",
+            email: formData.billingAddress.email,
+          };
+
       const order = {
         items: cartItems.map((item) => ({
           sku: item.sku,
@@ -198,25 +219,10 @@ export default function Checkout() {
         total,
         paymentMethod: formData.paymentMethod,
         billingAddress: {
-          name: formData.billingAddress.name,
-          email: formData.billingAddress.email,
-          phone: formData.billingAddress.phone,
-          address: formData.billingAddress.address,
-          city: formData.billingAddress.city,
-          state: formData.billingAddress.state,
-          pincode: formData.billingAddress.pincode,
+          ...formData.billingAddress,
           country: "India",
         },
-        deliveryAddress: {
-          name: formData.shippingAddress.name,
-          phone: formData.shippingAddress.phone,
-          address: formData.shippingAddress.address,
-          city: formData.shippingAddress.city,
-          state: formData.shippingAddress.state,
-          pincode: formData.shippingAddress.pincode,
-          country: "India",
-          email: formData.billingAddress.email,
-        },
+        deliveryAddress,
         orderDate: new Date().toISOString().split("T")[0],
       };
 
@@ -236,7 +242,6 @@ export default function Checkout() {
 
       const result = await res.json();
 
-      // ✅ Success: cleanup
       localStorage.removeItem("checkout:pendingIdempotencyKey");
       const existingOrders = JSON.parse(localStorage.getItem("ritvl-orders") || "[]");
       existingOrders.unshift({ ...result, orderId: result.orderId || crypto.randomUUID() });
@@ -246,7 +251,6 @@ export default function Checkout() {
       toast.success("Order placed successfully!");
       navigate("/orders");
     } catch (error: unknown) {
-
       const errMsg = (error as Error).message || "Something went wrong";
       console.error("Order error:", error);
 
@@ -255,7 +259,6 @@ export default function Checkout() {
         action: {
           label: "Retry",
           onClick: () => {
-            // Reuse same key
             handlePlaceOrder();
           },
         },

@@ -7,18 +7,18 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { fetchPrefix } from "@/utils/fetch";
 import { toast } from "sonner";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 export default function Cart() {
   const { cartItems, removeFromCart, updateQuantity, clearCart, getCartTotal } =
     useCart();
 
   const subtotal = getCartTotal();
-  const shipping = subtotal > 5000 ? 0 : 599; // Free shipping over ₹50 (5000 paisa)
-  const total = subtotal + shipping;
+  const gst = Math.round(subtotal * 0.18); // 18% GST
+  const total = subtotal + gst;
 
   const [dAvailableChecking, setDAvailableChecking] = useState(false);
-  const [isDeliveryAvailable, setIsDeliveryAvailable] = useState(false);
-
   const [pincode, setPincode] = useState("");
 
   const { mutate: checkDelivery } = useMutation({
@@ -88,7 +88,10 @@ export default function Cart() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8">
-          <div className="border border-border rounded-lg overflow-hidden">
+          <Card className="overflow-hidden">
+            <CardHeader className="bg-secondary p-4">
+              <CardTitle className="text-lg font-medium">Your Items</CardTitle>
+            </CardHeader>
             <div className="hidden md:grid grid-cols-12 gap-4 p-4 bg-secondary/30 text-sm font-medium">
               <div className="col-span-5">Product</div>
               <div className="col-span-2 text-center">Price</div>
@@ -105,7 +108,7 @@ export default function Cart() {
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
                   {/* Product info */}
                   <div className="md:col-span-5 flex items-center gap-4">
-                    <div className="w-20 h-20 bg-secondary/30 rounded-md overflow-hidden">
+                    <div className="w-20 h-20 bg-secondary/30 rounded-md overflow-hidden border">
                       <img
                         src={item.image}
                         alt={item.name}
@@ -114,7 +117,9 @@ export default function Cart() {
                     </div>
                     <div>
                       <h3 className="font-medium">{item.name}</h3>
-
+                      <p className="text-sm text-muted-foreground">
+                        SKU: {item.sku}
+                      </p>
                       <button
                         onClick={() => removeFromCart(item.productId)}
                         className="text-sm text-muted-foreground flex items-center gap-1 hover:text-destructive transition-colors mt-2 md:hidden"
@@ -142,7 +147,8 @@ export default function Cart() {
                         onClick={() =>
                           updateQuantity(item.productId, item.quantity - 1)
                         }
-                        className="px-2 py-1 hover:bg-secondary transition-colors text-sm"
+                        disabled={item.quantity <= 1}
+                        className="px-2 py-1 hover:bg-secondary transition-colors text-sm disabled:opacity-50"
                       >
                         -
                       </button>
@@ -182,84 +188,97 @@ export default function Cart() {
                 </div>
               </div>
             ))}
-          </div>
+          </Card>
 
           <div className="flex justify-between mt-6">
             <Button asChild variant="outline">
               <Link to="/products">Continue Shopping</Link>
             </Button>
-            <Button onClick={clearCart}>Clear Cart</Button>
+            <Button 
+              onClick={clearCart} 
+              variant="destructive"
+              className="flex items-center gap-1"
+            >
+              <Trash2 className="h-4 w-4" /> Clear Cart
+            </Button>
           </div>
         </div>
 
         <div className="lg:col-span-4">
-          <div className="bg-secondary/30 rounded-lg p-6">
-            <h2 className="font-serif text-xl mb-4">Order Summary</h2>
-
-            <div className="space-y-3 mb-6">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Subtotal</span>
-                <span>{formatINRWithPaisa(subtotal * 100)}</span>
+          <Card>
+            <CardHeader>
+              <CardTitle className="font-serif text-xl">Order Summary</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3 mb-6">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Subtotal</span>
+                  <span>{formatINRWithPaisa(subtotal * 100)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">GST (18%)</span>
+                  <span>{formatINRWithPaisa(gst * 100)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Shipping</span>
+                  <span className="text-sm text-foreground">
+                    Calculated at checkout
+                  </span>
+                </div>
+                <Separator className="my-2" />
+                <div className="flex justify-between font-medium text-base">
+                  <span>Total</span>
+                  <span>{formatINRWithPaisa(total * 100)}</span>
+                </div>
               </div>
-              {/* <div className="flex justify-between">
-                <span className="text-muted-foreground">Shipping</span>
-                <span>
-                  {shipping === 0 ? "Free" : formatINRWithPaisa(shipping * 100)}
-                </span>
-              </div> */}
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Shipping</span>
-                <span className="text-sm text-foreground">
-                  Calculated at checkout
-                </span>
-              </div>
-              <div className="border-t border-border pt-3 flex justify-between font-medium">
-                <span>Total</span>
-                <span>{formatINRWithPaisa(total * 100)}</span>
-              </div>
-            </div>
 
-            <Button asChild className="w-full" size="lg">
-              <Link to="/checkout">
-                Checkout <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+              <Button asChild className="w-full" size="lg">
+                <Link to="/checkout">
+                  Checkout <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
 
-            {/* <p className="text-center text-sm text-muted-foreground mt-4">
-              Free shipping on orders over ₹50
-            </p> */}
-
-            <div className="border-t border-border mt-6 pt-6">
-              <h3 className="font-medium mb-2">Check Delivery available?</h3>
-              <div className="flex gap-2">
-                <input
-                  value={pincode}
-                  onChange={(e) => setPincode(e.target.value)}
-                  type="text"
-                  placeholder="Enter pincode"
-                  className="px-3 py-2 border border-input rounded-md flex-1 focus:outline-none focus:ring-1 focus:ring-black"
-                />
-                <Button
-                  onClick={async () => {
-                    if (pincode.trim() === "") {
-                      alert("Please enter a pincode");
-                      return;
-                    }
-                    setDAvailableChecking(true);
-                    setIsDeliveryAvailable(false);
-                    checkDelivery(pincode);
-                  }}
-                  variant="outline"
-                >
-                  {dAvailableChecking ? (
-                    <LoaderCircle className="animate-spin" />
-                  ) : (
-                    "Check"
-                  )}
-                </Button>
+              <div className="mt-6 pt-6 border-t">
+                <h3 className="font-medium mb-3">Check Delivery Availability</h3>
+                <div className="flex gap-2">
+                  <input
+                    value={pincode}
+                    onChange={(e) => setPincode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    type="text"
+                    placeholder="Enter pincode"
+                    className="px-3 py-2 border border-input rounded-md flex-1 focus:outline-none focus:ring-1 focus:ring-black"
+                    inputMode="numeric"
+                  />
+                  <Button
+                    onClick={() => {
+                      if (pincode.trim() === "") {
+                        toast.error("Please enter a pincode");
+                        return;
+                      }
+                      if (pincode.length !== 6) {
+                        toast.error("Pincode must be 6 digits");
+                        return;
+                      }
+                      setDAvailableChecking(true);
+                      checkDelivery(pincode);
+                    }}
+                    variant="outline"
+                    disabled={dAvailableChecking}
+                    className="min-w-[80px]"
+                  >
+                    {dAvailableChecking ? (
+                      <LoaderCircle className="animate-spin h-5 w-5" />
+                    ) : (
+                      "Check"
+                    )}
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Enter a 6-digit pincode to check delivery availability
+                </p>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
