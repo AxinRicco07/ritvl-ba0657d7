@@ -1,90 +1,196 @@
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { useEffect, useState, useRef } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
-import useEmblaCarousel from "embla-carousel-react";
 import { HomeProduct } from "@/types/product";
-import Autoplay from "embla-carousel-autoplay";
-import { type CarouselApi } from "@/components/ui/carousel";
 import SaltSparkle from "./SaltSparkle";
+import { motion } from "framer-motion";
 
 const HeroCarousel = ({ heroImages }: { heroImages: HomeProduct[] }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [api, setApi] = useState<CarouselApi>();
+  const [progress, setProgress] = useState(0);
+  const autoplayTimer = useRef<NodeJS.Timeout | null>(null);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
 
   useEffect(() => {
-    if (!api) return;
+    if (!emblaApi) return;
 
     const onSelect = () => {
-      setSelectedIndex(api.selectedScrollSnap());
+      setSelectedIndex(emblaApi.selectedScrollSnap());
+      setProgress(0);
     };
 
-    // Register listener
-    api.on("select", onSelect);
-
-    // Set initial index
-    onSelect();
-
-    // Cleanup
+    emblaApi.on("select", onSelect);
+    
     return () => {
-      api.off("select", onSelect);
+      emblaApi.off("select", onSelect);
     };
-  }, [api]);
+  }, [emblaApi]);
+
+  // Custom autoplay implementation
+  useEffect(() => {
+    if (!emblaApi) return;
+    
+    const startAutoplay = () => {
+      if (autoplayTimer.current) clearTimeout(autoplayTimer.current);
+      
+      autoplayTimer.current = setTimeout(() => {
+        emblaApi.scrollNext();
+      }, 5000);
+    };
+
+    startAutoplay();
+    
+    return () => {
+      if (autoplayTimer.current) clearTimeout(autoplayTimer.current);
+    };
+  }, [emblaApi, selectedIndex]);
+
+  // Progress bar animation
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    let progressTimer: NodeJS.Timeout;
+    const startTime = Date.now();
+    const duration = 5000;
+    
+    const updateProgress = () => {
+      const elapsed = Date.now() - startTime;
+      const percentage = Math.min(100, (elapsed / duration) * 100);
+      setProgress(percentage);
+      
+      if (percentage < 100) {
+        progressTimer = setTimeout(updateProgress, 50);
+      }
+    };
+    
+    if (selectedIndex !== -1) {
+      progressTimer = setTimeout(updateProgress, 50);
+    }
+    
+    return () => {
+      if (progressTimer) clearTimeout(progressTimer);
+    };
+  }, [selectedIndex, emblaApi]);
 
   return (
-    <div className="relative rounded-lg overflow-hidden">
-      <Carousel
-        plugins={[Autoplay({ delay: 5000 })]}
-        opts={{ loop: true }}
-        setApi={setApi}
-        className="w-full"
-      >
-        <CarouselContent>
+    <div className="relative w-full rounded-xl overflow-hidden shadow-xl">
+      <div ref={emblaRef} className="overflow-hidden h-[50vh] min-h-[400px] max-h-[600px]">
+        <div className="flex h-full">
           {heroImages.map((p, index) => (
-            <CarouselItem key={index} className="relative aspect-[4/3]">
-              <img
-                src={p.images.find((i) => i.isPrimary)?.url}
-                alt={`Product ${index + 1}`}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40 flex flex-col items-center justify-end p-6 text-center">
-                <span className="text-white text-lg font-medium bg-white/20 backdrop-blur-sm px-3 py-1 mb-2 rounded-md">
-                  {index === 0 ? "Featured" : "Bestseller"}
-                </span>
-                <h3 className="text-white text-xl font-bold">{p.name}</h3>
-                <Button variant="secondary" size="sm" className="mt-2">
-                  <Link to={`/product/${p.productId}`}>View Details</Link>
-                </Button>
+            <div key={index} className="flex-[0_0_100%] min-w-0 relative">
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70 z-10" />
+              
+              <motion.div
+                className="absolute inset-0 w-full h-full"
+                animate={{
+                  scale: selectedIndex === index ? 1.05 : 1,
+                }}
+                transition={{ duration: 10 }}
+              >
+                <img
+                  src={p.images.find((i) => i.isPrimary)?.url}
+                  alt={p.name}
+                  className="w-full h-full object-cover"
+                />
+              </motion.div>
+              
+              <div className="absolute bottom-0 left-0 right-0 z-20 p-8 text-center flex flex-col items-center">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ 
+                    opacity: selectedIndex === index ? 1 : 0,
+                    y: selectedIndex === index ? 0 : 20
+                  }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  className="mb-4"
+                >
+                  <span className="text-white text-sm font-medium bg-white/20 backdrop-blur-sm px-4 py-1 rounded-full uppercase tracking-wider">
+                    {index === 0 ? "Featured" : "Bestseller"}
+                  </span>
+                </motion.div>
+                
+                <motion.h2
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ 
+                    opacity: selectedIndex === index ? 1 : 0,
+                    y: selectedIndex === index ? 0 : 30
+                  }}
+                  transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+                  className="text-white text-3xl md:text-4xl lg:text-5xl font-bold max-w-2xl mb-4 drop-shadow-lg"
+                >
+                  {p.name}
+                </motion.h2>
+                
+                <motion.div
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={{ 
+                    opacity: selectedIndex === index ? 1 : 0,
+                    y: selectedIndex === index ? 0 : 40
+                  }}
+                  transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+                  className="mb-6"
+                >
+                  <Button 
+                    asChild 
+                    variant="secondary" 
+                    size="lg"
+                    className="bg-white text-black hover:bg-white/90 shadow-lg px-8 py-6 rounded-full font-medium"
+                  >
+                    <Link to={`/product/${p.productId}`}>
+                      Shop Now
+                    </Link>
+                  </Button>
+                </motion.div>
+                
                 <SaltSparkle />
               </div>
-            </CarouselItem>
+            </div>
           ))}
-        </CarouselContent>
+        </div>
+      </div>
 
-        {/* <CarouselPrevious />
-        <CarouselNext /> */}
-      </Carousel>
-
-      {/* Dots */}
-      <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
+      <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-4 z-20">
         {heroImages.map((_, i) => (
           <button
             key={i}
             onClick={() => {
-              setSelectedIndex(i);
-              api?.scrollTo(i);
+              emblaApi?.scrollTo(i);
+              setProgress(0);
             }}
-            className={`w-3 h-3 rounded-full transition-colors ${
-              selectedIndex === i ? "bg-white" : "bg-white/40"
-            }`}
-          />
+            className="relative w-16 h-1 bg-white/30 rounded-full overflow-hidden"
+          >
+            {selectedIndex === i && (
+              <motion.div
+                className="absolute top-0 left-0 h-full bg-white rounded-full"
+                initial={{ width: "0%" }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.1 }}
+              />
+            )}
+          </button>
         ))}
+      </div>
+
+      <div className="absolute top-1/2 -translate-y-1/2 left-4 right-4 flex justify-between z-20">
+        <button
+          onClick={() => emblaApi?.scrollPrev()}
+          className="bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors rounded-full p-3"
+          aria-label="Previous slide"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button
+          onClick={() => emblaApi?.scrollNext()}
+          className="bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors rounded-full p-3"
+          aria-label="Next slide"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
     </div>
   );
