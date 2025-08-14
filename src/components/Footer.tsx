@@ -17,9 +17,8 @@ const Footer = () => {
               Premium epsom salts crafted with natural ingredients for the ultimate bath experience.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-300 hover:text-primary transition-colors">Instagram</a>
-              <a href="#" className="text-gray-300 hover:text-primary transition-colors">Facebook</a>
-              <a href="#" className="text-gray-300 hover:text-primary transition-colors">Pinterest</a>
+              <a href="https://www.instagram.com/ritvlofficial/profilecard/?igsh=anh5aXJtOXhsN2No" className="text-gray-300 hover:text-primary transition-colors" target="_blank">Instagram</a>
+              <a href="https://www.facebook.com/share/16jTNne3Z5/?mibextid=wwXIfr" className="text-gray-300 hover:text-primary transition-colors" target="_blank">Facebook</a>
             </div>
           </div>
           
@@ -27,19 +26,18 @@ const Footer = () => {
             <h3 className="font-medium text-lg mb-4">Shop</h3>
             <ul className="space-y-2">
               <li><Link to="/products" className="text-gray-300 hover:text-primary transition-colors">All Products</Link></li>
-              <li><Link to="/bestseller" className="text-gray-300 hover:text-primary transition-colors">Bestsellers</Link></li>
-              <li><Link to="/new-arrivals" className="text-gray-300 hover:text-primary transition-colors">New Arrivals</Link></li>
-              <li><Link to="/sale" className="text-gray-300 hover:text-primary transition-colors">Sale</Link></li>
-              <li><Link to="/gift-sets" className="text-gray-300 hover:text-primary transition-colors">Gift Sets</Link></li>
+              <li><Link to="/products?sort=rating" className="text-gray-300 hover:text-primary transition-colors">Bestsellers</Link></li>
+              <li><Link to="/products?sort=newest" className="text-gray-300 hover:text-primary transition-colors">New Arrivals</Link></li>
+              <li><Link to="/products?sort=price-low" className="text-gray-300 hover:text-primary transition-colors">Sale</Link></li>
+              <li><Link to="/products?sort=featured" className="text-gray-300 hover:text-primary transition-colors">Gift Sets</Link></li>
             </ul>
           </div>
           
           <div>
             <h3 className="font-medium text-lg mb-4">About</h3>
             <ul className="space-y-2">
-              <li><Link to="/our-story" className="text-gray-300 hover:text-primary transition-colors">Our Story</Link></li>
+              <li><Link to="/about" className="text-gray-300 hover:text-primary transition-colors">Our Story</Link></li>
               <li><Link to="/ingredients" className="text-gray-300 hover:text-primary transition-colors">Ingredients</Link></li>
-              <li><Link to="/sustainability" className="text-gray-300 hover:text-primary transition-colors">Sustainability</Link></li>
               <li><Link to="/faq" className="text-gray-300 hover:text-primary transition-colors">FAQs</Link></li>
               <li><Link to="/contact" className="text-gray-300 hover:text-primary transition-colors">Contact Us</Link></li>
             </ul>
@@ -48,7 +46,7 @@ const Footer = () => {
         
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-gray-400">
-            © {new Date().getFullYear()} RIVE. All rights reserved.
+            © {new Date().getFullYear()} RITVL. All rights reserved.
           </p>
           <div className="flex gap-4 mt-4 md:mt-0">
             <Link to="/privacy-policy" className="text-sm text-gray-400 hover:text-primary transition-colors">

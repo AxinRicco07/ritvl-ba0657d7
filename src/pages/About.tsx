@@ -12,10 +12,11 @@ export default function About() {
               Our Story
             </h1>
             <p className="text-lg text-muted-foreground mb-6">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
-            </p>
-            <p className="text-muted-foreground mb-8">
-             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
+              At Shio, we believe that self-care begins with nature’s finest ingredients. Our journey started with a simple mission — to create wellness products that are pure, effective, and environmentally responsible. From sourcing premium-grade Epsom salt to infusing it with natural essences like refreshing lemongrass,Cinnamon,Lavender every step is guided by our commitment to quality and sustainability.
+
+We work closely with ethical suppliers, ensuring eco-friendly practices while delivering products that nourish the body and calm the mind. Every jar of Shio Epsom Salt is a reflection of our passion for wellness, purity, and the healing power of nature.
+
+Because for us, it’s not just a product — it’s a promise of relaxation, rejuvenation, and care for both you and the planet.
             </p>
             <Button asChild size="lg" variant="outline" className="border-blue-500 text-blue-600 hover:bg-blue-50">
               <Link to="/contact">Contact Us</Link>
@@ -69,7 +70,7 @@ export default function About() {
               </div>
               <h3 className="font-medium text-xl mb-3">Natural Ingredients</h3>
               <p className="text-muted-foreground">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
+              Pure, high-grade Epsom salt blended with essential Oils
               </p>
             </div>
             
@@ -79,7 +80,7 @@ export default function About() {
               </div>
               <h3 className="font-medium text-xl mb-3">Sustainable Practices</h3>
               <p className="text-muted-foreground">
-                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
+              Responsibly sourced to ensure eco-friendly production.
               </p>
             </div>
             
@@ -89,7 +90,8 @@ export default function About() {
               </div>
               <h3 className="font-medium text-xl mb-3">Wellness Focus</h3>
               <p className="text-muted-foreground">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
+              Promotes relaxation, skin detoxification, and overall well-being.
+
               </p>
             </div>
           </div>
@@ -110,7 +112,7 @@ export default function About() {
                   <div>
                     <h3 className="font-medium text-lg mb-2">Sourcing</h3>
                     <p className="text-muted-foreground">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
+                    We carefully source premium-grade magnesium sulfate crystals from trusted suppliers to ensure purity and natural quality.
                     </p>
                   </div>
                 </div>
@@ -122,7 +124,7 @@ export default function About() {
                   <div>
                     <h3 className="font-medium text-lg mb-2">Formulation</h3>
                     <p className="text-muted-foreground">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
+                    Our salts undergo a thorough filtration and purification process to remove any impurities while preserving mineral integrity.
                     </p>
                   </div>
                 </div>
@@ -134,7 +136,7 @@ export default function About() {
                   <div>
                     <h3 className="font-medium text-lg mb-2">Production</h3>
                     <p className="text-muted-foreground">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
+                    We process the salts in a controlled environment, ensuring they retain their therapeutic properties and meet safety standards.
                     </p>
                   </div>
                 </div>
@@ -146,7 +148,7 @@ export default function About() {
                   <div>
                     <h3 className="font-medium text-lg mb-2">Testing</h3>
                     <p className="text-muted-foreground">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sagittis lacus nec nulla convallis, in pharetra ex interdum. Donec eleifend augue nec pellentesque facilisis.
+                    Each batch is sealed in moisture-proof, eco-friendly packaging to lock in freshness and maintain quality until it reaches you.
                     </p>
                   </div>
                 </div>

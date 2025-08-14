@@ -1,115 +1,28 @@
-
-import { useState } from "react";
-import { MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
 
 const WhatsAppButton = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [name, setName] = useState("");
+  const whatsappNumber = "917026252325"; // without '+' for wa.me links
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!phoneNumber) {
-      toast({
-        title: "Please enter your phone number",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    // Format Indian phone number
-    let formattedNumber = phoneNumber.replace(/\D/g, ''); // Remove non-digits
-    
-    // If number doesn't start with country code, add +91 for India
-    if (formattedNumber.length === 10 && !formattedNumber.startsWith('91')) {
-      formattedNumber = '91' + formattedNumber;
-    }
-    
-    const message = `Hello! I'm ${name || 'a customer'} interested in your products. Please contact me.`;
-    const encodedMessage = encodeURIComponent(message);
-    
-    // Open WhatsApp with the pre-filled message
-    window.open(`https://wa.me/${formattedNumber}?text=${encodedMessage}`, "_blank");
-    
-    // Show success message
-    toast({
-      title: "Thank you!",
-      description: "We'll contact you soon via WhatsApp.",
-    });
-    
-    // Reset and close form
-    setPhoneNumber("");
-    setName("");
-    setIsOpen(false);
+  const handleClick = () => {
+    const url = `https://wa.me/${whatsappNumber}`;
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      {isOpen ? (
-        <div className="bg-white p-4 rounded-lg shadow-lg mb-4 animate-scale-in w-[280px]">
-          <form onSubmit={handleSubmit}>
-            <h3 className="font-medium text-lg mb-3">Contact via WhatsApp</h3>
-            <div className="space-y-3">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-1">
-                  Your Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="John Doe"
-                  className="w-full px-3 py-2 border rounded-md"
-                />
-              </div>
-              <div>
-                <label htmlFor="phoneNumber" className="block text-sm font-medium mb-1">
-                  WhatsApp Number
-                </label>
-                <input
-                  type="tel"
-                  id="phoneNumber"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  placeholder="9876543210 or +919876543210"
-                  className="w-full px-3 py-2 border rounded-md"
-                  required
-                />
-                <p className="text-xs text-gray-500 mt-1">Enter your 10-digit Indian mobile number</p>
-              </div>
-              <div className="flex gap-2 pt-2">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  size="sm" 
-                  className="flex-1"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  type="submit" 
-                  variant="default" 
-                  size="sm" 
-                  className="flex-1 bg-green-600 hover:bg-green-700"
-                >
-                  Submit
-                </Button>
-              </div>
-            </div>
-          </form>
-        </div>
-      ) : null}
-      
       <Button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleClick}
         className="h-14 w-14 rounded-full bg-green-600 hover:bg-green-700 shadow-lg flex items-center justify-center animate-jiggle"
       >
-        <MessageSquare className="h-6 w-6 text-white" />
+        {/* WhatsApp SVG */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 32 32"
+          className="h-6 w-6 text-white"
+        >
+          <path d="M16 .003C7.164.003.003 7.165.003 16c0 2.828.736 5.577 2.135 7.995L.09 31.91l8.127-2.015A15.9 15.9 0 0 0 16 31.997C24.837 31.997 32 24.835 32 16S24.837.003 16 .003Zm0 29.292a13.3 13.3 0 0 1-6.769-1.842l-.484-.288-4.826 1.196 1.29-4.7-.314-.49A13.3 13.3 0 0 1 2.708 16c0-7.307 5.986-13.292 13.292-13.292 7.307 0 13.292 5.985 13.292 13.292 0 7.306-5.985 13.292-13.292 13.292Zm7.448-9.973c-.408-.204-2.417-1.193-2.792-1.328-.375-.14-.647-.204-.92.204-.272.403-1.05 1.327-1.288 1.6-.238.27-.473.305-.88.102-.407-.203-1.715-.632-3.27-2.016-1.21-1.08-2.026-2.414-2.262-2.82-.236-.407-.025-.627.178-.83.183-.182.407-.473.61-.71.203-.238.27-.407.407-.68.136-.27.068-.51-.034-.71-.103-.204-.92-2.218-1.26-3.036-.33-.796-.667-.686-.92-.696-.238-.01-.51-.01-.782-.01-.272 0-.71.102-1.08.51-.37.403-1.41 1.377-1.41 3.358 0 1.98 1.443 3.89 1.643 4.157.204.27 2.84 4.33 6.88 6.067.962.414 1.71.662 2.293.846.962.307 1.84.263 2.535.16.775-.115 2.417-.986 2.756-1.94.34-.954.34-1.77.237-1.94-.102-.17-.37-.27-.78-.473Z"/>
+        </svg>
       </Button>
     </div>
   );

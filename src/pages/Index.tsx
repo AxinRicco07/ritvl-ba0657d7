@@ -427,7 +427,7 @@ const Index = () => {
       </section>
 
       {/* Newsletter */}
-      <section className="py-12 px-4 md:py-16 bg-white">
+      {/* <section className="py-12 px-4 md:py-16 bg-white">
         <div className="container max-w-7xl mx-auto text-center">
           <h2 className="text-2xl md:text-3xl font-display mb-4 animate-fade-in">
             Join Our Community
@@ -455,7 +455,7 @@ const Index = () => {
             </Button>
           </div>
         </div>
-      </section>
+      </section> */}
     </main>
   );
 };

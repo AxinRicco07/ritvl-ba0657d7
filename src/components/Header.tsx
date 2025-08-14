@@ -1,16 +1,41 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { ShoppingCart, Search, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate();
   const { getCartCount } = useCart();
   const cartCount = getCartCount();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleSearch = () => {
+    setIsSearchOpen((prev) => !prev);
+  };
+
+  useEffect(() => {
+    if (isSearchOpen) {
+      // focus input when opened
+      setTimeout(() => searchInputRef.current?.focus(), 0);
+    } else {
+      setSearchTerm("");
+    }
+  }, [isSearchOpen]);
+
+  const onSubmitSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = searchTerm.trim();
+    if (!q) return;
+    navigate(`/products?q=${encodeURIComponent(q)}`);
+    setIsSearchOpen(false);
   };
 
   return (
@@ -36,9 +61,25 @@ const Header = () => {
           </nav>
 
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="ghost" size="icon" aria-label="Search">
-              <Search className="h-5 w-5" />
-            </Button>
+            <form onSubmit={onSubmitSearch} className="relative flex items-center">
+              <div className={`flex items-center transition-all duration-200 ${isSearchOpen ? 'w-64' : 'w-10'} overflow-hidden border border-border rounded-md bg-background`}>
+                <button type="button" aria-label="Search" onClick={toggleSearch} className="p-2 text-foreground/80 hover:text-foreground">
+                  <Search className="h-5 w-5" />
+                </button>
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape') setIsSearchOpen(false);
+                  }}
+                  placeholder="Search products..."
+                  className={`bg-transparent text-sm outline-none px-2 py-2 ${isSearchOpen ? 'block' : 'hidden'}`}
+                  aria-label="Search products"
+                />
+              </div>
+            </form>
             {/* <Button variant="ghost" size="icon" aria-label="Account">
               <User className="h-5 w-5" />
             </Button> */}
@@ -93,39 +134,48 @@ const Header = () => {
                 About Us
               </MobileNavLink>
             </nav>
-            <div className="flex items-center gap-6 mt-6 pt-4 border-t border-border">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="flex items-center gap-2"
-                aria-label="Search"
-              >
-                <Search className="h-4 w-4" /> Search
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="flex items-center gap-2"
-                aria-label="Account"
-              >
-                <User className="h-4 w-4" /> Account
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="flex items-center gap-2 relative"
-                aria-label="Cart"
-              >
-                <Link to="/cart" className="flex items-center gap-2">
-                  <ShoppingCart className="h-4 w-4" />
-                  Cart
-                  {cartCount > 0 && (
-                    <span className="bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center ml-1">
-                      {cartCount}
-                    </span>
-                  )}
-                </Link>
-              </Button>
+            <div className="flex flex-col gap-3 mt-6 pt-4 border-t border-border">
+              <form onSubmit={(e) => { e.preventDefault(); if (searchTerm.trim()) { navigate(`/products?q=${encodeURIComponent(searchTerm.trim())}`); setIsMenuOpen(false);} }} className="flex items-center gap-2">
+                <div className="flex items-center flex-1 border border-border rounded-md px-2">
+                  <Search className="h-4 w-4 text-muted-foreground" />
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search products..."
+                    className="flex-1 bg-transparent outline-none px-2 py-2 text-sm"
+                    aria-label="Search products"
+                  />
+                </div>
+                <Button type="submit" size="sm" variant="outline">Search</Button>
+              </form>
+
+              <div className="flex items-center gap-6">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="flex items-center gap-2"
+                  aria-label="Account"
+                >
+                  <User className="h-4 w-4" /> Account
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="flex items-center gap-2 relative"
+                  aria-label="Cart"
+                >
+                  <Link to="/cart" className="flex items-center gap-2">
+                    <ShoppingCart className="h-4 w-4" />
+                    Cart
+                    {cartCount > 0 && (
+                      <span className="bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center ml-1">
+                        {cartCount}
+                      </span>
+                    )}
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         </div>

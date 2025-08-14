@@ -26,14 +26,17 @@ import AdminOrders from "./pages/admin/AdminOrders";
 import AdminCustomers from "./pages/admin/AdminCustomers";
 import UserAuthPage from "./components/auth/UserAuth";
 import AdminAuth from "./pages/admin/AdminAuth";
+import PrivacyPolicy from "./pages/Privacy";
+import ShippingPolicy from "./pages/Shipping";
+import Ingredients from "./pages/Ingredients";
+import FAQs from "./pages/FAQs";
 
 const queryClient = new QueryClient();
 
 //  Wrapper to protect admin routes
 const RequireAuth = () => {
-  const isAuthenticated = localStorage.getItem("isAuthenticated");
-  return isAuthenticated ? <Outlet /> : <Navigate to="/admin/login" />;
-  return <Outlet />
+  const token = localStorage.getItem("ritvl-admin-token");
+  return token ? <Outlet /> : <Navigate to="/admin/login" />;
 };
 
 const App = () => (
@@ -45,6 +48,8 @@ const App = () => (
           <Routes>
             {/* Login Page */}
             <Route path="/login" element={<UserAuthPage />} />
+            {/* Admin Login (public) */}
+            <Route path="/admin/login" element={<AdminAuth />} />
 
             {/* Public Routes */}
             <Route element={<Layout />}>
@@ -57,6 +62,10 @@ const App = () => (
               <Route path="/tracking-order/:orderId" element={<TrackingOrder />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
+              <Route path="/ingredients" element={<Ingredients />} />
+              <Route path="/faq" element={<FAQs />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/shipping" element={<ShippingPolicy />} />
               <Route path="*" element={<NotFound />} />
             </Route>
 
@@ -64,7 +73,6 @@ const App = () => (
             <Route element={<RequireAuth />}>
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
-                <Route path="login" element={<AdminAuth />} />
                 <Route path="products" element={<AdminProducts />} />
                 <Route path="products/add" element={<AdminProductForm />} />
                 <Route path="products/edit/:id" element={<AdminProductForm />} />

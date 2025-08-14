@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Filter, X, ChevronDown, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -189,7 +189,31 @@ export default function Products() {
   >([]);
   const [selectedBenefits, setSelectedBenefits] = useState<string[]>([]);
   const [selectedIntensities, setSelectedIntensities] = useState<string[]>([]);
+  const location = useLocation();
+  const navigate = useNavigate();
   const [sortOption, setSortOption] = useState("featured");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Initialize sort and search from URL query and update when it changes
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const sort = params.get("sort");
+    const q = params.get("q")?.trim() || "";
+    const allowed = ["featured", "price-low", "price-high", "rating", "newest"];
+    if (sort && allowed.includes(sort)) {
+      setSortOption(sort);
+    }
+    setSearchQuery(q);
+  }, [location.search]);
+
+  // Keep the URL in sync when sort changes via dropdown (preserve existing q)
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (sortOption) {
+      params.set("sort", sortOption);
+      navigate({ pathname: "/products", search: params.toString() }, { replace: true });
+    }
+  }, [sortOption]);
 
   const toggleMobileFilters = () => setMobileFiltersOpen(!mobileFiltersOpen);
   const clearAllFilters = () => {
@@ -238,6 +262,13 @@ export default function Products() {
       !product.benefits.some((b) => selectedBenefits.includes(b))
     )
       return false;
+
+    // Text search across product name (case-insensitive)
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      const name = (product.name || "").toLowerCase();
+      if (!name.includes(q)) return false;
+    }
 
     // if (
     //   selectedIntensities.length > 0 &&

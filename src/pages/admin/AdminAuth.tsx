@@ -20,7 +20,7 @@ export default function AdminAuth() {
   useEffect(() => {
     const adminToken = localStorage.getItem("ritvl-admin-token");
     if (adminToken) {
-      navigate("/admin/dashboard", { replace: true });
+      navigate("/admin", { replace: true });
     }
   }, [navigate]);
 
@@ -69,7 +69,7 @@ export default function AdminAuth() {
       localStorage.setItem("ritvl-admin-token", data.token); // Store JWT or flag
       localStorage.setItem("ritvl-admin-email", formData.email);
       toast.success("Welcome, Admin!");
-      navigate("/admin/dashboard", { replace: true });
+      navigate("/admin", { replace: true });
     } catch (error: any) {
       toast.error(error.message || "Something went wrong");
     } finally {
