@@ -74,6 +74,8 @@ const RequireAuth = () => {
   }
 
   // Redirect to login if not authenticated
+  console.log(window.location.href, "is");
+  if (isAuthenticated && window.location.href.includes("login")) return <Navigate to="/admin/dashboard" />
   return isAuthenticated ? <Outlet /> : <Navigate to="/admin/login" />;
 };
 

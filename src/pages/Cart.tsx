@@ -50,6 +50,7 @@ export default function Cart() {
     onSuccess: (data: { isServiceable: boolean; message: string }) => {
       if (data.isServiceable) {
         toast.success("Delivery is available for this pincode!");
+        console.log(data);
       } else {
         toast.error("Sorry, delivery is not available for this pincode.");
       }

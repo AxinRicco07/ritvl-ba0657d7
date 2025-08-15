@@ -26,13 +26,22 @@ import { fetchPrefix } from "@/utils/fetch";
 import { CreateProduct, PublicProduct } from "@/types/product";
 import MultipleProductsSelect from "@/components/admin/RelatedProductSelect";
 import ProductTags from "@/components/admin/ProductTags";
+import { MultiSelect } from "@/components/ui/multi-select";
+
+const TAGS_OPTIONS = [
+    { value: "new", label: "New" },
+    { value: "featured", label: "Featured" },
+    { value: "best-selling", label: "Best Selling" },
+  ];
 
 const AdminProductForm: React.FC = () => {
+  
   const { toast } = useToast();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { id } = useParams();
   const isEditMode = Boolean(id);
+  
 
   const [product, setProduct] = useState<CreateProduct>({
     name: "",
@@ -48,7 +57,7 @@ const AdminProductForm: React.FC = () => {
     howToUse: "",
     benefits: [""],
     ratings: { average: 0, count: 0 },
-    tags: [""],
+    tags: [],
     category: { name: "" },
     relatedProducts: [""],
     packaging: {
@@ -58,6 +67,11 @@ const AdminProductForm: React.FC = () => {
     productType: "salt",
     inventoryId: "",
   });
+
+
+  useEffect(() => {
+    console.log("Product has been changed", product);
+  }, [product]);
 
   const [qty, setQty] = useState(1);
 
@@ -302,23 +316,37 @@ const AdminProductForm: React.FC = () => {
               <Label>Benefits</Label>
               <Textarea
                 placeholder="Separate values by comma"
-                value={(product.benefits || []).join(", ")}
+                value={''}
                 onChange={(e) => {
-                  const value = e.target.value.split(",").map((v) => v.trim());
-                  handleChange("Benefits", value);
+                  // const value = e.target.value.split(",").map((v) => v.trim());
+                  handleChange("Benefits", [e.target.value]);
                 }}
               />
             </div>
-            
-            <ProductTags
+
+            <div>
+              <Label>Tags</Label>
+              <MultiSelect
+                options={TAGS_OPTIONS}
+                onValueChange={(values) => {
+                  console.log(values,  values.filter(v => v));
+                  // handleChange("tags", values.filter(v => v));
+                  setProduct(prev => ({...prev, tags: values.filter(v => v)}))
+                  console.log(product, "Product ");
+                }}
+                defaultValue={product.tags}
+              />
+            </div>
+
+            {/* <ProductTags
               value={product.tags}
               onChange={(newTags) =>
                 setProduct((prev) => ({ ...prev, tags: newTags }))
               }
-            />
+            /> */}
 
             {/* Arrays */}
-            {["Benefits", "Tags"].map((key) => (
+            {/* {["Benefits", "Tags"].map((key) => (
               <div key={key} className="space-y-2">
                 <Label>{key}</Label>
                 <Textarea
@@ -347,7 +375,7 @@ const AdminProductForm: React.FC = () => {
                   }}
                 />
               </div>
-            ))}
+            ))} */}
 
             <MultipleProductsSelect
               products={productsList.map((p) => {

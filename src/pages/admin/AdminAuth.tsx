@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { auth } from "@/firebase-config";
 import { Lock } from "lucide-react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
+import { fetchPrefix } from "@/utils/fetch";
 
 // 🔒 Admin-only login page
 export default function AdminAuth() {
@@ -19,13 +20,40 @@ export default function AdminAuth() {
     password: "",
   });
 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+
   // Prevent showing login if already logged in
   useEffect(() => {
-    const adminToken = localStorage.getItem("ritvl-admin-token");
-    if (adminToken) {
-      navigate("/admin/dashboard", { replace: true });
-    }
-  }, [navigate]);
+    // Function to check authentication status
+    const checkAuth = async () => {
+      try {
+        // Make fetch request to the admin auth check endpoint
+        const response = await fetch(`${fetchPrefix}/api/auth/admin/check`, {
+          method: "GET",
+          credentials: "include", // This includes cookies in the request
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error("Authentication check failed:", error);
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  if (isAuthenticated){
+    return <Navigate to="/admin/dashboard"/>
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
