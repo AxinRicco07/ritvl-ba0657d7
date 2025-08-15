@@ -297,7 +297,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-const fetchPrefix = "http://localhost:3000"; // Adjust if needed
+const fetchPrefix = "https://backend.ritvl.com"; // Adjust if needed
 
 // === Types ===
 interface TrackingActivity {

@@ -14,7 +14,7 @@ const AdminLayout: React.FC = () => {
   const { toast } = useToast();
 
   const navItems = [
-    { title: "Dashboard", path: "/admin", icon: <LayoutDashboard className="w-4 h-4" /> },
+    { title: "Dashboard", path: "/admin/dashboard", icon: <LayoutDashboard className="w-4 h-4" /> },
     { title: "Products", path: "/admin/products", icon: <Package className="w-4 h-4" /> },
     { title: "Orders", path: "/admin/orders", icon: <ShoppingCart className="w-4 h-4" /> },
     { title: "Customers", path: "/admin/customers", icon: <Users className="w-4 h-4" /> },

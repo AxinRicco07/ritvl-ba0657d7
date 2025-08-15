@@ -94,6 +94,7 @@ const AdminProductForm: React.FC = () => {
           quantity: qty,
           inStock: true,
         }),
+        credentials: "include",
       });
       if (!res.ok) throw new Error("Failed to create inventory");
       return res.json();
@@ -106,6 +107,7 @@ const AdminProductForm: React.FC = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...product, inventoryId }),
+        credentials: "include",
       });
       if (!res.ok) throw new Error("Failed to create product");
       return res.json();

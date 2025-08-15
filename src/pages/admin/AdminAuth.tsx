@@ -5,7 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { auth } from "@/firebase-config";
 import { Lock } from "lucide-react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 
 // 🔒 Admin-only login page
 export default function AdminAuth() {
@@ -20,7 +23,7 @@ export default function AdminAuth() {
   useEffect(() => {
     const adminToken = localStorage.getItem("ritvl-admin-token");
     if (adminToken) {
-      navigate("/admin", { replace: true });
+      navigate("/admin/dashboard", { replace: true });
     }
   }, [navigate]);
 
@@ -43,35 +46,66 @@ export default function AdminAuth() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!validateForm()) return;
 
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/admin/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
+      // Step 1: Sign in with Firebase
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+
+      const idToken = await userCredential.user.getIdToken();
+      console.log("Firebase ID Token:", idToken);
+
+      // Step 2: Send ID token to your backend for session creation
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_API_URL || "https://backend.ritvl.com"
+        }/api/auth/admin/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ idToken }),
+          credentials: "include", // 🔥 Essential: saves session cookie
+        }
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Invalid credentials");
+        throw new Error(data.message || "Failed to establish session");
       }
 
-      // ✅ Login successful
-      localStorage.setItem("ritvl-admin-token", data.token); // Store JWT or flag
-      localStorage.setItem("ritvl-admin-email", formData.email);
+      // ✅ Success: session cookie is now set by backend (if Set-Cookie was sent)
       toast.success("Welcome, Admin!");
-      navigate("/admin", { replace: true });
-    } catch (error: any) {
-      toast.error(error.message || "Something went wrong");
+      navigate("/admin/dashboard", { replace: true });
+    } catch (error: unknown) {
+      // Handle specific Firebase auth errors
+      let errorMessage: string;
+      if (error instanceof FirebaseError) {
+        errorMessage = (() => {
+          switch (error.code) {
+            case "auth/user-not-found":
+            case "auth/wrong-password":
+            case "auth/invalid-credential":
+              return "Invalid email or password.";
+            case "auth/too-many-requests":
+              return "Too many attempts. Try again later.";
+            default:
+              return error.message || "Authentication failed.";
+          }
+        })();
+      }
+
+      toast.error(errorMessage);
+      console.error("Login error:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -85,7 +119,9 @@ export default function AdminAuth() {
             <Lock className="h-8 w-8 text-primary" />
           </div>
           <CardTitle className="text-2xl">Admin Login</CardTitle>
-          <p className="text-sm text-muted-foreground">Enter your credentials to access the admin panel</p>
+          <p className="text-sm text-muted-foreground">
+            Enter your credentials to access the admin panel
+          </p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -113,7 +149,12 @@ export default function AdminAuth() {
                 disabled={isSubmitting}
               />
             </div>
-            <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              className="w-full"
+              size="lg"
+              disabled={isSubmitting}
+            >
               {isSubmitting ? (
                 <>
                   <div className="mr-2 h-4 w-4 animate-spin rounded-full border border-current border-t-transparent" />

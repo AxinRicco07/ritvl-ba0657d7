@@ -12,39 +12,44 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { PackagePlus } from "lucide-react";
+import { PackagePlus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchPrefix } from "@/utils/fetch";
 import { InventoryRecord, PublicProduct } from "@/types/product";
 
 type ProductInventoryRecord = PublicProduct & {
   quantity: number;
-  status: 'active' | 'low-stock' | 'out-of-stock'
+  status: "active" | "low-stock" | "out-of-stock";
 };
-
-
 
 const AdminProducts: React.FC = () => {
   const { toast } = useToast();
 
+  const queryClient = useQueryClient()
   const {
     data: productsList,
     isFetching,
     isError,
   } = useQuery<PublicProduct[]>({
-    queryKey: ["products"],
+    queryKey: ["admin-products"],
     queryFn: async () => {
-      const res = await fetch(`${fetchPrefix}/api/products`);
+      const res = await fetch(`${fetchPrefix}/api/products`, {
+        credentials: "include",
+      });
       if (!res.ok) throw new Error("Failed to fetch products");
       return res.json();
     },
   });
 
-  const { data: inventoryList, isFetching: isInventoryFetching } = useQuery<InventoryRecord[]>({
-    queryKey: ["inventory"],
+  const { data: inventoryList, isFetching: isInventoryFetching } = useQuery<
+    InventoryRecord[]
+  >({
+    queryKey: ["admin-inventory"],
     queryFn: async () => {
-      const res = await fetch(`${fetchPrefix}/api/inventory/list`);
+      const res = await fetch(`${fetchPrefix}/api/inventory/list`, {
+        credentials: "include",
+      });
       if (!res.ok) throw new Error("Failed to fetch inventory");
       return res.json();
     },
@@ -61,12 +66,19 @@ const AdminProducts: React.FC = () => {
         return {
           ...product,
           quantity: inventoryItem?.quantity || 0,
-          status: (inventoryItem.quantity >= (inventoryItem.fewStocks ??  100) && inventoryItem.inStock) ? 'active' : (inventoryItem.quantity < (inventoryItem.fewStocks ?? 100) && inventoryItem.inStock) ? 'low-stock' : 'out-of-stock'
+          status:
+            inventoryItem.quantity >= (inventoryItem.fewStocks ?? 100) &&
+            inventoryItem.inStock
+              ? "active"
+              : inventoryItem.quantity < (inventoryItem.fewStocks ?? 100) &&
+                inventoryItem.inStock
+              ? "low-stock"
+              : "out-of-stock",
         };
       });
       setProducts(combinedData);
     }
-  }, [productsList, inventoryList])
+  }, [productsList, inventoryList]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -95,6 +107,49 @@ const AdminProducts: React.FC = () => {
       title: "Edit Product",
       description: `Editing product: ${id}`,
     });
+  };
+
+  const handleDeleteProduct = async (id: string, name: string) => {
+    // Confirm deletion
+    if (
+      !confirm(
+        `Are you sure you want to delete "${name}"? This action cannot be undone.`
+      )
+    ) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${fetchPrefix}/api/products/${id}`, {
+        method: "DELETE",
+        credentials: "include", // important for session/auth cookies
+      });
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.message || "Failed to delete product");
+      }
+
+      // ✅ Success
+      toast({
+        title: "Success",
+        description: `Product "${name}" has been deleted.`,
+      });
+
+      await queryClient.invalidateQueries({queryKey: ['admin-products']})
+      await queryClient.invalidateQueries({queryKey: ['admin-inventory']})
+
+      // Optionally: refetch data or filter locally
+      // Since we're using react-query, we can invalidate queries
+      // But for now, just refresh the list
+      window.location.reload(); // or better: invalidate query (see advanced option below)
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Could not delete product.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -165,21 +220,29 @@ const AdminProducts: React.FC = () => {
                             {product.status}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="text-right space-x-2">
                           <Button
                             variant="outline"
                             size="sm"
-                            className="mr-2"
                             onClick={() => handleViewProduct(product.id)}
                           >
                             View
                           </Button>
-                          <Button
+                          {/* <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handleEditProduct(product.id)}
                           >
                             Edit
+                          </Button> */}
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() =>
+                              handleDeleteProduct(product.id, product.name)
+                            }
+                          >
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -244,7 +307,9 @@ const AdminProducts: React.FC = () => {
                               {product.sku}
                             </TableCell>
                             <TableCell>{product.category.name}</TableCell>
-                            <TableCell>₹{product.price.sp.toFixed(2)}</TableCell>
+                            <TableCell>
+                              ₹{product.price.sp.toFixed(2)}
+                            </TableCell>
                             <TableCell>{product.quantity}</TableCell>
                             <TableCell>
                               <Badge variant={getStatusColor(product.status)}>
