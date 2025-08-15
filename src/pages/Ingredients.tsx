@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 
+
 export default function Ingredients() {
   return (
     <main>
@@ -49,13 +50,13 @@ export default function Ingredients() {
             </ul>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 order-first lg:order-last">
+          {/* <div className="grid grid-cols-2 gap-4 order-first lg:order-last">
             <div className="col-span-2">
               <div className="aspect-[4/3] overflow-hidden rounded-lg bg-blue-100" />
             </div>
             <div className="aspect-square overflow-hidden rounded-lg bg-blue-100" />
             <div className="aspect-square overflow-hidden rounded-lg bg-blue-100" />
-          </div>
+          </div> */}
         </div>
       </section>
 

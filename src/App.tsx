@@ -28,6 +28,9 @@ import UserAuthPage from "./components/auth/UserAuth";
 import AdminAuth from "./pages/admin/AdminAuth";
 import { useEffect, useState } from "react";
 import { fetchPrefix } from "./utils/fetch";
+import Ingredients from "./pages/Ingredients";
+import FAQ from "./pages/FAQ";
+import Privacy from "./pages/Privacy";
 
 const queryClient = new QueryClient();
 
@@ -85,7 +88,7 @@ const App = () => (
             <Route path="/login" element={<UserAuthPage />} />
 
             {/* Public Routes */}
-            <Route element={<Layout />}>
+            <Route element={<Layout />}> 
               <Route path="/" element={<Index />} />
               <Route path="/products" element={<Products />} />
               <Route path="/product/:id" element={<ProductDetail />} />
@@ -95,6 +98,9 @@ const App = () => (
               <Route path="/tracking-order/:orderId" element={<TrackingOrder />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
+              <Route path="/ingredients" element={<Ingredients />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/privacy" element={<Privacy />} />
               <Route path="*" element={<NotFound />} />
             </Route>
 

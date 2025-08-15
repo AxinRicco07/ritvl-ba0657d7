@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import Whatsapp from "../assets/whatsapp.png";
+import Whatsapp from "../assets/social-media-logo-design_23-2151296979-modified.png";
 import { useEffect, useState } from "react";
 
 const WhatsAppButton = () => {

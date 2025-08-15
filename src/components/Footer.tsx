@@ -89,7 +89,7 @@ const Footer = () => {
           </p>
           <div className="flex gap-6 mt-4 md:mt-0">
             {[
-              { path: "/privacy-policy", label: "Privacy Policy" },
+              { path: "/privacy", label: "Privacy Policy" },
               { path: "/terms", label: "Terms of Service" },
               { path: "/shipping", label: "Shipping Policy" }
             ].map((link) => (

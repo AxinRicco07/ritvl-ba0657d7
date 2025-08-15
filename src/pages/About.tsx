@@ -1,5 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import Image1 from "../assets/WhatsApp Image 2025-08-14 at 12.22.09 PM.jpeg";
+import Image2 from "../assets/WhatsApp Image 2025-08-14 at 12.22.10 PM.jpeg";
+import Image3 from "../assets/WhatsApp Image 2025-08-14 at 12.22.11 PM.jpeg";
+import Image4 from "../assets/WhatsApp Image 2025-08-14 at 12.22.08 PM.jpeg";
 
 export default function About() {
   return (
@@ -27,7 +31,7 @@ Because for us, it’s not just a product — it’s a promise of relaxation, re
             <div className="col-span-2">
               <div className="aspect-[4/3] overflow-hidden rounded-lg">
                 <img 
-                  src="/placeholder.svg" 
+                  src={Image1} 
                   alt="Our workshop" 
                   className="w-full h-full object-cover"
                 />
@@ -36,7 +40,7 @@ Because for us, it’s not just a product — it’s a promise of relaxation, re
             <div>
               <div className="aspect-square overflow-hidden rounded-lg">
                 <img 
-                  src="/placeholder.svg" 
+                  src={Image2} 
                   alt="Founder portrait" 
                   className="w-full h-full object-cover"
                 />
@@ -45,7 +49,7 @@ Because for us, it’s not just a product — it’s a promise of relaxation, re
             <div>
               <div className="aspect-square overflow-hidden rounded-lg">
                 <img 
-                  src="/placeholder.svg" 
+                  src={Image3} 
                   alt="Product creation" 
                   className="w-full h-full object-cover"
                 />
@@ -158,7 +162,7 @@ Because for us, it’s not just a product — it’s a promise of relaxation, re
             <div className="order-1 lg:order-2">
               <div className="aspect-[4/5] rounded-lg overflow-hidden">
                 <img 
-                  src="/placeholder.svg" 
+                  src={Image4}
                   alt="Our production process" 
                   className="w-full h-full object-cover"
                 />

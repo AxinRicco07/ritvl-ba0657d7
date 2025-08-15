@@ -58,6 +58,7 @@ const Header = () => {
             <NavLink to="/products">Products</NavLink>
             <NavLink to="/contact">Contact Us</NavLink>
             <NavLink to="/about">About Us</NavLink>
+            <NavLink to="/orders">Order</NavLink>
           </nav>
 
           <div className="hidden md:flex items-center gap-4">
