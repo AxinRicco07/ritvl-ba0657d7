@@ -1,28 +1,41 @@
 import { Button } from "@/components/ui/button";
+import Whatsapp from "../assets/whatsapp.png";
+import { useEffect, useState } from "react";
 
 const WhatsAppButton = () => {
-  const whatsappNumber = "917026252325"; // without '+' for wa.me links
+  const whatsappNumber = "917026252325";
+  const [isJiggling, setIsJiggling] = useState(true);
 
   const handleClick = () => {
     const url = `https://wa.me/${whatsappNumber}`;
     window.open(url, "_blank", "noopener,noreferrer");
+    setIsJiggling(false);
   };
+
+  // Make the button jiggle periodically
+  useEffect(() => {
+    const jiggleInterval = setInterval(() => {
+      setIsJiggling(true);
+      const timer = setTimeout(() => setIsJiggling(false), 1000);
+      return () => clearTimeout(timer);
+    }, 15000); // Jiggle every 15 seconds
+
+    return () => clearInterval(jiggleInterval);
+  }, []);
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
       <Button
         onClick={handleClick}
-        className="h-14 w-14 rounded-full bg-green-600 hover:bg-green-700 shadow-lg flex items-center justify-center animate-jiggle"
+        className={`h-14 w-14 rounded-full bg-transparent hover:bg-transparent p-0 shadow-lg transform transition-transform duration-300 ${
+          isJiggling ? "animate-jiggle" : ""
+        }`}
       >
-        {/* WhatsApp SVG */}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          viewBox="0 0 32 32"
-          className="h-6 w-6 text-white"
-        >
-          <path d="M16 .003C7.164.003.003 7.165.003 16c0 2.828.736 5.577 2.135 7.995L.09 31.91l8.127-2.015A15.9 15.9 0 0 0 16 31.997C24.837 31.997 32 24.835 32 16S24.837.003 16 .003Zm0 29.292a13.3 13.3 0 0 1-6.769-1.842l-.484-.288-4.826 1.196 1.29-4.7-.314-.49A13.3 13.3 0 0 1 2.708 16c0-7.307 5.986-13.292 13.292-13.292 7.307 0 13.292 5.985 13.292 13.292 0 7.306-5.985 13.292-13.292 13.292Zm7.448-9.973c-.408-.204-2.417-1.193-2.792-1.328-.375-.14-.647-.204-.92.204-.272.403-1.05 1.327-1.288 1.6-.238.27-.473.305-.88.102-.407-.203-1.715-.632-3.27-2.016-1.21-1.08-2.026-2.414-2.262-2.82-.236-.407-.025-.627.178-.83.183-.182.407-.473.61-.71.203-.238.27-.407.407-.68.136-.27.068-.51-.034-.71-.103-.204-.92-2.218-1.26-3.036-.33-.796-.667-.686-.92-.696-.238-.01-.51-.01-.782-.01-.272 0-.71.102-1.08.51-.37.403-1.41 1.377-1.41 3.358 0 1.98 1.443 3.89 1.643 4.157.204.27 2.84 4.33 6.88 6.067.962.414 1.71.662 2.293.846.962.307 1.84.263 2.535.16.775-.115 2.417-.986 2.756-1.94.34-.954.34-1.77.237-1.94-.102-.17-.37-.27-.78-.473Z"/>
-        </svg>
+        <img 
+          src={Whatsapp} 
+          alt="Chat with us on WhatsApp" 
+          className="w-10 h-10 object-contain"
+        />
       </Button>
     </div>
   );

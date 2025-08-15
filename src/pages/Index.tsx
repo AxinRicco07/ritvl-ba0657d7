@@ -30,15 +30,13 @@ import { HomeProduct } from "@/types/product";
 import HeroCarousel from "@/components/HeroCarousel";
 import HomePageSkeleton from "@/components/skeletons/HomePageSkeleton";
 
-
-
 const fetchProductsData = async (): Promise<{
   featuredProducts: HomeProduct[];
   bestSellingProducts: HomeProduct[];
 }> => {
   const res = await fetch(`${fetchPrefix}/api/home`, {
     method: "GET",
-  }); // Change to your actual endpoint
+  });
   if (!res.ok) {
     console.log("Fetch error");
     throw new Error("Failed to fetch home page data");
@@ -112,8 +110,8 @@ const Index = () => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["homeData"],
     queryFn: fetchProductsData,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: 2, // optional retry attempts
+    staleTime: 1000 * 60 * 5,
+    retry: 2,
   });
 
   const { bestSellingProducts, featuredProducts } = data || {
@@ -124,7 +122,6 @@ const Index = () => {
   useEffect(() => {
     setIsVisible(true);
 
-    // Auto-slide for hero carousel
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % 3);
     }, 10000);
@@ -135,7 +132,6 @@ const Index = () => {
   useEffect(() => {
     if (data) {
       const { bestSellingProducts, featuredProducts } = data;
-
       setHeroImages([
         featuredProducts[0],
         bestSellingProducts[0],
@@ -144,20 +140,13 @@ const Index = () => {
     }
   }, [data]);
 
-  // const heroImages = [p2, p3, p1];
-  // const heroTitles = [
-  //   "Dreamer's Galaxy",
-  //   "Rose's Mist Bath",
-  //   "Himalayan Flower",
-  // ];
-
   if (isLoading) return <HomePageSkeleton />
   if (isError) return <div>Error: {(error as Error).message}</div>;
 
   return (
     <main className="overflow-x-hidden">
       {/* Hero Section with Auto-Sliding */}
-      <section className="relative min-h-[80vh] overflow-hidden flex items-center bg-blue-50/50">
+      <section className="relative min-h-[80vh] overflow-hidden flex items-center bg-gradient-to-br from-blue-50 to-blue-100">
         <div className="container max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-8">
           <div
             className={`relative z-10 ${
@@ -165,30 +154,52 @@ const Index = () => {
             }`}
             style={{ animationDelay: "0.2s" }}
           >
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight font-bold text-blue-800">
-              <span className="block text-reveal">
-                <span style={{ animationDelay: "0.3s" }}>Natural Healing.</span>
-              </span>
-              <span className="block text-reveal">
-                <span style={{ animationDelay: "0.5s" }}>Pure Joy.</span>
-              </span>
-              <span className="block text-reveal">
-                <span style={{ animationDelay: "0.7s" }}>Everyday Luxury.</span>
-              </span>
-            </h1>
+            <div className="relative inline-block">
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight font-bold text-blue-900">
+                <span className="block text-reveal">
+                  <span 
+                    className="relative inline-block"
+                    style={{ animationDelay: "0.3s" }}
+                  >
+                    Natural Healing.
+                    <SaltSparkle />
+                  </span>
+                </span>
+                <span className="block text-reveal">
+                  <span 
+                    className="relative inline-block"
+                    style={{ animationDelay: "0.5s" }}
+                  >
+                    Pure Joy.
+                    <SaltSparkle />
+                  </span>
+                </span>
+                <span className="block text-reveal">
+                  <span 
+                    className="relative inline-block"
+                    style={{ animationDelay: "0.7s" }}
+                  >
+                    Everyday Luxury.
+                    <SaltSparkle />
+                  </span>
+                </span>
+              </h1>
+            </div>
+            
             <p
-              className="mt-4 text-lg text-muted-foreground max-w-lg animate-fade-in"
+              className="mt-6 text-xl text-blue-800/90 max-w-xl animate-fade-in font-serif italic"
               style={{ animationDelay: "0.9s" }}
             >
               Experience the therapeutic benefits of our premium bath
               salts—ethically sourced, 100% natural, and crafted for your
               wellbeing.
             </p>
+            
             <div className="mt-8 flex gap-4">
               <Button
                 asChild
                 size="lg"
-                className="rounded-full bg-blue-600 hover:bg-blue-500 sparkle-button animate-fade-in"
+                className="rounded-full bg-blue-700 hover:bg-blue-600 sparkle-button animate-fade-in transition-all shadow-lg"
                 style={{ animationDelay: "1.1s" }}
               >
                 <Link to="/products">SHOP NOW</Link>
@@ -197,7 +208,7 @@ const Index = () => {
                 asChild
                 variant="outline"
                 size="lg"
-                className="rounded-full border-blue-600 text-blue-600 hover:bg-blue-50 animate-fade-in"
+                className="rounded-full border-blue-700 text-blue-700 hover:bg-blue-50/50 animate-fade-in shadow"
                 style={{ animationDelay: "1.3s" }}
               >
                 <Link to="/about">Learn More</Link>
@@ -209,18 +220,16 @@ const Index = () => {
         </div>
       </section>
 
-      
-
       {/* Featured Products - First Row */}
-      <section className="py-12 px-4 md:py-16 bg-secondary/10">
+      <section className="py-12 px-4 md:py-16 bg-gradient-to-b from-white to-blue-50">
         <div className="container max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-display animate-slide-in-left">
+            <h2 className="text-2xl md:text-3xl font-display animate-slide-in-left text-blue-900">
               Featured Products
             </h2>
             <Link
               to="/products"
-              className="text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors animate-slide-in-right"
+              className="text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors animate-slide-in-right text-blue-700"
             >
               View all <ArrowRight className="h-4 w-4" />
             </Link>
@@ -245,15 +254,15 @@ const Index = () => {
       </section>
 
       {/* Featured Products - Second Row */}
-      <section className="py-12 px-4 md:py-16 bg-white">
+      <section className="py-12 px-4 md:py-16 bg-gradient-to-b from-blue-50 to-white">
         <div className="container max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-display animate-slide-in-left">
+            <h2 className="text-2xl md:text-3xl font-display animate-slide-in-left text-blue-900">
               Bestselling Products
             </h2>
             <Link
               to="/products"
-              className="text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors animate-slide-in-right"
+              className="text-sm font-medium flex items-center gap-1 hover:text-primary transition-colors animate-slide-in-right text-blue-700"
             >
               View all <ArrowRight className="h-4 w-4" />
             </Link>
@@ -278,13 +287,13 @@ const Index = () => {
       </section>
 
       {/* Why Choose Us - Updated Section */}
-      <section className="py-12 px-4 md:py-16 bg-blue-50/50">
+      <section className="py-12 px-4 md:py-16 bg-gradient-to-b from-white to-blue-50/50">
         <div className="container max-w-7xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-display text-center mb-4 animate-slide-in-bottom">
-            WHY <strong>Salts</strong>?
+          <h2 className="text-2xl md:text-3xl font-display text-center mb-4 animate-slide-in-bottom text-blue-900">
+            WHY <strong className="text-blue-700">Salts</strong>?
           </h2>
           <p
-            className="text-center text-muted-foreground max-w-2xl mx-auto mb-12 animate-slide-in-bottom"
+            className="text-center text-blue-800/90 max-w-2xl mx-auto mb-12 animate-slide-in-bottom font-serif text-lg"
             style={{ animationDelay: "0.2s" }}
           >
             Experience the therapeutic benefits of natural mineral salts,
@@ -296,7 +305,7 @@ const Index = () => {
             {[0, 1, 2, 3].map((index) => (
               <div
                 key={index}
-                className={`animate-zoom-in`}
+                className={`animate-zoom-in bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-sm hover:shadow-md transition-all`}
                 style={{ animationDelay: `${0.3 + index * 0.2}s` }}
               >
                 <FeatureCard
@@ -339,11 +348,11 @@ const Index = () => {
       <section className="py-12 px-4 md:py-16">
         <div className="container max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-blue-100/50 p-6 md:p-8 rounded-lg animate-slide-in-left">
-              <h3 className="text-xl font-display uppercase mb-4">
+            <div className="bg-blue-100/30 backdrop-blur-sm p-6 md:p-8 rounded-lg border border-blue-200 animate-slide-in-left">
+              <h3 className="text-xl font-display uppercase mb-4 text-blue-900">
                 PREMIUM EPSOM SALT COLLECTION
               </h3>
-              <p className="text-muted-foreground mb-6">
+              <p className="text-blue-800/90 mb-6">
                 Discover therapeutic-grade magnesium sulfate crystals,
                 meticulously harvested for optimal purity and dissolution.
                 Perfect for muscle relaxation, detoxification baths, and
@@ -351,18 +360,18 @@ const Index = () => {
               </p>
               <Button
                 variant="outline"
-                className="flex items-center gap-2 border-blue-600 text-blue-600 hover:bg-blue-50 sparkle-button"
+                className="flex items-center gap-2 border-blue-700 text-blue-700 hover:bg-blue-50/50 sparkle-button"
               >
                 EXPLORE BATH SALTS{" "}
                 <ArrowRight className="h-4 w-4 group-hover:animate-bounce" />
               </Button>
             </div>
 
-            <div className="bg-blue-100/50 p-6 md:p-8 rounded-lg animate-slide-in-right">
-              <h3 className="text-xl font-display uppercase mb-4">
+            <div className="bg-blue-100/30 backdrop-blur-sm p-6 md:p-8 rounded-lg border border-blue-200 animate-slide-in-right">
+              <h3 className="text-xl font-display uppercase mb-4 text-blue-900">
                 SPECIALTY EPSOM BLENDS
               </h3>
-              <p className="text-muted-foreground mb-6">
+              <p className="text-blue-800/90 mb-6">
                 Enhanced mineral combinations infused with essential oils and
                 natural botanicals. Our aromatic blends combine Epsom salts with
                 lavender, eucalyptus, and chamomile for elevated therapeutic
@@ -370,7 +379,7 @@ const Index = () => {
               </p>
               <Button
                 variant="outline"
-                className="flex items-center gap-2 border-blue-600 text-blue-600 hover:bg-blue-50 sparkle-button"
+                className="flex items-center gap-2 border-blue-700 text-blue-700 hover:bg-blue-50/50 sparkle-button"
               >
                 DISCOVER BLENDS{" "}
                 <ArrowRight className="h-4 w-4 group-hover:animate-bounce" />
@@ -381,9 +390,9 @@ const Index = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-12 px-4 md:py-16 bg-blue-50/50">
+      <section className="py-12 px-4 md:py-16 bg-gradient-to-b from-blue-50/50 to-white">
         <div className="container max-w-7xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-display text-center mb-12 animate-fade-in">
+          <h2 className="text-2xl md:text-3xl font-display text-center mb-12 animate-fade-in text-blue-900">
             What Our Customers Say
           </h2>
 
@@ -391,7 +400,7 @@ const Index = () => {
             {testimonials.map((testimonial, index) => (
               <div
                 key={index}
-                className={`bg-white p-6 rounded-lg shadow-sm animate-slide-in-bottom`}
+                className={`bg-white p-6 rounded-lg shadow-sm border border-blue-100 animate-slide-in-bottom`}
                 style={{ animationDelay: `${0.2 + index * 0.2}s` }}
               >
                 <div className="flex items-center gap-1 mb-2">
@@ -406,16 +415,16 @@ const Index = () => {
                     />
                   ))}
                 </div>
-                <p className="italic text-muted-foreground mb-6">
+                <p className="italic text-blue-800/90 mb-6 font-serif">
                   "{testimonial.comment}"
                 </p>
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-medium">
                     {testimonial.name.charAt(0)}
                   </div>
                   <div>
-                    <p className="font-medium">{testimonial.name}</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="font-medium text-blue-900">{testimonial.name}</p>
+                    <p className="text-sm text-blue-700/80">
                       {testimonial.title}
                     </p>
                   </div>
@@ -425,68 +434,9 @@ const Index = () => {
           </div>
         </div>
       </section>
-
-      {/* Newsletter */}
-      {/* <section className="py-12 px-4 md:py-16 bg-white">
-        <div className="container max-w-7xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-display mb-4 animate-fade-in">
-            Join Our Community
-          </h2>
-          <p
-            className="text-muted-foreground max-w-xl mx-auto mb-8 animate-fade-in"
-            style={{ animationDelay: "0.2s" }}
-          >
-            Subscribe to our newsletter for exclusive offers, recipes, and
-            self-care tips.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <Input
-              type="email"
-              placeholder="Your email address"
-              className="bg-white animate-slide-in-left"
-              style={{ animationDelay: "0.3s" }}
-            />
-            <Button
-              className="bg-blue-600 hover:bg-blue-500 animate-slide-in-right sparkle-button"
-              style={{ animationDelay: "0.4s" }}
-            >
-              Subscribe
-            </Button>
-          </div>
-        </div>
-      </section> */}
     </main>
   );
 };
-
-// Let's add a scrollbar hiding utility to our CSS
-const hideScrollbarStyle = document.createElement("style");
-hideScrollbarStyle.textContent = `
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  
-  @keyframes scale-in {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  
-  .animate-scale-in {
-    animation: scale-in 0.2s ease-out forwards;
-  }
-`;
-document.head.appendChild(hideScrollbarStyle);
 
 // Components
 const Input = ({
@@ -511,10 +461,10 @@ const FeatureCard = ({
   description: string;
 }) => {
   return (
-    <div className="flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300">
+    <div className="flex flex-col items-center text-center">
       {children}
-      <h3 className="font-medium mb-2">{title}</h3>
-      <p className="text-muted-foreground text-sm">{description}</p>
+      <h3 className="font-medium mb-2 text-blue-900">{title}</h3>
+      <p className="text-blue-800/80 text-sm">{description}</p>
     </div>
   );
 };
