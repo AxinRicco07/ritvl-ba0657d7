@@ -25,6 +25,7 @@ import ProductImageUploader from "@/components/admin/ProductImageUploader";
 import { fetchPrefix } from "@/utils/fetch";
 import { CreateProduct, PublicProduct } from "@/types/product";
 import MultipleProductsSelect from "@/components/admin/RelatedProductSelect";
+import ProductTags from "@/components/admin/ProductTags";
 
 const AdminProductForm: React.FC = () => {
   const { toast } = useToast();
@@ -156,7 +157,7 @@ const AdminProductForm: React.FC = () => {
       toast({
         title: "Product Created",
         description: `Product "${newProduct.id}" created successfully!`,
-      })
+      });
     } catch (error) {
       toast({
         title: "Submission Failed",
@@ -296,6 +297,26 @@ const AdminProductForm: React.FC = () => {
               )
             )}
 
+            {/* Benefits textarea */}
+            <div className="space-y-2">
+              <Label>Benefits</Label>
+              <Textarea
+                placeholder="Separate values by comma"
+                value={(product.benefits || []).join(", ")}
+                onChange={(e) => {
+                  const value = e.target.value.split(",").map((v) => v.trim());
+                  handleChange("Benefits", value);
+                }}
+              />
+            </div>
+            
+            <ProductTags
+              value={product.tags}
+              onChange={(newTags) =>
+                setProduct((prev) => ({ ...prev, tags: newTags }))
+              }
+            />
+
             {/* Arrays */}
             {["Benefits", "Tags"].map((key) => (
               <div key={key} className="space-y-2">
@@ -369,7 +390,7 @@ const AdminProductForm: React.FC = () => {
                     type="number"
                     step="0.01"
                     value={
-                     dim === "Quantity"
+                      dim === "Quantity"
                         ? qty
                         : product.packaging.dimensions[dim.toLowerCase()]
                     }
@@ -379,15 +400,15 @@ const AdminProductForm: React.FC = () => {
                         setQty(parseInt(e.target.value, 10));
                       } else {
                         setProduct((prev) => ({
-                        ...prev,
-                        packaging: {
-                          ...prev.packaging,
-                          dimensions: {
-                            ...prev.packaging.dimensions,
-                            [dim]: parseFloat(e.target.value),
+                          ...prev,
+                          packaging: {
+                            ...prev.packaging,
+                            dimensions: {
+                              ...prev.packaging.dimensions,
+                              [dim]: parseFloat(e.target.value),
+                            },
                           },
-                        },
-                      }))
+                        }));
                       }
                     }}
                   />
