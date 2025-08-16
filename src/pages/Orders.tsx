@@ -349,7 +349,7 @@ export default function Orders() {
           </p>
           <div className="flex items-center gap-2">
             <Phone className="h-4 w-4" />
-            <span className="font-medium text-lg">+91 1800-123-4567</span>
+            <span className="font-medium text-lg">+91 7026-252-325</span>
           </div>
           <p className="text-sm text-muted-foreground mt-2">
             Available 24/7 for your assistance

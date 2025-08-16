@@ -71,9 +71,12 @@ const AdminProductForm: React.FC = () => {
 
   useEffect(() => {
     console.log("Product has been changed", product);
+    // Keep the raw textarea string in sync with product.benefits for initial/render
+    setBenefitsInput((product.benefits || []).join(", "));
   }, [product]);
 
   const [qty, setQty] = useState(1);
+  const [benefitsInput, setBenefitsInput] = useState<string>("");
 
   const setProductPayload = useCallback(
     (updater: (prev: CreateProduct) => CreateProduct) => {
@@ -117,11 +120,11 @@ const AdminProductForm: React.FC = () => {
   });
 
   const productMutation = useMutation({
-    mutationFn: async (inventoryId: string) => {
+    mutationFn: async ({ inventoryId, payload }: { inventoryId: string; payload: CreateProduct }) => {
       const res = await fetch(`${fetchPrefix}/api/products`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...product, inventoryId }),
+        body: JSON.stringify({ ...payload, inventoryId }),
         credentials: "include",
       });
       if (!res.ok) throw new Error("Failed to create product");
@@ -154,6 +157,12 @@ const AdminProductForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Parse benefits from the raw textarea so spaces and commas are preserved during typing
+    const parsedBenefits = benefitsInput
+      .split(",")
+      .map((v) => v.trim())
+      .filter((v) => v.length > 0);
+
     if (product.images.length === 0) {
       toast({
         title: "Image Required",
@@ -167,7 +176,8 @@ const AdminProductForm: React.FC = () => {
 
     try {
       const inventory = await inventoryMutation.mutateAsync();
-      const newProduct = await productMutation.mutateAsync(inventory.id);
+      const payload: CreateProduct = { ...product, benefits: parsedBenefits };
+      const newProduct = await productMutation.mutateAsync({ inventoryId: inventory.id, payload });
       toast({
         title: "Product Created",
         description: `Product "${newProduct.id}" created successfully!`,
@@ -316,10 +326,18 @@ const AdminProductForm: React.FC = () => {
               <Label>Benefits</Label>
               <Textarea
                 placeholder="Separate values by comma"
-                value={''}
+                value={benefitsInput}
                 onChange={(e) => {
-                  // const value = e.target.value.split(",").map((v) => v.trim());
-                  handleChange("Benefits", [e.target.value]);
+                  // Allow free typing of spaces and commas; don't normalize on each keystroke
+                  setBenefitsInput(e.target.value);
+                }}
+                onBlur={() => {
+                  // Normalize to array on blur
+                  const value = benefitsInput
+                    .split(",")
+                    .map((v) => v.trim())
+                    .filter((v) => v.length > 0);
+                  handleChange("benefits", value);
                 }}
               />
             </div>
@@ -420,20 +438,22 @@ const AdminProductForm: React.FC = () => {
                     value={
                       dim === "Quantity"
                         ? qty
-                        : product.packaging.dimensions[dim.toLowerCase()]
+                        : product.packaging.dimensions[dim.toLowerCase() as keyof typeof product.packaging.dimensions]
                     }
                     min={dim === "Quantity" ? 1 : 0}
                     onChange={(e) => {
                       if (dim === "Quantity") {
                         setQty(parseInt(e.target.value, 10));
                       } else {
+                        const key = dim.toLowerCase() as keyof typeof product.packaging.dimensions;
+                        const parsed = parseFloat(e.target.value);
                         setProduct((prev) => ({
                           ...prev,
                           packaging: {
                             ...prev.packaging,
                             dimensions: {
                               ...prev.packaging.dimensions,
-                              [dim]: parseFloat(e.target.value),
+                              [key]: isNaN(parsed) ? 0 : parsed,
                             },
                           },
                         }));

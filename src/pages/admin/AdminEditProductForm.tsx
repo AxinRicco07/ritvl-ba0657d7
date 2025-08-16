@@ -16,8 +16,9 @@ import { Save, ArrowLeft, FlaskConical } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ProductImageUploader from "@/components/admin/ProductImageUploader";
 import { CreateProduct, PublicProduct } from "@/types/product";
+import { fetchPrefix } from "@/utils/fetch";
 
-// Interfaces (same as before)
+// Interfaces
 interface ProductImage {
   url: string;
   altText?: string;
@@ -70,43 +71,43 @@ interface Product {
   inventoryId: string;
 }
 
-
-function partialProduct(product: PublicProduct, inventoryId: string): CreateProduct{
-    return {
-        name: product.name,
-        description: product.description,
-        shortDescription: product.shortDescription,
-        sku: product.sku,
-        slug: product.slug,
-        price: {
-            sp: product.price.sp,
-            mrp: product.price.mrp,
-            discount: product.price.discount,
-        },
-        images: product.images,
-        variants: {
-            size: product.variants.size,
-            fragranceStrength: product.variants.fragranceStrength,
-        },
-        details: product.details,
-        ingredients: product.ingredients,
-        howToUse: product.howToUse,
-        benefits: product.benefits,
-        ratings: product.ratings,
-        tags: product.tags,
-        category: product.category,
-        relatedProducts: product.relatedProducts,
-        packaging: {
-            weight: 0,
-            dimensions: {
-                length: 0,
-                width: 0,
-                height: 0,
-            },
-        },
-        productType: product.productType,
-        inventoryId: inventoryId,
-    };
+// Helper: strip product down to safe payload
+function partialProduct(product: PublicProduct, inventoryId: string): CreateProduct {
+  return {
+    name: product.name,
+    description: product.description,
+    shortDescription: product.shortDescription,
+    sku: product.sku,
+    slug: product.slug,
+    price: {
+      sp: product.price.sp,
+      mrp: product.price.mrp,
+      discount: product.price.discount,
+    },
+    images: product.images,
+    variants: {
+      size: product.variants.size,
+      fragranceStrength: product.variants.fragranceStrength,
+    },
+    details: product.details,
+    ingredients: product.ingredients,
+    howToUse: product.howToUse,
+    benefits: product.benefits,
+    ratings: product.ratings,
+    tags: product.tags,
+    category: product.category,
+    relatedProducts: product.relatedProducts,
+    packaging: {
+      weight: 0,
+      dimensions: {
+        length: 0,
+        width: 0,
+        height: 0,
+      },
+    },
+    productType: product.productType,
+    inventoryId: inventoryId,
+  };
 }
 
 const AdminProductEditForm: React.FC = () => {
@@ -118,32 +119,40 @@ const AdminProductEditForm: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Fetch product
   const { data: productData, isFetching, isError } = useQuery<Product>({
     queryKey: ["product", id],
     queryFn: async () => {
-      const res = await fetch(`/api/products/${id}`);
+      const res = await fetch(`${fetchPrefix}/api/products/${id}`, {
+        credentials: "include",
+      });
       if (!res.ok) throw new Error("Failed to fetch product");
       return res.json();
     },
     refetchOnWindowFocus: false,
   });
 
-  const {data: inventoryData, isFetching: isInventoryFetching} = useQuery({
+  // Fetch inventory (depends on product)
+  useQuery({
     queryKey: ["inventory", product?.inventoryId],
     queryFn: async () => {
-        const res = await fetch(`/api/inventory/${product?.inventoryId}`)
-        if (!res.ok) throw new Error("Failed to fetch inventory");
-        return res.json();
-    }
-  })
+      const res = await fetch(`${fetchPrefix}/api/inventory/${product?.inventoryId}`, {
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to fetch inventory");
+      return res.json();
+    },
+    enabled: Boolean(product?.inventoryId),
+  });
 
   useEffect(() => {
     if (productData) setProduct(productData);
   }, [productData]);
 
+  // Mutations
   const updateInventory = useMutation({
     mutationFn: async ({ sku }: { sku: string }) => {
-      const res = await fetch(`/api/inventory/${product?.inventoryId}`, {
+      const res = await fetch(`${fetchPrefix}/api/inventory/${product?.inventoryId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -151,6 +160,7 @@ const AdminProductEditForm: React.FC = () => {
           quantity: 1,
           inStock: true,
         }),
+        credentials: "include",
       });
       if (!res.ok) throw new Error("Failed to update inventory");
       return res.json();
@@ -159,10 +169,14 @@ const AdminProductEditForm: React.FC = () => {
 
   const updateProduct = useMutation({
     mutationFn: async () => {
-      const res = await fetch(`/api/products/${id}`, {
+      if (!product) throw new Error("No product to update");
+      const payload = partialProduct(product as any, product.inventoryId);
+
+      const res = await fetch(`${fetchPrefix}/api/products/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(product),
+        body: JSON.stringify(payload),
+        credentials: "include",
       });
       if (!res.ok) throw new Error("Failed to update product");
       return res.json();
@@ -172,6 +186,7 @@ const AdminProductEditForm: React.FC = () => {
         title: "Product Updated",
         description: `Product "${product?.name}" updated successfully!`,
       });
+      queryClient.invalidateQueries({ queryKey: ["product", id] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
       navigate("/admin/products");
     },
@@ -184,6 +199,7 @@ const AdminProductEditForm: React.FC = () => {
     },
   });
 
+  // Handlers
   const handleChange = (field: string, value: any) => {
     if (!product) return;
     setProduct((prev) => ({ ...prev!, [field]: value }));
@@ -191,20 +207,15 @@ const AdminProductEditForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!product) return;
 
-    if (product.images.length === 0) {
-      toast({
-        title: "Image Required",
-        description: "Please add at least one product image",
-        variant: "destructive",
-      });
-      return;
-    }
+    const confirmed = window.confirm(
+      "Are you sure you want to save the changes? By doing so you'll lose the previous data."
+    );
+    if (!confirmed) return;
 
     setIsLoading(true);
     try {
-      await updateInventory.mutateAsync({ sku: product.sku });
+      await updateInventory.mutateAsync({ sku: product!.sku });
       await updateProduct.mutateAsync();
     } catch (error) {
       toast({
@@ -217,16 +228,13 @@ const AdminProductEditForm: React.FC = () => {
     }
   };
 
+  // Conditional rendering
   if (isFetching || !product) {
     return <div className="p-6 text-muted-foreground">Loading...</div>;
   }
 
   if (isError) {
-    return (
-      <div className="p-6 text-red-600">
-        Failed to load product. Please try again.
-      </div>
-    );
+    return <div className="p-6 text-red-600">Failed to load product. Please try again.</div>;
   }
 
   return (
@@ -267,12 +275,7 @@ const AdminProductEditForm: React.FC = () => {
 
             {/* Basic Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[
-                "name",
-                "sku",
-                "slug",
-                "shortDescription",
-              ].map((key) => (
+              {["name", "sku", "slug", "shortDescription"].map((key) => (
                 <div key={key} className="space-y-2">
                   <Label>{key}</Label>
                   <Input
@@ -334,7 +337,11 @@ const AdminProductEditForm: React.FC = () => {
                 <Label>{key}</Label>
                 <Textarea
                   placeholder="Comma separated"
-                  value={((key.includes(".") ? key.split(".").reduce((a, b) => a[b], product) : (product as any)[key]) || []).join(", ")}
+                  value={(
+                    (key.includes(".")
+                      ? key.split(".").reduce((a: any, b) => a[b], product)
+                      : (product as any)[key]) || []
+                  ).join(", ")}
                   onChange={(e) => {
                     const value = e.target.value.split(",").map((v) => v.trim());
                     if (key.includes(".")) {
@@ -377,7 +384,11 @@ const AdminProductEditForm: React.FC = () => {
                   <Label>{dim}</Label>
                   <Input
                     type="number"
-                    value={product.packaging.dimensions[dim as keyof typeof product.packaging.dimensions]}
+                    value={
+                      product.packaging.dimensions[
+                        dim as keyof typeof product.packaging.dimensions
+                      ]
+                    }
                     onChange={(e) =>
                       setProduct((prev) => ({
                         ...prev!,

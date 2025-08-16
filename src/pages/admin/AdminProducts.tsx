@@ -228,13 +228,13 @@ const AdminProducts: React.FC = () => {
                           >
                             View
                           </Button>
-                          {/* <Button
+                          <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleEditProduct(product.id)}
+                            asChild
                           >
-                            Edit
-                          </Button> */}
+                            <Link to={`edit/${product.id}`}>Edit</Link>
+                          </Button>
                           <Button
                             variant="destructive"
                             size="sm"
@@ -328,9 +328,9 @@ const AdminProducts: React.FC = () => {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => handleEditProduct(product.id)}
+                                asChild
                               >
-                                Edit
+                                <Link to={`edit/${product.id}`}>Edit</Link>
                               </Button>
                             </TableCell>
                           </TableRow>

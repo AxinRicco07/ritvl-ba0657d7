@@ -214,9 +214,55 @@ export default function Checkout() {
 
       const result = await res.json();
 
+      // Normalize and persist order in the SavedOrder shape expected by Orders page
       localStorage.removeItem("checkout:pendingIdempotencyKey");
       const existingOrders = JSON.parse(localStorage.getItem("ritvl-orders") || "[]");
-      existingOrders.unshift({ ...result, orderId: result.orderId || crypto.randomUUID() });
+
+      const savedOrder = {
+        products: cartItems.map((item) => ({
+          quantity: item.quantity,
+          price: item.price.sp,
+          name: item.name,
+          sku: item.sku,
+          id: item.productId,
+          image: item.image,
+        })),
+        billingAddress: {
+          customerName: formData.billingAddress.name,
+          address1: formData.billingAddress.address,
+          city: formData.billingAddress.city,
+          pincode: formData.billingAddress.pincode,
+          state: formData.billingAddress.state,
+          country: "India",
+          email: formData.billingAddress.email,
+          phone: formData.billingAddress.phone,
+        },
+        shippingAddress: {
+          customerName: formData.shippingAddress.name,
+          address1: formData.shippingAddress.address,
+          city: formData.shippingAddress.city,
+          pincode: formData.shippingAddress.pincode,
+          state: formData.shippingAddress.state,
+          country: "India",
+          email: formData.billingAddress.email,
+          phone: formData.shippingAddress.phone,
+        },
+        orderDate: new Date().toISOString().split("T")[0],
+        paymentMethod: formData.paymentMethod === "UPI" ? "PREPAID" : formData.paymentMethod,
+        orderStatus: "CONFIRMED",
+        totalAmount: total,
+        shippingCharges: shippingCharges,
+        taxes: taxes,
+        subtotal: subtotal,
+        trackingUrl: result?.trackingUrl || "",
+        shipmentId: result?.shipmentId || "",
+        isShippingBilling: false,
+        paymentStatus: result?.paymentStatus || (formData.paymentMethod === "COD" ? "PENDING" : "PAID"),
+        idempotencyKey: idempotencyKey,
+        orderId: result?.orderId || crypto.randomUUID(),
+      };
+
+      existingOrders.unshift(savedOrder);
       localStorage.setItem("ritvl-orders", JSON.stringify(existingOrders));
 
       clearCart();

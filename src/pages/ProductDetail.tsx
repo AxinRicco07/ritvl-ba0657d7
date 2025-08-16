@@ -371,7 +371,7 @@ export default function ProductDetail() {
                 </h3>
                 <div className="flex justify-between items-center">
                   <span className="text-[12px] font-semibold">
-                    {formatINRWithPaisa(item.price.sp)}
+                    {formatINRWithPaisa(item.price.sp * 100)}
                   </span>
                   <Button
                     asChild

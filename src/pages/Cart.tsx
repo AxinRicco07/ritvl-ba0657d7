@@ -31,6 +31,8 @@ export default function Cart() {
         })),
       };
 
+      console.log(JSON.stringify(body, null, 2));
+
       const response = await fetch(
         `${fetchPrefix}/api/shipments/check-cart-serviceability`,
         {
