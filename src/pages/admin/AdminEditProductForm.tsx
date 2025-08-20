@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Save, ArrowLeft, FlaskConical, X, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { CreateProduct } from "@/types/product";
+import { fetchPrefix } from "@/utils/fetch";
 
 // NOTE: This code assumes the existence of `fetchPrefix` and other components/types.
 
@@ -440,8 +441,8 @@ const AdminProductEditForm: React.FC = () => {
                     setProduct((prev) => ({
                       ...prev!,
                       packaging: {
-                        ...(prev?.packaging || {}),
-                        weight: parseFloat(e.target.value),
+                        dimensions: prev?.packaging?.dimensions || { length: 1, width: 1, height: 1 },
+                        weight: parseFloat(e.target.value) || 1,
                       },
                     }))
                   }
@@ -461,10 +462,10 @@ const AdminProductEditForm: React.FC = () => {
                       setProduct((prev) => ({
                         ...prev!,
                         packaging: {
-                          ...(prev?.packaging || {}),
+                          weight: prev?.packaging?.weight || 1,
                           dimensions: {
-                            ...(prev?.packaging?.dimensions || {}),
-                            [dim]: parseFloat(e.target.value),
+                            ...(prev?.packaging?.dimensions || { length: 1, width: 1, height: 1 }),
+                            [dim]: parseFloat(e.target.value) || 1,
                           },
                         },
                       }))
@@ -499,14 +500,5 @@ const AdminProductEditForm: React.FC = () => {
     </div>
   );
 };
-
-export default function App() {
-  return (
-    <BrowserRouter>
-      <AdminProductEditForm />
-    </BrowserRouter>
-  );
-}
-
 
 export default AdminProductEditForm;
