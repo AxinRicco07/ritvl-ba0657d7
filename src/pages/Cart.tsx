@@ -15,8 +15,7 @@ export default function Cart() {
     useCart();
 
   const subtotal = getCartTotal();
-  const gst = Math.round(subtotal * 0.18); // 18% GST
-  const total = subtotal + gst;
+  const total = subtotal;
 
   const [dAvailableChecking, setDAvailableChecking] = useState(false);
   const [pincode, setPincode] = useState("");
@@ -217,10 +216,6 @@ export default function Cart() {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Subtotal</span>
                   <span>{formatINRWithPaisa(subtotal * 100)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">GST (18%)</span>
-                  <span>{formatINRWithPaisa(gst * 100)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Shipping</span>

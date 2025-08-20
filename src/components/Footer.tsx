@@ -10,7 +10,7 @@ const Footer = () => {
               <div className="w-10 h-10 rounded-full bg-blue-700 border border-gray-700 flex items-center justify-center text-gray-100 font-serif text-xl">
                 r
               </div>
-              <span className="text-2xl font-serif italic text-gray-100 tracking-tight">ritvl</span>
+              <span className="text-2xl font-brittany text-gray-100 tracking-tight">Ritvl</span>
             </div>
             <p className="mb-6 text-gray-400 max-w-md text-sm leading-relaxed">
               Premium epsom salts crafted with natural ingredients for the ultimate bath experience.

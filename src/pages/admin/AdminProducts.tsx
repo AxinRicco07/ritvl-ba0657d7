@@ -233,7 +233,7 @@ const AdminProducts: React.FC = () => {
                             size="sm"
                             asChild
                           >
-                            <Link to={`edit/${product.id}`}>Edit</Link>
+                            <Link to={`/admin/products/edit/${product.id}`}>Edit</Link>
                           </Button>
                           <Button
                             variant="destructive"
@@ -330,7 +330,7 @@ const AdminProducts: React.FC = () => {
                                 size="sm"
                                 asChild
                               >
-                                <Link to={`edit/${product.id}`}>Edit</Link>
+                                <Link to={`/admin/products/edit/${product.id}`}>Edit</Link>
                               </Button>
                             </TableCell>
                           </TableRow>

@@ -16,9 +16,9 @@ export default function About() {
               Our Story
             </h1>
             <p className="text-lg text-muted-foreground mb-6">
-              At Shio, we believe that self-care begins with nature’s finest ingredients. Our journey started with a simple mission — to create wellness products that are pure, effective, and environmentally responsible. From sourcing premium-grade Epsom salt to infusing it with natural essences like refreshing lemongrass,Cinnamon,Lavender every step is guided by our commitment to quality and sustainability.
+              At Ritvl, we believe that self-care begins with nature’s finest ingredients. Our journey started with a simple mission — to create wellness products that are pure, effective, and environmentally responsible. From sourcing premium-grade Epsom salt to infusing it with natural essences like refreshing lemongrass,Cinnamon,Lavender every step is guided by our commitment to quality and sustainability.
 
-We work closely with ethical suppliers, ensuring eco-friendly practices while delivering products that nourish the body and calm the mind. Every jar of Shio Epsom Salt is a reflection of our passion for wellness, purity, and the healing power of nature.
+We work closely with ethical suppliers, ensuring eco-friendly practices while delivering products that nourish the body and calm the mind. Every jar of Ritvl Epsom Salt is a reflection of our passion for wellness, purity, and the healing power of nature.
 
 Because for us, it’s not just a product — it’s a promise of relaxation, rejuvenation, and care for both you and the planet.
             </p>

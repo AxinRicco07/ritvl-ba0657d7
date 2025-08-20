@@ -344,50 +344,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Collections */}
-      <section className="py-12 px-4 md:py-16">
-        <div className="container max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-blue-100/30 backdrop-blur-sm p-6 md:p-8 rounded-lg border border-blue-200 animate-slide-in-left">
-              <h3 className="text-xl font-display uppercase mb-4 text-blue-900">
-                PREMIUM EPSOM SALT COLLECTION
-              </h3>
-              <p className="text-blue-800/90 mb-6">
-                Discover therapeutic-grade magnesium sulfate crystals,
-                meticulously harvested for optimal purity and dissolution.
-                Perfect for muscle relaxation, detoxification baths, and
-                skincare rituals.
-              </p>
-              <Button
-                variant="outline"
-                className="flex items-center gap-2 border-blue-700 text-blue-700 hover:bg-blue-50/50 sparkle-button"
-              >
-                EXPLORE BATH SALTS{" "}
-                <ArrowRight className="h-4 w-4 group-hover:animate-bounce" />
-              </Button>
-            </div>
-
-            <div className="bg-blue-100/30 backdrop-blur-sm p-6 md:p-8 rounded-lg border border-blue-200 animate-slide-in-right">
-              <h3 className="text-xl font-display uppercase mb-4 text-blue-900">
-                SPECIALTY EPSOM BLENDS
-              </h3>
-              <p className="text-blue-800/90 mb-6">
-                Enhanced mineral combinations infused with essential oils and
-                natural botanicals. Our aromatic blends combine Epsom salts with
-                lavender, eucalyptus, and chamomile for elevated therapeutic
-                benefits.
-              </p>
-              <Button
-                variant="outline"
-                className="flex items-center gap-2 border-blue-700 text-blue-700 hover:bg-blue-50/50 sparkle-button"
-              >
-                DISCOVER BLENDS{" "}
-                <ArrowRight className="h-4 w-4 group-hover:animate-bounce" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Testimonials */}
       <section className="py-12 px-4 md:py-16 bg-gradient-to-b from-blue-50/50 to-white">

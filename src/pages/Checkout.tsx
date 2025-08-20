@@ -61,9 +61,9 @@ export default function Checkout() {
   });
 
   const subtotal = getCartTotal();
-  const taxes = Math.round(subtotal * 0.18);
+  const taxes = 0;
   const [shippingCharges, setShippingCharges] = useState<number>(0);
-  const total = subtotal + taxes + shippingCharges;
+  const total = subtotal + shippingCharges;
 
   // Auto-fetch shipping charges when pincode is valid
   useEffect(() => {
@@ -85,7 +85,12 @@ export default function Checkout() {
         .then((res) => res.json())
         .then((data) => {
           if (data.isServiceable) {
-            setShippingCharges(data.rate);
+            // Free shipping for orders above Rs 1000
+            if (subtotal > 1000) {
+              setShippingCharges(0);
+            } else {
+              setShippingCharges(data.rate);
+            }
           } else {
             setShippingCharges(0);
             toast.error("Delivery not available at this pincode.");
@@ -151,8 +156,10 @@ export default function Checkout() {
       }
     }
 
-    if (!shippingCharges) {
-      toast.error("Shipping charges not calculated. Please check shipping pincode.");
+    // Allow zero shipping charges (free shipping)
+    // Ensure a valid pincode is entered for shipping calculation
+    if (!/^[0-9]{6}$/.test(shippingAddress.pincode)) {
+      toast.error("Please enter a valid 6-digit shipping pincode.");
       return false;
     }
 
@@ -640,10 +647,6 @@ export default function Checkout() {
                   <span>{formatINRWithPaisa(subtotal * 100)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Taxes (18% GST)</span>
-                  <span>{formatINRWithPaisa(taxes * 100)}</span>
-                </div>
-                <div className="flex justify-between">
                   <span className="text-muted-foreground">Shipping</span>
                   <span>
                     {isShippingChargesLoading ? (
@@ -666,7 +669,7 @@ export default function Checkout() {
                 </div>
               </div>
               <Button
-                disabled={!shippingCharges || isSubmitting}
+                disabled={isSubmitting}
                 onClick={handlePlaceOrder}
                 className="w-full mt-4 py-6 text-base"
                 size="lg"

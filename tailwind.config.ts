@@ -182,9 +182,9 @@ export default {
 				'sparkle': 'sparkle 2s ease-in-out forwards'
 			},
 			fontFamily: {
-				sans: ['Montserrat', 'sans-serif'],
+				sans: ['"Playwrite US Trad"', 'serif'],
 				display: ['Cormorant Garamond', 'serif'],
-				elegant: ['"Playfair Display"', 'serif'],
+				brittany: ['"Brittany Signature"', 'cursive'],
 			}
 		}
 	},

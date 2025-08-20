@@ -3,7 +3,7 @@ import Whatsapp from "../assets/social-media-logo-design_23-2151296979-modified.
 import { useEffect, useState } from "react";
 
 const WhatsAppButton = () => {
-  const whatsappNumber = "917026252325";
+  const whatsappNumber = "919483946506";
   const [isJiggling, setIsJiggling] = useState(true);
 
   const handleClick = () => {
