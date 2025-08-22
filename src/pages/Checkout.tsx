@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { fetchPrefix } from "@/utils/fetch";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
+import confetti from "canvas-confetti";
 
 interface CheckoutFormData {
   billingAddress: {
@@ -64,6 +65,39 @@ export default function Checkout() {
   const taxes = 0;
   const [shippingCharges, setShippingCharges] = useState<number>(0);
   const total = subtotal + shippingCharges;
+
+  // Confetti animation function
+  const triggerConfetti = () => {
+    const duration = 3000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    function randomInRange(min: number, max: number) {
+      return Math.random() * (max - min) + min;
+    }
+
+    const interval: NodeJS.Timeout = setInterval(function() {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      
+      // since particles fall down, start a bit higher than random
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+      });
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+      });
+    }, 250);
+  };
 
   // Auto-fetch shipping charges when pincode is valid
   useEffect(() => {
@@ -273,8 +307,16 @@ export default function Checkout() {
       localStorage.setItem("ritvl-orders", JSON.stringify(existingOrders));
 
       clearCart();
+      
+      // Trigger confetti animation
+      triggerConfetti();
+      
       toast.success("Order placed successfully!");
-      navigate("/orders");
+      
+      // Delay navigation to allow confetti to be visible
+      setTimeout(() => {
+        navigate("/orders");
+      }, 1500);
     } catch (error: unknown) {
       const errMsg = (error as Error).message || "Something went wrong";
       console.error("Order error:", error);
