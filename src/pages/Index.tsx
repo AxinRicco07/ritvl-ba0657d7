@@ -191,7 +191,7 @@ const Index = () => {
               style={{ animationDelay: "0.9s" }}
             >
               Experience the therapeutic benefits of our premium bath
-              salts—ethically sourced, 100% natural, and crafted for your
+              salts—100% natural and crafted for your
               wellbeing.
             </p>
             

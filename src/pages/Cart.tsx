@@ -19,6 +19,10 @@ export default function Cart() {
 
   const [dAvailableChecking, setDAvailableChecking] = useState(false);
   const [pincode, setPincode] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"COD" | "UPI">((sessionStorage.getItem("ritvl:preferredPayment") as "COD" | "UPI") || "COD");
+  const [codAvailable, setCodAvailable] = useState<boolean | null>(null);
+  const [prepaidAvailable, setPrepaidAvailable] = useState<boolean | null>(null);
+  const [serviceMessage, setServiceMessage] = useState<string | null>(null);
 
   const { mutate: checkDelivery } = useMutation({
     mutationFn: async (pincode: string) => {
@@ -48,12 +52,21 @@ export default function Cart() {
       }
       return response.json();
     },
-    onSuccess: (data: { isServiceable: boolean; message: string }) => {
+    onSuccess: (data: { isServiceable: boolean; message?: string; codAvailable?: boolean; prepaidAvailable?: boolean; rate?: number }) => {
+      setServiceMessage(data.message || null);
+      setCodAvailable(data.codAvailable ?? null);
+      setPrepaidAvailable(data.prepaidAvailable ?? null);
+
       if (data.isServiceable) {
-        toast.success("Delivery is available for this pincode!");
-        console.log(data);
+        if (data.codAvailable === false && data.prepaidAvailable) {
+          setPaymentMethod("UPI");
+          sessionStorage.setItem("ritvl:preferredPayment", "UPI");
+          toast.message(data.message || "Prepaid delivery is available. COD not available for this pincode.");
+        } else {
+          toast.success(data.message || "Delivery is available for this pincode!");
+        }
       } else {
-        toast.error("Sorry, delivery is not available for this pincode.");
+        toast.error(data.message || "Sorry, delivery is not available for this pincode.");
       }
     },
     onError(error, variables, context) {
@@ -274,6 +287,47 @@ export default function Cart() {
                 <p className="text-xs text-muted-foreground mt-2">
                   Enter a 6-digit pincode to check delivery availability
                 </p>
+                {serviceMessage && (
+                  <p className="text-sm mt-2">{serviceMessage}</p>
+                )}
+              </div>
+
+              {/* Payment selection */}
+              <div className="mt-6 pt-6 border-t">
+                <h3 className="font-medium mb-3">Payment Method</h3>
+                <div className="space-y-3">
+                  <label className={`flex items-center gap-3 p-3 border rounded-md ${codAvailable === false ? 'opacity-60' : ''}`}>
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="COD"
+                      disabled={codAvailable === false}
+                      checked={paymentMethod === "COD"}
+                      onChange={() => {
+                        setPaymentMethod("COD");
+                        sessionStorage.setItem("ritvl:preferredPayment", "COD");
+                      }}
+                    />
+                    <span>Cash on Delivery (COD)</span>
+                    {codAvailable === false && (
+                      <span className="text-xs text-muted-foreground">Not available for current cart/pincode</span>
+                    )}
+                  </label>
+                  <label className={`flex items-center gap-3 p-3 border rounded-md ${prepaidAvailable === false ? 'opacity-60' : ''}`}>
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="UPI"
+                      disabled={prepaidAvailable === false}
+                      checked={paymentMethod === "UPI"}
+                      onChange={() => {
+                        setPaymentMethod("UPI");
+                        sessionStorage.setItem("ritvl:preferredPayment", "UPI");
+                      }}
+                    />
+                    <span>UPI / Netbanking (Prepaid)</span>
+                  </label>
+                </div>
               </div>
             </CardContent>
           </Card>

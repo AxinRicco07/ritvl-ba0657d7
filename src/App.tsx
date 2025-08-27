@@ -9,6 +9,7 @@ import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
+import Payment from "./pages/Payment";
 import TrackingOrder from "./pages/TrackingOrder";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
@@ -98,6 +99,7 @@ const App = () => (
               <Route path="/cart" element={<Cart />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/orders" element={<Orders />} />
+              <Route path="/pay" element={<Payment />} />
               <Route path="/tracking-order/:orderId" element={<TrackingOrder />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />

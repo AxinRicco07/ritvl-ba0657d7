@@ -58,13 +58,15 @@ export default function Checkout() {
       state: "",
       pincode: "",
     },
-    paymentMethod: "COD",
+    paymentMethod: (sessionStorage.getItem("ritvl:preferredPayment") as "COD" | "UPI") || "COD",
   });
 
   const subtotal = getCartTotal();
   const taxes = 0;
   const [shippingCharges, setShippingCharges] = useState<number>(0);
   const total = subtotal + shippingCharges;
+  const [codAvailable, setCodAvailable] = useState<boolean | null>(null);
+  const [prepaidAvailable, setPrepaidAvailable] = useState<boolean | null>(null);
 
   // Confetti animation function
   const triggerConfetti = () => {
@@ -118,6 +120,12 @@ export default function Checkout() {
       })
         .then((res) => res.json())
         .then((data) => {
+          setCodAvailable(data.codAvailable ?? null);
+          setPrepaidAvailable(data.prepaidAvailable ?? null);
+          if (!data.codAvailable && data.prepaidAvailable && formData.paymentMethod === "COD") {
+            setFormData((prev) => ({ ...prev, paymentMethod: "UPI" }));
+            sessionStorage.setItem("ritvl:preferredPayment", "UPI");
+          }
           if (data.isServiceable) {
             // Free shipping for orders above Rs 1000
             if (subtotal > 1000) {
@@ -127,7 +135,7 @@ export default function Checkout() {
             }
           } else {
             setShippingCharges(0);
-            toast.error("Delivery not available at this pincode.");
+            toast.error(data.message || "Delivery not available at this pincode.");
           }
         })
         .catch(() => {
@@ -239,7 +247,32 @@ export default function Checkout() {
         orderDate: new Date().toISOString().split("T")[0],
       };
 
-      const res = await fetch(`${fetchPrefix}/api/orders/new`, {
+      if (formData.paymentMethod === "UPI") {
+        // Save pending order for the payment page
+        sessionStorage.setItem("ritvl:pendingOrder", JSON.stringify(order));
+        
+        // Create Razorpay order on the server first and wait for confirmation
+        const rpRes = await fetch(`${fetchPrefix}/api/orders/checkout/razorpay`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Idempotency-Key": idempotencyKey,
+          },
+          body: JSON.stringify(order),
+        });
+        if (!rpRes.ok) {
+          const err = await rpRes.json().catch(() => ({}));
+          throw new Error(err.message || "Failed to create Razorpay order");
+        }
+        const rpOrder = await rpRes.json() as { id: string; amount: number; currency: string; orderId: string };
+        // Persist Razorpay order for the payment page
+        sessionStorage.setItem("ritvl:rpOrder", JSON.stringify(rpOrder));
+        navigate("/pay");
+        return;
+      }
+
+      // COD flow
+      const res = await fetch(`${fetchPrefix}/api/orders/checkout/cod`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -289,7 +322,7 @@ export default function Checkout() {
           phone: formData.shippingAddress.phone,
         },
         orderDate: new Date().toISOString().split("T")[0],
-        paymentMethod: formData.paymentMethod === "UPI" ? "PREPAID" : formData.paymentMethod,
+        paymentMethod: "COD",
         orderStatus: "CONFIRMED",
         totalAmount: total,
         shippingCharges: shippingCharges,
@@ -298,7 +331,7 @@ export default function Checkout() {
         trackingUrl: result?.trackingUrl || "",
         shipmentId: result?.shipmentId || "",
         isShippingBilling: false,
-        paymentStatus: result?.paymentStatus || (formData.paymentMethod === "COD" ? "PENDING" : "PAID"),
+        paymentStatus: result?.paymentStatus || "PENDING",
         idempotencyKey: idempotencyKey,
         orderId: result?.orderId || crypto.randomUUID(),
       };
@@ -307,12 +340,12 @@ export default function Checkout() {
       localStorage.setItem("ritvl-orders", JSON.stringify(existingOrders));
 
       clearCart();
-      
+
       // Trigger confetti animation
       triggerConfetti();
-      
+
       toast.success("Order placed successfully!");
-      
+
       // Delay navigation to allow confetti to be visible
       setTimeout(() => {
         navigate("/orders");
@@ -614,25 +647,32 @@ export default function Checkout() {
                       id="cod"
                       name="payment"
                       value="COD"
+                      disabled={codAvailable === false}
                       checked={formData.paymentMethod === "COD"}
-                      onChange={() =>
-                        setFormData((prev) => ({ ...prev, paymentMethod: "COD" }))
-                      }
+                      onChange={() => {
+                        setFormData((prev) => ({ ...prev, paymentMethod: "COD" }));
+                        sessionStorage.setItem("ritvl:preferredPayment", "COD");
+                      }}
                       className="h-4 w-4 text-primary focus:ring-primary"
                     />
                     <Label htmlFor="cod" className="font-medium">Cash on Delivery (COD)</Label>
                   </div>
-                  <div className="flex items-center space-x-3 p-3 rounded-md border border-input opacity-50">
-                    <input 
-                      type="radio" 
-                      id="upi" 
-                      name="payment" 
-                      value="upi" 
-                      disabled 
-                      className="h-4 w-4"
+                  <div className="flex items-center space-x-3 p-3 rounded-md border border-input hover:border-primary transition-colors">
+                    <input
+                      type="radio"
+                      id="upi"
+                      name="payment"
+                      value="UPI"
+                      disabled={prepaidAvailable === false}
+                      checked={formData.paymentMethod === "UPI"}
+                      onChange={() => {
+                        setFormData((prev) => ({ ...prev, paymentMethod: "UPI" }));
+                        sessionStorage.setItem("ritvl:preferredPayment", "UPI");
+                      }}
+                      className="h-4 w-4 text-primary focus:ring-primary"
                     />
-                    <Label htmlFor="upi" className="text-muted-foreground font-medium">
-                      UPI (Coming Soon)
+                    <Label htmlFor="upi" className="font-medium">
+                      UPI / Netbanking
                     </Label>
                   </div>
                 </div>

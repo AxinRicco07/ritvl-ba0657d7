@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import Image1 from "../assets/WhatsApp Image 2025-08-14 at 12.22.09 PM.jpeg";
-import Image2 from "../assets/WhatsApp Image 2025-08-14 at 12.22.10 PM.jpeg";
-import Image3 from "../assets/WhatsApp Image 2025-08-14 at 12.22.11 PM.jpeg";
-import Image4 from "../assets/WhatsApp Image 2025-08-14 at 12.22.08 PM.jpeg";
+import Image1 from "../assets/IMG_1060.png";
+import Image2 from "../assets/IMG_1049.jpg";
+import Image3 from "../assets/IMG_1048.jpg";
+import Image4 from "../assets/IMG_1047.jpg";
 
 export default function About() {
   return (
