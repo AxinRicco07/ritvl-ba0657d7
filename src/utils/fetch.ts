@@ -1,1 +1,1 @@
-export const fetchPrefix = "http://localhost:3000"
+export const fetchPrefix = "https://backend.ritvl.com"

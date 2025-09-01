@@ -68,6 +68,22 @@ export default function Checkout() {
   const [codAvailable, setCodAvailable] = useState<boolean | null>(null);
   const [prepaidAvailable, setPrepaidAvailable] = useState<boolean | null>(null);
 
+  // If cart changes between visits, rotate idempotency and clear any stale payment state
+  useEffect(() => {
+    const fingerprint = JSON.stringify(
+      cartItems
+        .map((i) => ({ sku: i.sku, qty: i.quantity, sp: i.price?.sp }))
+        .sort((a, b) => (a.sku > b.sku ? 1 : a.sku < b.sku ? -1 : 0))
+    );
+    const prev = localStorage.getItem("checkout:cartFingerprint");
+    if (prev !== fingerprint) {
+      localStorage.setItem("checkout:cartFingerprint", fingerprint);
+      localStorage.removeItem("checkout:pendingIdempotencyKey");
+      sessionStorage.removeItem("ritvl:rpOrder");
+      sessionStorage.removeItem("ritvl:pendingOrder");
+    }
+  }, [cartItems]);
+
   // Confetti animation function
   const triggerConfetti = () => {
     const duration = 3000;

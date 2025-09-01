@@ -98,6 +98,9 @@ export default function Payment() {
           throw new Error(err.message || "Failed to initiate payment");
         }
         rpOrder = await res.json();
+        console.log("🔹 Razorpay Order from backend:", rpOrder);
+        console.log("🔹 Amount in Paise (sent to Razorpay):", rpOrder.amount);
+        console.log("🔹 Amount in INR:", rpOrder.amount / 100);
         // persist for refresh safety
         sessionStorage.setItem("ritvl:rpOrder", JSON.stringify(rpOrder));
       }

@@ -238,7 +238,7 @@ const ProductImageUploader: React.FC<{
 };
 
 const AdminProductEditForm: React.FC = () => {
-  const { id } = useParams();
+  const { productId } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -249,18 +249,18 @@ const AdminProductEditForm: React.FC = () => {
 
   // Fetch product
   const { data: productData, isFetching, isError } = useQuery<Product>({
-    queryKey: ["product", id],
+    queryKey: ["product", productId],
     queryFn: async () => {
-      if (!id) throw new Error("Product ID is missing");
+      if (!productId) throw new Error("Product ID is missing");
       
-      const res = await fetch(`${fetchPrefix}/api/products/${id}`, {
+      const res = await fetch(`${fetchPrefix}/api/products/${productId}`, {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Failed to fetch product");
       return res.json();
     },
     refetchOnWindowFocus: false,
-    enabled: !!id, // Only run query if id exists
+    enabled: !!productId, // Only run query if id exists
   });
 
   useEffect(() => {
@@ -303,7 +303,7 @@ const AdminProductEditForm: React.FC = () => {
   const updateProduct = useMutation({
     mutationFn: async (updatedProduct: Product) => {
       // Check if ID is available
-      if (!id) {
+      if (!productId) {
         throw new Error("Product ID is missing");
       }
 
@@ -349,10 +349,10 @@ const AdminProductEditForm: React.FC = () => {
             height: Number(updatedProduct.packaging.dimensions.height) || 1
           }
         },
-        inventoryId: updatedProduct.inventoryId || id // Use the product ID as inventory ID
+        inventoryId: updatedProduct.inventoryId || productId // Use the product ID as inventory ID
       };
 
-      const res = await fetch(`${fetchPrefix}/api/products/${id}`, {
+      const res = await fetch(`${fetchPrefix}/api/products/${productId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -371,7 +371,7 @@ const AdminProductEditForm: React.FC = () => {
         title: "Product Updated",
         description: `Product "${product.name}" updated successfully!`,
       });
-      queryClient.invalidateQueries({ queryKey: ["product", id] });
+      queryClient.invalidateQueries({ queryKey: ["product", productId] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
       navigate("/admin/products");
     },
@@ -425,7 +425,7 @@ const AdminProductEditForm: React.FC = () => {
     e.preventDefault();
 
     // Check if ID is available
-    if (!id) {
+    if (!productId) {
       toast({
         title: "Update Failed",
         description: "Product ID is missing",
@@ -871,7 +871,7 @@ const AdminProductEditForm: React.FC = () => {
                     <Label htmlFor="inventoryId">Inventory ID</Label>
                     <Input
                       id="inventoryId"
-                      value={product.inventoryId || id || ""}
+                      value={product.inventoryId || productId || ""}
                       readOnly
                       className="bg-muted"
                       placeholder="Auto-populated with product ID"
@@ -952,7 +952,7 @@ const AdminProductEditForm: React.FC = () => {
               <Button
                 type="submit"
                 className="bg-blue-600 hover:bg-blue-500 text-white flex gap-2 shadow-md"
-                disabled={isLoading || !id}
+                disabled={isLoading || !productId}
               >
                 <Save className="h-4 w-4" />
                 {isLoading ? "Updating..." : "Update Product"}

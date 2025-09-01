@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Trash2, ShoppingCart, LoaderCircle } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { formatINRWithPaisa } from "@/utils/currency";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { fetchPrefix } from "@/utils/fetch";
 import { toast } from "sonner";
@@ -23,6 +23,23 @@ export default function Cart() {
   const [codAvailable, setCodAvailable] = useState<boolean | null>(null);
   const [prepaidAvailable, setPrepaidAvailable] = useState<boolean | null>(null);
   const [serviceMessage, setServiceMessage] = useState<string | null>(null);
+
+  // Reset idempotency key whenever cart contents change (new product/qty)
+  useEffect(() => {
+    const fingerprint = JSON.stringify(
+      [...cartItems]
+        .map((i) => ({ sku: i.sku, qty: i.quantity, sp: i.price?.sp }))
+        .sort((a, b) => (a.sku > b.sku ? 1 : a.sku < b.sku ? -1 : 0))
+    );
+    const prev = localStorage.getItem("checkout:cartFingerprint");
+    if (prev !== fingerprint) {
+      localStorage.setItem("checkout:cartFingerprint", fingerprint);
+      // Drop any pending idempotency and stale Razorpay order state
+      localStorage.removeItem("checkout:pendingIdempotencyKey");
+      sessionStorage.removeItem("ritvl:rpOrder");
+      sessionStorage.removeItem("ritvl:pendingOrder");
+    }
+  }, [cartItems]);
 
   const { mutate: checkDelivery } = useMutation({
     mutationFn: async (pincode: string) => {
