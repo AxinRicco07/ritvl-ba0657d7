@@ -414,7 +414,7 @@ const AdminProductForm: React.FC = () => {
             {/* Packaging */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="space-y-2">
-                <Label>Weight (g)</Label>
+                <Label>Weight (kg)</Label>
                 <Input
                   type="number"
                   value={product.packaging.weight}
