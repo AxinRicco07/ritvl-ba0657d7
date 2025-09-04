@@ -27,7 +27,7 @@ import {
   Download,
   MoreHorizontal
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Added useNavigate
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchPrefix } from "@/utils/fetch";
 import { InventoryRecord, PublicProduct } from "@/types/product";
@@ -48,6 +48,7 @@ type ProductInventoryRecord = PublicProduct & {
 
 const AdminProducts: React.FC = () => {
   const { toast } = useToast();
+  const navigate = useNavigate(); // Added navigate hook
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
@@ -142,10 +143,8 @@ const AdminProducts: React.FC = () => {
   };
 
   const handleViewProduct = (id: string) => {
-    toast({
-      title: "View Product",
-      description: `Viewing details for product: ${id}`,
-    });
+    // Navigate to the product detail page
+    navigate(`/product/${id}`);
   };
 
   const handleEditProduct = (id: string) => {

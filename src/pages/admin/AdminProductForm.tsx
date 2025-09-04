@@ -29,19 +29,17 @@ import ProductTags from "@/components/admin/ProductTags";
 import { MultiSelect } from "@/components/ui/multi-select";
 
 const TAGS_OPTIONS = [
-    { value: "new", label: "New" },
-    { value: "featured", label: "Featured" },
-    { value: "best-selling", label: "Best Selling" },
-  ];
+  { value: "new", label: "New" },
+  { value: "featured", label: "Featured" },
+  { value: "best-selling", label: "Best Selling" },
+];
 
 const AdminProductForm: React.FC = () => {
-  
   const { toast } = useToast();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { id } = useParams();
   const isEditMode = Boolean(id);
-  
 
   const [product, setProduct] = useState<CreateProduct>({
     name: "",
@@ -61,30 +59,20 @@ const AdminProductForm: React.FC = () => {
     category: { name: "" },
     relatedProducts: [""],
     packaging: {
-      weight: 1,
-      dimensions: { length: 1, width: 1, height: 1 },
+      weight: 0,
+      dimensions: { length: 0, width: 0, height: 0 },
     },
     productType: "salt",
     inventoryId: "",
   });
 
-
   useEffect(() => {
     console.log("Product has been changed", product);
-    // Keep the raw textarea string in sync with product.benefits for initial/render
     setBenefitsInput((product.benefits || []).join(", "));
   }, [product]);
 
-  const [qty, setQty] = useState(1);
+  const [qty, setQty] = useState(0);
   const [benefitsInput, setBenefitsInput] = useState<string>("");
-
-  const setProductPayload = useCallback(
-    (updater: (prev: CreateProduct) => CreateProduct) => {
-      setProduct(updater);
-    },
-    []
-  );
-
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -110,7 +98,7 @@ const AdminProductForm: React.FC = () => {
         body: JSON.stringify({
           sku: product.sku,
           quantity: qty,
-          inStock: true,
+          inStock: qty > 0,
         }),
         credentials: "include",
       });
@@ -157,7 +145,6 @@ const AdminProductForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Parse benefits from the raw textarea so spaces and commas are preserved during typing
     const parsedBenefits = benefitsInput
       .split(",")
       .map((v) => v.trim())
@@ -244,17 +231,18 @@ const AdminProductForm: React.FC = () => {
             {/* Grid Inputs */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
-                { label: "Name", key: "name" },
-                { label: "SKU", key: "sku" },
-                { label: "Slug", key: "slug" },
-                { label: "Short Description", key: "shortDescription" },
-              ].map(({ label, key }) => (
+                { label: "Name", key: "name", required: true },
+                { label: "SKU", key: "sku", required: true },
+                { label: "Slug", key: "slug", required: true },
+                { label: "Short Description", key: "shortDescription", required: true },
+              ].map(({ label, key, required }) => (
                 <div key={key} className="space-y-2">
-                  <Label>{label}</Label>
+                  <Label>{label}{required && <span className="text-red-500 ml-1">*</span>}</Label>
                   <Input
                     value={(product as any)[key]}
                     onChange={(e) => handleChange(key, e.target.value)}
-                    required
+                    required={required}
+                    placeholder={`Enter ${label.toLowerCase()}`}
                   />
                 </div>
               ))}
@@ -270,29 +258,35 @@ const AdminProductForm: React.FC = () => {
                       category: { name: e.target.value },
                     }))
                   }
+                  placeholder="e.g., Bath Salts, Soaps"
                 />
               </div>
 
               {/* Price fields */}
-              {["mrp", "sp", "discount"].map((priceKey) => (
-                <div key={priceKey} className="space-y-2">
-                  <Label>{priceKey.toUpperCase()}</Label>
+              {[
+                { key: "mrp", label: "MRP (Maximum Retail Price)" },
+                { key: "sp", label: "Selling Price" },
+                { key: "discount", label: "Discount (%)" }
+              ].map(({ key, label }) => (
+                <div key={key} className="space-y-2">
+                  <Label>{label}</Label>
                   <Input
                     step="0.01"
                     type="number"
                     value={
-                      product.price[priceKey as keyof typeof product.price]
+                      product.price[key as keyof typeof product.price] || ""
                     }
                     onChange={(e) =>
                       setProduct((prev) => ({
                         ...prev,
                         price: {
                           ...prev.price,
-                          [priceKey]: parseFloat(e.target.value),
+                          [key]: parseFloat(e.target.value) || 0,
                         },
                       }))
                     }
                     min={0}
+                    placeholder={`Enter ${label.toLowerCase()}`}
                   />
                 </div>
               ))}
@@ -303,36 +297,39 @@ const AdminProductForm: React.FC = () => {
                 <Input
                   value={product.productType}
                   onChange={(e) => handleChange("productType", e.target.value)}
+                  placeholder="e.g., salt, soap, oil"
                 />
               </div>
             </div>
 
             {/* Textarea fields */}
-            {["description", "details", "ingredients", "howToUse"].map(
-              (key) => (
-                <div key={key} className="space-y-2">
-                  <Label>{key.replace(/([A-Z])/g, " $1")}</Label>
-                  <Textarea
-                    value={(product as any)[key]}
-                    onChange={(e) => handleChange(key, e.target.value)}
-                    className="min-h-[80px]"
-                  />
-                </div>
-              )
-            )}
+            {[
+              { key: "description", label: "Description" },
+              { key: "details", label: "Details" },
+              { key: "ingredients", label: "Ingredients" },
+              { key: "howToUse", label: "How To Use" }
+            ].map(({ key, label }) => (
+              <div key={key} className="space-y-2">
+                <Label>{label}</Label>
+                <Textarea
+                  value={(product as any)[key]}
+                  onChange={(e) => handleChange(key, e.target.value)}
+                  className="min-h-[80px]"
+                  placeholder={`Enter ${label.toLowerCase()}`}
+                />
+              </div>
+            ))}
 
             {/* Benefits textarea */}
             <div className="space-y-2">
               <Label>Benefits</Label>
               <Textarea
-                placeholder="Separate values by comma"
+                placeholder="Separate values by comma (e.g., Relaxation, Skin hydration, Stress relief)"
                 value={benefitsInput}
                 onChange={(e) => {
-                  // Allow free typing of spaces and commas; don't normalize on each keystroke
                   setBenefitsInput(e.target.value);
                 }}
                 onBlur={() => {
-                  // Normalize to array on blur
                   const value = benefitsInput
                     .split(",")
                     .map((v) => v.trim())
@@ -347,53 +344,12 @@ const AdminProductForm: React.FC = () => {
               <MultiSelect
                 options={TAGS_OPTIONS}
                 onValueChange={(values) => {
-                  console.log(values,  values.filter(v => v));
-                  // handleChange("tags", values.filter(v => v));
                   setProduct(prev => ({...prev, tags: values.filter(v => v)}))
-                  console.log(product, "Product ");
                 }}
                 defaultValue={product.tags}
+                placeholder="Select tags for your product"
               />
             </div>
-
-            {/* <ProductTags
-              value={product.tags}
-              onChange={(newTags) =>
-                setProduct((prev) => ({ ...prev, tags: newTags }))
-              }
-            /> */}
-
-            {/* Arrays */}
-            {/* {["Benefits", "Tags"].map((key) => (
-              <div key={key} className="space-y-2">
-                <Label>{key}</Label>
-                <Textarea
-                  placeholder="Separate values by comma"
-                  value={(
-                    (key.includes(".")
-                      ? key.split(".").reduce((a, b) => a[b], product)
-                      : (product as any)[key]) || []
-                  ).join(", ")}
-                  onChange={(e) => {
-                    const value = e.target.value
-                      .split(",")
-                      .map((v) => v.trim());
-                    if (key.includes(".")) {
-                      const [parent, child] = key.split(".");
-                      setProduct((prev) => ({
-                        ...prev,
-                        [parent]: {
-                          ...prev[parent as keyof typeof prev],
-                          [child]: value,
-                        },
-                      }));
-                    } else {
-                      handleChange(key, value);
-                    }
-                  }}
-                />
-              </div>
-            ))} */}
 
             <MultipleProductsSelect
               products={productsList.map((p) => {
@@ -408,7 +364,7 @@ const AdminProductForm: React.FC = () => {
                   description: p.shortDescription || "",
                 };
               })}
-              setProductPayload={setProductPayload}
+              setProductPayload={setProduct}
             />
 
             {/* Packaging */}
@@ -417,51 +373,59 @@ const AdminProductForm: React.FC = () => {
                 <Label>Weight (kg)</Label>
                 <Input
                   type="number"
-                  value={product.packaging.weight}
+                  step="0.01"
+                  value={product.packaging.weight || ""}
                   onChange={(e) =>
                     setProduct((prev) => ({
                       ...prev,
                       packaging: {
                         ...prev.packaging,
-                        weight: parseFloat(e.target.value),
+                        weight: parseFloat(e.target.value) || 0,
                       },
                     }))
                   }
+                  placeholder="0.5"
+                  min={0}
                 />
               </div>
-              {["Length", "Width", "Height", "Quantity"].map((dim) => (
+              {["length", "width", "height"].map((dim) => (
                 <div key={dim} className="space-y-2">
-                  <Label>{dim}</Label>
+                  <Label>{dim.charAt(0).toUpperCase() + dim.slice(1)} (cm)</Label>
                   <Input
                     type="number"
-                    step="0.01"
-                    value={
-                      dim === "Quantity"
-                        ? qty
-                        : product.packaging.dimensions[dim.toLowerCase() as keyof typeof product.packaging.dimensions]
-                    }
-                    min={dim === "Quantity" ? 1 : 0}
+                    step="0.1"
+                    value={product.packaging.dimensions[dim as keyof typeof product.packaging.dimensions] || ""}
+                    min={0}
                     onChange={(e) => {
-                      if (dim === "Quantity") {
-                        setQty(parseInt(e.target.value, 10));
-                      } else {
-                        const key = dim.toLowerCase() as keyof typeof product.packaging.dimensions;
-                        const parsed = parseFloat(e.target.value);
-                        setProduct((prev) => ({
-                          ...prev,
-                          packaging: {
-                            ...prev.packaging,
-                            dimensions: {
-                              ...prev.packaging.dimensions,
-                              [key]: isNaN(parsed) ? 0 : parsed,
-                            },
+                      const key = dim as keyof typeof product.packaging.dimensions;
+                      const parsed = parseFloat(e.target.value) || 0;
+                      setProduct((prev) => ({
+                        ...prev,
+                        packaging: {
+                          ...prev.packaging,
+                          dimensions: {
+                            ...prev.packaging.dimensions,
+                            [key]: parsed,
                           },
-                        }));
-                      }
+                        },
+                      }));
                     }}
+                    placeholder={`${dim === 'length' ? '15' : dim === 'width' ? '10' : '5'}`}
                   />
                 </div>
               ))}
+              <div className="space-y-2">
+                <Label>Initial Stock Quantity</Label>
+                <Input
+                  type="number"
+                  value={qty || ""}
+                  min={0}
+                  onChange={(e) => {
+                    setQty(parseInt(e.target.value, 10) || 0);
+                  }}
+                  placeholder="100"
+                />
+              </div>
             </div>
           </CardContent>
 

@@ -27,8 +27,8 @@ const defaultProduct = {
   sku: "",
   slug: "",
   price: {
-    sp: 1,
-    mrp: 1,
+    sp: 0,
+    mrp: 0,
     discount: 0
   },
   images: [
@@ -39,7 +39,7 @@ const defaultProduct = {
     }
   ],
   inventory: {
-    quantity: 1,
+    quantity: 0,
     inStock: true
   },
   variants: {
@@ -60,11 +60,11 @@ const defaultProduct = {
     count: 0
   },
   packaging: {
-    weight: 1,
+    weight: 0,
     dimensions: {
-      length: 1,
-      width: 1,
-      height: 1
+      length: 0,
+      width: 0,
+      height: 0
     }
   },
   inventoryId: "",
@@ -238,7 +238,7 @@ const ProductImageUploader: React.FC<{
 };
 
 const AdminProductEditForm: React.FC = () => {
-  const { productId } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -249,18 +249,18 @@ const AdminProductEditForm: React.FC = () => {
 
   // Fetch product
   const { data: productData, isFetching, isError } = useQuery<Product>({
-    queryKey: ["product", productId],
+    queryKey: ["product", id],
     queryFn: async () => {
-      if (!productId) throw new Error("Product ID is missing");
+      if (!id) throw new Error("Product ID is missing");
       
-      const res = await fetch(`${fetchPrefix}/api/products/${productId}`, {
+      const res = await fetch(`${fetchPrefix}/api/products/${id}`, {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Failed to fetch product");
       return res.json();
     },
     refetchOnWindowFocus: false,
-    enabled: !!productId, // Only run query if id exists
+    enabled: !!id, // Only run query if id exists
   });
 
   useEffect(() => {
@@ -269,29 +269,29 @@ const AdminProductEditForm: React.FC = () => {
       const processedData = {
         ...productData,
         price: {
-          sp: Number(productData.price?.sp) || 1,
-          mrp: Number(productData.price?.mrp) || 1,
-          discount: Number(productData.price?.discount) || 0,
-        },
-        inventory: productData.inventory || {
-          quantity: 1,
-          inStock: true
-        },
+        sp: Number(productData.price?.sp) || 0,
+        mrp: Number(productData.price?.mrp) || 0,
+        discount: Number(productData.price?.discount) || 0,
+      },
+         inventory: {
+        quantity: 0, // Default value since API doesn't provide quantity
+        inStock: productData.inventory?.inStock !== undefined ? productData.inventory.inStock : true
+      },
         variants: {
-          ...productData.variants,
-          size: (productData.variants?.size || []).map(size => ({
-            label: size.label || "",
-            priceModifier: Number(size.priceModifier) || 0,
-          })),
-        },
+        ...productData.variants,
+        size: (productData.variants?.size || []).map(size => ({
+          label: size.label || "",
+          priceModifier: Number(size.priceModifier) || 0,
+        })),
+      },
         packaging: productData.packaging || {
-          weight: 1,
-          dimensions: {
-            length: 1,
-            width: 1,
-            height: 1
-          }
-        },
+        weight: 0,
+        dimensions: {
+          length: 0,
+          width: 0,
+          height: 0
+        }
+      },
         // Auto-populate inventoryId with product id
         inventoryId: productData.id || ""
       };
@@ -303,7 +303,7 @@ const AdminProductEditForm: React.FC = () => {
   const updateProduct = useMutation({
     mutationFn: async (updatedProduct: Product) => {
       // Check if ID is available
-      if (!productId) {
+      if (!id) {
         throw new Error("Product ID is missing");
       }
 
@@ -315,15 +315,15 @@ const AdminProductEditForm: React.FC = () => {
         sku: updatedProduct.sku || "",
         slug: updatedProduct.slug || "",
         price: {
-          sp: Number(updatedProduct.price.sp) || 1,
-          mrp: Number(updatedProduct.price.mrp) || 1,
+          sp: Number(updatedProduct.price.sp) || 0,
+          mrp: Number(updatedProduct.price.mrp) || 0,
           discount: Number(updatedProduct.price.discount) || 0,
         },
         images: updatedProduct.images || [],
-        inventory: {
-          quantity: Number(updatedProduct.inventory.quantity) || 1,
-          inStock: Boolean(updatedProduct.inventory.inStock)
-        },
+         inventory: {
+    quantity: Number(updatedProduct.inventory.quantity) || 0,
+    inStock: Boolean(updatedProduct.inventory.inStock)
+  },
         variants: {
           size: (updatedProduct.variants.size || []).map(size => ({
             label: size.label || "",
@@ -342,17 +342,17 @@ const AdminProductEditForm: React.FC = () => {
           count: Number(updatedProduct.ratings.count) || 0,
         },
         packaging: {
-          weight: Number(updatedProduct.packaging.weight) || 1,
+          weight: Number(updatedProduct.packaging.weight) || 0,
           dimensions: {
-            length: Number(updatedProduct.packaging.dimensions.length) || 1,
-            width: Number(updatedProduct.packaging.dimensions.width) || 1,
-            height: Number(updatedProduct.packaging.dimensions.height) || 1
+            length: Number(updatedProduct.packaging.dimensions.length) || 0,
+            width: Number(updatedProduct.packaging.dimensions.width) || 0,
+            height: Number(updatedProduct.packaging.dimensions.height) || 0
           }
         },
-        inventoryId: updatedProduct.inventoryId || productId // Use the product ID as inventory ID
+        inventoryId: updatedProduct.inventoryId || id // Use the product ID as inventory ID
       };
 
-      const res = await fetch(`${fetchPrefix}/api/products/${productId}`, {
+      const res = await fetch(`${fetchPrefix}/api/products/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -371,7 +371,7 @@ const AdminProductEditForm: React.FC = () => {
         title: "Product Updated",
         description: `Product "${product.name}" updated successfully!`,
       });
-      queryClient.invalidateQueries({ queryKey: ["product", productId] });
+      queryClient.invalidateQueries({ queryKey: ["product", id] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
       navigate("/admin/products");
     },
@@ -425,7 +425,7 @@ const AdminProductEditForm: React.FC = () => {
     e.preventDefault();
 
     // Check if ID is available
-    if (!productId) {
+    if (!id) {
       toast({
         title: "Update Failed",
         description: "Product ID is missing",
@@ -612,9 +612,10 @@ const AdminProductEditForm: React.FC = () => {
                         id="mrp"
                         type="number"
                         step="0.01"
-                        value={product.price.mrp || 1}
+                        value={product.price.mrp || ""}
                         onChange={(e) => handlePriceChange("mrp", e.target.value)}
                         className="pl-9"
+                        placeholder="0.00"
                       />
                     </div>
                   </div>
@@ -627,9 +628,10 @@ const AdminProductEditForm: React.FC = () => {
                         id="sp"
                         type="number"
                         step="0.01"
-                        value={product.price.sp || 1}
+                        value={product.price.sp || ""}
                         onChange={(e) => handlePriceChange("sp", e.target.value)}
                         className="pl-9"
+                        placeholder="0.00"
                       />
                     </div>
                   </div>
@@ -640,8 +642,9 @@ const AdminProductEditForm: React.FC = () => {
                       id="discount"
                       type="number"
                       step="0.01"
-                      value={product.price.discount || 0}
+                      value={product.price.discount || ""}
                       onChange={(e) => handlePriceChange("discount", e.target.value)}
+                      placeholder="0.00"
                     />
                   </div>
                 </div>
@@ -721,7 +724,7 @@ const AdminProductEditForm: React.FC = () => {
                             <Input
                               type="number"
                               step="0.01"
-                              value={size.priceModifier || 0}
+                              value={size.priceModifier || ""}
                               onChange={(e) => handleSizeVariantChange(index, "priceModifier", e.target.value)}
                               className="pl-9"
                               placeholder="0.00"
@@ -831,11 +834,12 @@ const AdminProductEditForm: React.FC = () => {
                     <Input
                       id="quantity"
                       type="number"
-                      value={product.inventory.quantity || 1}
+                      value={product.inventory.quantity || ""}
                       onChange={(e) => {
-                        const value = e.target.value === "" ? 1 : parseInt(e.target.value);
-                        handleNestedChange("inventory", "quantity", isNaN(value) ? 1 : value);
+                        const value = e.target.value === "" ? 0 : parseInt(e.target.value);
+                        handleNestedChange("inventory", "quantity", isNaN(value) ? 0 : value);
                       }}
+                      placeholder="0"
                     />
                   </div>
 
@@ -859,11 +863,12 @@ const AdminProductEditForm: React.FC = () => {
                       id="weight"
                       type="number"
                       step="0.01"
-                      value={product.packaging.weight || 1}
+                      value={product.packaging.weight || ""}
                       onChange={(e) => {
-                        const value = e.target.value === "" ? 1 : parseFloat(e.target.value);
-                        handleNestedChange("packaging", "weight", isNaN(value) ? 1 : value);
+                        const value = e.target.value === "" ? 0 : parseFloat(e.target.value);
+                        handleNestedChange("packaging", "weight", isNaN(value) ? 0 : value);
                       }}
+                      placeholder="0.00"
                     />
                   </div>
 
@@ -871,7 +876,7 @@ const AdminProductEditForm: React.FC = () => {
                     <Label htmlFor="inventoryId">Inventory ID</Label>
                     <Input
                       id="inventoryId"
-                      value={product.inventoryId || productId || ""}
+                      value={product.inventoryId || id || ""}
                       readOnly
                       className="bg-muted"
                       placeholder="Auto-populated with product ID"
@@ -886,14 +891,15 @@ const AdminProductEditForm: React.FC = () => {
                       id="length"
                       type="number"
                       step="0.01"
-                      value={product.packaging.dimensions.length || 1}
+                      value={product.packaging.dimensions.length || ""}
                       onChange={(e) => {
-                        const value = e.target.value === "" ? 1 : parseFloat(e.target.value);
+                        const value = e.target.value === "" ? 0 : parseFloat(e.target.value);
                         handleNestedChange("packaging", "dimensions", {
                           ...product.packaging.dimensions,
-                          length: isNaN(value) ? 1 : value
+                          length: isNaN(value) ? 0 : value
                         });
                       }}
+                      placeholder="0.00"
                     />
                   </div>
 
@@ -903,14 +909,15 @@ const AdminProductEditForm: React.FC = () => {
                       id="width"
                       type="number"
                       step="0.01"
-                      value={product.packaging.dimensions.width || 1}
+                      value={product.packaging.dimensions.width || ""}
                       onChange={(e) => {
-                        const value = e.target.value === "" ? 1 : parseFloat(e.target.value);
+                        const value = e.target.value === "" ? 0 : parseFloat(e.target.value);
                         handleNestedChange("packaging", "dimensions", {
                           ...product.packaging.dimensions,
-                          width: isNaN(value) ? 1 : value
+                          width: isNaN(value) ? 0 : value
                         });
                       }}
+                      placeholder="0.00"
                     />
                   </div>
 
@@ -920,14 +927,15 @@ const AdminProductEditForm: React.FC = () => {
                       id="height"
                       type="number"
                       step="0.01"
-                      value={product.packaging.dimensions.height || 1}
+                      value={product.packaging.dimensions.height || ""}
                       onChange={(e) => {
-                        const value = e.target.value === "" ? 1 : parseFloat(e.target.value);
+                        const value = e.target.value === "" ? 0 : parseFloat(e.target.value);
                         handleNestedChange("packaging", "dimensions", {
                           ...product.packaging.dimensions,
-                          height: isNaN(value) ? 1 : value
+                          height: isNaN(value) ? 0 : value
                         });
                       }}
+                      placeholder="0.00"
                     />
                   </div>
                 </div>
@@ -952,7 +960,7 @@ const AdminProductEditForm: React.FC = () => {
               <Button
                 type="submit"
                 className="bg-blue-600 hover:bg-blue-500 text-white flex gap-2 shadow-md"
-                disabled={isLoading || !productId}
+                disabled={isLoading || !id}
               >
                 <Save className="h-4 w-4" />
                 {isLoading ? "Updating..." : "Update Product"}
