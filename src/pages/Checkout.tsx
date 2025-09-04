@@ -13,6 +13,7 @@ import { fetchPrefix } from "@/utils/fetch";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import confetti from "canvas-confetti";
+import { ensureIdempotencyKey } from "@/utils/idempotency";
 
 interface CheckoutFormData {
   billingAddress: {
@@ -116,6 +117,13 @@ export default function Checkout() {
       });
     }, 250);
   };
+
+  // Ensure an idempotency key exists when entering checkout with items
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      ensureIdempotencyKey();
+    }
+  }, [cartItems.length]);
 
   // Auto-fetch shipping charges when pincode is valid
   useEffect(() => {

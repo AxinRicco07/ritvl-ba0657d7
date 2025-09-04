@@ -9,6 +9,7 @@ import { fetchPrefix } from "@/utils/fetch";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { ensureIdempotencyKey } from "@/utils/idempotency";
 
 export default function Cart() {
   const { cartItems, removeFromCart, updateQuantity, clearCart, getCartTotal } =
@@ -40,6 +41,13 @@ export default function Cart() {
       sessionStorage.removeItem("ritvl:pendingOrder");
     }
   }, [cartItems]);
+
+  // Ensure an idempotency key exists while viewing cart with items
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      ensureIdempotencyKey();
+    }
+  }, [cartItems.length]);
 
   const { mutate: checkDelivery } = useMutation({
     mutationFn: async (pincode: string) => {

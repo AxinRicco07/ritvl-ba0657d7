@@ -587,19 +587,32 @@ const ShareButton = ({ productId, productName }: { productId: string; productNam
     e.preventDefault();
     e.stopPropagation();
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`${shareText} ${productUrl}`)}`;
-    window.open(whatsappUrl, '_blank');
+    // Redirect in the same tab for immediate handoff
+    window.location.href = whatsappUrl;
     setShowShareMenu(false);
   };
 
   const handleInstagramShare = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Instagram doesn't have direct URL sharing, so we copy the link
-    navigator.clipboard.writeText(productUrl);
-    toast({
-      title: "Link copied for Instagram!",
-      description: "Paste this link in your Instagram story or post.",
-    });
+    // Best-effort: try to open Instagram app, then fall back to web DM compose
+    const instagramDeepLink = 'instagram://app';
+    const webFallback = 'https://www.instagram.com/direct/new/';
+
+    // Copy link so user can paste inside Instagram
+    try { navigator.clipboard?.writeText(productUrl); } catch {}
+
+    // Attempt deep link first
+    const timer = setTimeout(() => {
+      // Fallback to web if app doesn't open
+      window.location.href = webFallback;
+    }, 800);
+
+    // Some browsers may block or immediately navigate; this is a best-effort
+    window.location.href = instagramDeepLink;
+    // Clear timeout if navigation happens successfully (cannot detect reliably, but harmless)
+    setTimeout(() => clearTimeout(timer), 2000);
+
     setShowShareMenu(false);
   };
 
@@ -680,7 +693,7 @@ const ProductCard = ({ product }: { product: PublicProduct }) => {
 
   return (
     <Link to={`/product/${product.id}`} className="block">
-      <div className="product-card bg-white rounded-lg overflow-hidden border border-border hover:border-primary/30 shadow-sm">
+      <div className="product-card bg-white rounded-lg border border-border hover:border-primary/30 shadow-sm">
         <div className="aspect-square bg-secondary/30 relative overflow-hidden">
           <img
             src={primaryImage}

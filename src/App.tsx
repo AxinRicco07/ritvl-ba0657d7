@@ -32,6 +32,7 @@ import { fetchPrefix } from "./utils/fetch";
 import Ingredients from "./pages/Ingredients";
 import FAQ from "./pages/FAQ";
 import Privacy from "./pages/Privacy";
+import Shipping from "./pages/Shipping";
 import AdminEditProductForm from "./pages/admin/AdminEditProductForm";
 
 const queryClient = new QueryClient();
@@ -106,6 +107,7 @@ const App = () => (
               <Route path="/ingredients" element={<Ingredients />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/privacy" element={<Privacy />} />
+              <Route path="/shipping" element={<Shipping />} />
               <Route path="*" element={<NotFound />} />
             </Route>
 
