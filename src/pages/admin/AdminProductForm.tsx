@@ -236,8 +236,8 @@ const AdminProductForm: React.FC = () => {
             <div className="space-y-2">
               <Label htmlFor="images">Product Images</Label>
               <ProductImageUploader
-                images={product.images}
-                onChange={(images) => handleChange("images", images)}
+                images={product.images.map(img => ({ ...img, id: img.url }))}
+                onChange={(images) => handleChange("images", images.map(({ id, ...img }) => img))}
               />
             </div>
 
