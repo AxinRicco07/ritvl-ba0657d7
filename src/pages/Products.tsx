@@ -9,6 +9,7 @@ import { PublicProduct } from "@/types/product";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPrefix } from "@/utils/fetch";
 import { toast } from "@/components/ui/use-toast";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 // Mock product data with paisa values (1 rupee = 100 paisa)
 const allProducts = [
@@ -559,14 +560,10 @@ const FilterGroup = ({
 };
 
 const ShareButton = ({ productId, productName }: { productId: string; productName: string }) => {
-  const [showShareMenu, setShowShareMenu] = useState(false);
-  
   const productUrl = `${window.location.origin}/product/${productId}`;
   const shareText = `Check out this amazing product: ${productName}`;
-  
-  const handleCopyLink = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+
+  const doCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(productUrl);
       toast({
@@ -580,96 +577,74 @@ const ShareButton = ({ productId, productName }: { productId: string; productNam
         variant: "destructive",
       });
     }
-    setShowShareMenu(false);
   };
 
-  const handleWhatsAppShare = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const doWhatsAppShare = () => {
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`${shareText} ${productUrl}`)}`;
-    // Redirect in the same tab for immediate handoff
-    window.location.href = whatsappUrl;
-    setShowShareMenu(false);
+    window.open(whatsappUrl, "_blank");
   };
 
-  const handleInstagramShare = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    // Best-effort: try to open Instagram app, then fall back to web DM compose
+  const doInstagramShare = () => {
     const instagramDeepLink = 'instagram://app';
     const webFallback = 'https://www.instagram.com/direct/new/';
-
-    // Copy link so user can paste inside Instagram
     try { navigator.clipboard?.writeText(productUrl); } catch {}
-
-    // Attempt deep link first
     const timer = setTimeout(() => {
-      // Fallback to web if app doesn't open
       window.location.href = webFallback;
     }, 800);
-
-    // Some browsers may block or immediately navigate; this is a best-effort
     window.location.href = instagramDeepLink;
-    // Clear timeout if navigation happens successfully (cannot detect reliably, but harmless)
     setTimeout(() => clearTimeout(timer), 2000);
-
-    setShowShareMenu(false);
   };
 
   return (
-    <div className="relative">
-      <Button
-        size="sm"
-        variant="ghost"
-        className="h-8 w-8 p-0 hover:bg-secondary"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setShowShareMenu(!showShareMenu);
-        }}
-      >
-        <Share2 className="h-4 w-4" />
-      </Button>
-      
-      {showShareMenu && (
-        <div className="absolute right-0 top-9 z-50 bg-white border border-border rounded-md shadow-lg p-2 min-w-[160px]">
-          <button
-            onClick={handleCopyLink}
-            className="flex items-center gap-2 w-full p-2 text-sm hover:bg-secondary rounded transition-colors"
-          >
-            <Copy className="h-4 w-4" />
-            Copy Link
-          </button>
-          <button
-            onClick={handleWhatsAppShare}
-            className="flex items-center gap-2 w-full p-2 text-sm hover:bg-secondary rounded transition-colors"
-          >
-            <MessageCircle className="h-4 w-4" />
-            WhatsApp
-          </button>
-          <button
-            onClick={handleInstagramShare}
-            className="flex items-center gap-2 w-full p-2 text-sm hover:bg-secondary rounded transition-colors"
-          >
-            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-            </svg>
-            Instagram
-          </button>
-        </div>
-      )}
-      
-      {showShareMenu && (
-        <div 
-          className="fixed inset-0 z-40" 
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          size="sm"
+          variant="ghost"
+          className="h-8 w-8 p-0 hover:bg-secondary"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            setShowShareMenu(false);
           }}
-        />
-      )}
-    </div>
+        >
+          <Share2 className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent side="top" align="end" sideOffset={8}>
+        <DropdownMenuItem
+          onSelect={(e) => {
+            e.preventDefault();
+            doCopyLink();
+          }}
+          className="gap-2"
+        >
+          <Copy className="h-4 w-4" />
+          Copy Link
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onSelect={(e) => {
+            e.preventDefault();
+            doWhatsAppShare();
+          }}
+          className="gap-2"
+        >
+          <MessageCircle className="h-4 w-4" />
+          WhatsApp
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onSelect={(e) => {
+            e.preventDefault();
+            doInstagramShare();
+          }}
+          className="gap-2"
+        >
+          <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+          Instagram
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

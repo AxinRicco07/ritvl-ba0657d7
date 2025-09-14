@@ -290,7 +290,7 @@ const Index = () => {
       <section className="py-12 px-4 md:py-16 bg-gradient-to-b from-white to-blue-50/50">
         <div className="container max-w-7xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-display text-center mb-4 animate-slide-in-bottom text-blue-900">
-          ✨ Why <strong className="text-blue-700">Epsom</strong> Salt? ✨?
+          Why <strong className="text-blue-700">Epsom</strong> Salt? 
           </h2>
           <p
             className="text-center text-blue-800/90 max-w-2xl mx-auto mb-12 animate-slide-in-bottom font-serif text-lg"
@@ -300,10 +300,10 @@ const Index = () => {
 
             Epsom salt is packed with magnesium – the mineral your body loves for relaxation, skin glow, and stress relief.
 
-            💆 Melt away stress in a warm soak
-            🌿 Rejuvenate tired muscles after a long day
-            ✨ Exfoliate & refresh your skin naturally
-            🌸 Bring spa-like calm right into your home
+            Melt away stress in a warm soak
+            Rejuvenate tired muscles after a long day
+            Exfoliate & refresh your skin naturally
+             Bring spa-like calm right into your home
 
             With every soak, you’re not just relaxing – you’re recharging mind, body & soul.
           </p>

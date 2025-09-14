@@ -36,6 +36,14 @@ const Footer = () => {
                   <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
                 </svg>
               </a>
+              <a 
+              href="https://www.youtube.com/@RitvlOfficial" 
+              className="text-gray-400 hover:text-gray-100 transition-colors duration-300" 
+              target="_blank">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fillRule="evenodd" d="M23.498 6.186a2.997 2.997 0 0 0-2.112-2.12C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.386.566a2.997 2.997 0 0 0-2.112 2.12A31.73 31.73 0 0 0 0 12a31.73 31.73 0 0 0 .502 5.814 2.997 2.997 0 0 0 2.112 2.12C4.495 20.5 12 20.5 12 20.5s7.505 0 9.386-.566a2.997 2.997 0 0 0 2.112-2.12A31.73 31.73 0 0 0 24 12a31.73 31.73 0 0 0-.502-5.814zM9.75 15.02V8.98l6.27 3.02-6.27 3.02z" clipRule="evenodd"/>
+                </svg>
+              </a>
             </div>
           </div>
           
@@ -91,6 +99,8 @@ const Footer = () => {
             {[
               { path: "/privacy", label: "Privacy Policy" },
               { path: "/terms", label: "Terms of Service" },
+              { path: "/refund", label: "Refund Policy" },
+              { path: "/contact", label: "Bulk Delivery" },
               { path: "/shipping", label: "Shipping Policy" }
             ].map((link) => (
               <Link 

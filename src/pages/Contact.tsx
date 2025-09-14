@@ -143,7 +143,7 @@ const Contact = () => {
                 <div>
                   <h3 className="font-medium text-blue-700">Address</h3>
                   <p className="text-gray-600">
-                    Hbr Layout ,Kalyan Nagar Bangalore 560043
+                    HBR Layout ,Kalyan Nagar Bangalore 560043
                   </p>
                 </div>
                 <div>

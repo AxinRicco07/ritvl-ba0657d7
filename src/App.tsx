@@ -32,7 +32,10 @@ import { fetchPrefix } from "./utils/fetch";
 import Ingredients from "./pages/Ingredients";
 import FAQ from "./pages/FAQ";
 import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import Shipping from "./pages/Shipping";
+import Refund from "./pages/Refund";
+import Bulk from "./pages/Bulk";
 import AdminEditProductForm from "./pages/admin/AdminEditProductForm";
 
 const queryClient = new QueryClient();
@@ -107,7 +110,10 @@ const App = () => (
               <Route path="/ingredients" element={<Ingredients />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
               <Route path="/shipping" element={<Shipping />} />
+              <Route path="/refund" element={<Refund />} />
+              <Route path="/bulk" element={<Bulk />} />
               <Route path="*" element={<NotFound />} />
             </Route>
 
