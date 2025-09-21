@@ -39,7 +39,7 @@ const Header = () => {
   };
 
   return (
-    <header className="py-4 px-4 md:px-8 border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
+    <header className="py-2 px-4 md:px-8 border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="container max-w-7xl mx-auto">
         <div className="flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">

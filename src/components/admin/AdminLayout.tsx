@@ -6,9 +6,11 @@ import {
   ShoppingCart,
   Users,
   LogOut,
+  Megaphone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import path from "path";
 
 const AdminLayout: React.FC = () => {
   const { toast } = useToast();
@@ -18,6 +20,7 @@ const AdminLayout: React.FC = () => {
     { title: "Products", path: "/admin/products", icon: <Package className="w-4 h-4" /> },
     { title: "Orders", path: "/admin/orders", icon: <ShoppingCart className="w-4 h-4" /> },
     { title: "Customers", path: "/admin/customers", icon: <Users className="w-4 h-4" /> },
+    { title: "Campaigns", path: "/admin/campaigns", icon: <Megaphone className="w-4 h-4" /> }
   ];
 
   const handleLogout = () => {

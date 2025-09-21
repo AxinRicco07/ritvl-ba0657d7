@@ -1,7 +1,13 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 import Index from "./pages/Index";
 import Products from "./pages/Products";
@@ -37,6 +43,8 @@ import Shipping from "./pages/Shipping";
 import Refund from "./pages/Refund";
 import Bulk from "./pages/Bulk";
 import AdminEditProductForm from "./pages/admin/AdminEditProductForm";
+import AdminCampaigns from "./pages/admin/ AdminCampaings";
+import AddNewCampaignPage from "./pages/admin/AddAdminCampaigns";
 
 const queryClient = new QueryClient();
 
@@ -51,10 +59,10 @@ const RequireAuth = () => {
       try {
         // Make fetch request to the admin auth check endpoint
         const response = await fetch(`${fetchPrefix}/api/auth/admin/check`, {
-          method: 'GET',
-          credentials: 'include', // This includes cookies in the request
+          method: "GET",
+          credentials: "include", // This includes cookies in the request
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         });
 
@@ -64,7 +72,7 @@ const RequireAuth = () => {
           setIsAuthenticated(false);
         }
       } catch (error) {
-        console.error('Authentication check failed:', error);
+        console.error("Authentication check failed:", error);
         setIsAuthenticated(false);
       } finally {
         setIsLoading(false);
@@ -81,7 +89,8 @@ const RequireAuth = () => {
 
   // Redirect to login if not authenticated
   console.log(window.location.href, "is");
-  if (isAuthenticated && window.location.href.includes("login")) return <Navigate to="/admin/dashboard" />
+  if (isAuthenticated && window.location.href.includes("login"))
+    return <Navigate to="/admin/dashboard" />;
   return isAuthenticated ? <Outlet /> : <Navigate to="/admin/login" />;
 };
 
@@ -96,7 +105,7 @@ const App = () => (
             <Route path="/login" element={<UserAuthPage />} />
 
             {/* Public Routes */}
-            <Route element={<Layout />}> 
+            <Route element={<Layout />}>
               <Route path="/" element={<Index />} />
               <Route path="/products" element={<Products />} />
               <Route path="/product/:id" element={<ProductDetail />} />
@@ -104,7 +113,10 @@ const App = () => (
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/pay" element={<Payment />} />
-              <Route path="/tracking-order/:orderId" element={<TrackingOrder />} />
+              <Route
+                path="/tracking-order/:orderId"
+                element={<TrackingOrder />}
+              />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
               <Route path="/ingredients" element={<Ingredients />} />
@@ -123,12 +135,17 @@ const App = () => (
             <Route element={<RequireAuth />}>
               <Route path="/admin" element={<AdminLayout />}>
                 <Route path="dashboard" element={<AdminDashboard />} />
-                
-                	<Route path="products" element={<AdminProducts />} />
-                	<Route path="products/add" element={<AdminProductForm />} />
-                	<Route path="products/edit/:id" element={<AdminEditProductForm />} />
-                	<Route path="orders" element={<AdminOrders />} />
-                	<Route path="customers" element={<AdminCustomers />} />
+
+                <Route path="products" element={<AdminProducts />} />
+                <Route path="products/add" element={<AdminProductForm />} />
+                <Route
+                  path="products/edit/:id"
+                  element={<AdminEditProductForm />}
+                />
+                <Route path="orders" element={<AdminOrders />} />
+                <Route path="customers" element={<AdminCustomers />} />
+                <Route path="campaigns" element={<AdminCampaigns />} />
+                <Route path="campaigns/add" element={<AddNewCampaignPage />} />
               </Route>
             </Route>
           </Routes>

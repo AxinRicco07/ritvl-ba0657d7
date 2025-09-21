@@ -29,12 +29,14 @@ import { fetchPrefix } from "@/utils/fetch";
 import { HomeProduct } from "@/types/product";
 import HeroCarousel from "@/components/HeroCarousel";
 import HomePageSkeleton from "@/components/skeletons/HomePageSkeleton";
+import FullPageBannerCarousel from "@/components/home/FullPageBannerCarousel";
 
 const fetchProductsData = async (): Promise<{
   featuredProducts: HomeProduct[];
   bestSellingProducts: HomeProduct[];
+  banners: { imageUrl: string; redirectUrl: string; imageOrder: number }[];
 }> => {
-  const res = await fetch(`${fetchPrefix}/api/home`, {
+  const res = await fetch(`http://localhost:3000/api/home`, {
     method: "GET",
   });
   if (!res.ok) {
@@ -114,7 +116,7 @@ const Index = () => {
     retry: 2,
   });
 
-  const { bestSellingProducts, featuredProducts } = data || {
+  const { bestSellingProducts, featuredProducts, banners } = data || {
     bestSellingProducts: [],
     featuredProducts: [],
   };
@@ -140,88 +142,84 @@ const Index = () => {
     }
   }, [data]);
 
-  if (isLoading) return <HomePageSkeleton />
+  if (isLoading) return <HomePageSkeleton />;
   if (isError) return <div>Error: {(error as Error).message}</div>;
 
   return (
     <main className="overflow-x-hidden">
       {/* Hero Section with Auto-Sliding */}
-      <section className="relative min-h-[80vh] overflow-hidden flex items-center bg-gradient-to-br from-blue-50 to-blue-100">
-        <div className="container max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-8">
-          <div
-            className={`relative z-10 ${
-              isVisible ? "animate-slide-in-left" : "opacity-0"
-            }`}
-            style={{ animationDelay: "0.2s" }}
-          >
-            <div className="relative inline-block">
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight font-bold text-blue-900">
-                <span className="block text-reveal">
-                  <span 
-                    className="relative inline-block"
-                    style={{ animationDelay: "0.3s" }}
-                  >
-                    Natural Healing.
-                    <SaltSparkle />
-                  </span>
-                </span>
-                <span className="block text-reveal">
-                  <span 
-                    className="relative inline-block"
-                    style={{ animationDelay: "0.5s" }}
-                  >
-                    Pure Joy.
-                    <SaltSparkle />
-                  </span>
-                </span>
-                <span className="block text-reveal">
-                  <span 
-                    className="relative inline-block"
-                    style={{ animationDelay: "0.7s" }}
-                  >
-                    Everyday Luxury.
-                    <SaltSparkle />
-                  </span>
-                </span>
-              </h1>
-            </div>
-            
-            <p
-              className="mt-6 text-xl text-blue-800/90 max-w-xl animate-fade-in font-serif italic"
-              style={{ animationDelay: "0.9s" }}
+      <section className="relative min-h-[80vh] max-h-[80vh] overflow-hidden flex items-center bg-gradient-to-br from-blue-50 to-blue-100">
+        {!banners || banners.length === 0 ? (
+          <div className="container max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-8">
+            <div
+              className={`relative z-10 ${
+                isVisible ? "animate-slide-in-left" : "opacity-0"
+              }`}
+              style={{ animationDelay: "0.2s" }}
             >
-              Experience the therapeutic benefits of our premium bath
-              salts—100% natural and crafted for your
-              wellbeing.
-            </p>
-            
-            <div className="mt-8 flex gap-4">
-              <Button
-                asChild
-                size="lg"
-                className="rounded-full bg-blue-700 hover:bg-blue-600 sparkle-button animate-fade-in transition-all shadow-lg"
-                style={{ animationDelay: "1.1s" }}
-              >
-                <Link to="/products">SHOP NOW</Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="rounded-full border-blue-700 text-blue-700 hover:bg-blue-50/50 animate-fade-in shadow"
-                style={{ animationDelay: "1.3s" }}
-              >
-                <Link to="/about">Learn More</Link>
-              </Button>
-            </div>
-          </div>
+              <div className="relative inline-block">
+                <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight font-bold text-blue-900">
+                  {["Natural Healing.", "Pure Joy.", "Everyday Luxury."].map(
+                    (text, index) => (
+                      <span key={index} className="block text-reveal">
+                        <span
+                          className="relative inline-block"
+                          style={{ animationDelay: `${0.3 + index * 0.2}s` }}
+                        >
+                          {text}
+                          <SaltSparkle />
+                        </span>
+                      </span>
+                    )
+                  )}
+                </h1>
+              </div>
 
-          <HeroCarousel heroImages={heroImages}/>
-        </div>
+              <p
+                className="mt-6 text-xl text-blue-800/90 max-w-xl animate-fade-in font-serif italic"
+                style={{ animationDelay: "0.9s" }}
+              >
+                Experience the therapeutic benefits of our premium bath
+                salts—100% natural and crafted for your wellbeing.
+              </p>
+
+              <div className="mt-8 flex gap-4">
+                <Button
+                  asChild
+                  size="lg"
+                  className="rounded-full bg-blue-700 hover:bg-blue-600 sparkle-button animate-fade-in transition-all shadow-lg"
+                  style={{ animationDelay: "1.1s" }}
+                >
+                  <Link to="/products">SHOP NOW</Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                  className="rounded-full border-blue-700 text-blue-700 hover:bg-blue-50/50 animate-fade-in shadow"
+                  style={{ animationDelay: "1.3s" }}
+                >
+                  <Link to="/about">Learn More</Link>
+                </Button>
+              </div>
+            </div>
+
+            <HeroCarousel heroImages={heroImages} />
+          </div>
+        ) : (
+          <FullPageBannerCarousel
+            banners={banners
+              .sort((a, b) => a.imageOrder - b.imageOrder)
+              .map((b) => ({
+                image: b.imageUrl,
+                redirectUrl: b.redirectUrl,
+              }))}
+          />
+        )}
       </section>
 
       {/* Featured Products - First Row */}
-      <section className="py-12 px-4 md:py-16 bg-gradient-to-b from-white to-blue-50">
+      <section className="py-4 px-4 md:py-16 bg-gradient-to-b from-white to-blue-50">
         <div className="container max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-8">
             <h2 className="text-2xl md:text-3xl font-display animate-slide-in-left text-blue-900">
@@ -254,7 +252,7 @@ const Index = () => {
       </section>
 
       {/* Featured Products - Second Row */}
-      <section className="py-12 px-4 md:py-16 bg-gradient-to-b from-blue-50 to-white">
+      <section className="py-4 px-4 md:py-16 bg-gradient-to-b from-blue-50 to-white">
         <div className="container max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-8">
             <h2 className="text-2xl md:text-3xl font-display animate-slide-in-left text-blue-900">
@@ -287,25 +285,22 @@ const Index = () => {
       </section>
 
       {/* Why Choose Us - Updated Section */}
-      <section className="py-12 px-4 md:py-16 bg-gradient-to-b from-white to-blue-50/50">
+      <section className="py-4 px-4 md:py-16 bg-gradient-to-b from-white to-blue-50/50">
         <div className="container max-w-7xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-display text-center mb-4 animate-slide-in-bottom text-blue-900">
-          Why <strong className="text-blue-700">Epsom</strong> Salt? 
+            Why <strong className="text-blue-700">Epsom</strong> Salt?
           </h2>
           <p
             className="text-center text-blue-800/90 max-w-2xl mx-auto mb-12 animate-slide-in-bottom font-serif text-lg"
             style={{ animationDelay: "0.2s" }}
           >
-            Because self-care should be simple, natural, and effective.
-
-            Epsom salt is packed with magnesium – the mineral your body loves for relaxation, skin glow, and stress relief.
-
-            Melt away stress in a warm soak
-            Rejuvenate tired muscles after a long day
-            Exfoliate & refresh your skin naturally
-             Bring spa-like calm right into your home
-
-            With every soak, you’re not just relaxing – you’re recharging mind, body & soul.
+            Because self-care should be simple, natural, and effective. Epsom
+            salt is packed with magnesium – the mineral your body loves for
+            relaxation, skin glow, and stress relief. Melt away stress in a warm
+            soak Rejuvenate tired muscles after a long day Exfoliate & refresh
+            your skin naturally Bring spa-like calm right into your home With
+            every soak, you’re not just relaxing – you’re recharging mind, body
+            & soul.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -351,9 +346,8 @@ const Index = () => {
         </div>
       </section>
 
-
       {/* Testimonials */}
-      <section className="py-12 px-4 md:py-16 bg-gradient-to-b from-blue-50/50 to-white">
+      <section className="py-4 px-4 md:py-16 bg-gradient-to-b from-blue-50/50 to-white">
         <div className="container max-w-7xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-display text-center mb-12 animate-fade-in text-blue-900">
             What Our Customers Say
@@ -386,7 +380,9 @@ const Index = () => {
                     {testimonial.name.charAt(0)}
                   </div>
                   <div>
-                    <p className="font-medium text-blue-900">{testimonial.name}</p>
+                    <p className="font-medium text-blue-900">
+                      {testimonial.name}
+                    </p>
                     <p className="text-sm text-blue-700/80">
                       {testimonial.title}
                     </p>
@@ -401,19 +397,7 @@ const Index = () => {
   );
 };
 
-// Components
-const Input = ({
-  className,
-  ...props
-}: React.InputHTMLAttributes<HTMLInputElement>) => {
-  return (
-    <input
-      className={`px-4 py-2 border border-input rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary/20 ${className}`}
-      {...props}
-    />
-  );
-};
-
+// Compone
 const FeatureCard = ({
   children,
   title,
@@ -432,15 +416,6 @@ const FeatureCard = ({
   );
 };
 
-// Data types
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  colors: string[];
-}
-
 interface Category {
   id: number;
   name: string;
@@ -455,83 +430,6 @@ interface Testimonial {
   comment: string;
   rating: number;
 }
-
-// Sample data
-const categories: Category[] = [
-  {
-    id: 1,
-    name: "Bath Salts",
-    items: 12,
-    image: "/placeholder.svg",
-    link: "/products?category=bath-salts",
-  },
-  {
-    id: 2,
-    name: "Aromatherapy",
-    items: 8,
-    image: "/placeholder.svg",
-    link: "/products?category=aromatherapy",
-  },
-  {
-    id: 3,
-    name: "Gift Sets",
-    items: 6,
-    image: "/placeholder.svg",
-    link: "/gift-sets",
-  },
-  {
-    id: 4,
-    name: "Specialty Crystals",
-    items: 10,
-    image: "/placeholder.svg",
-    link: "/products?category=specialty",
-  },
-];
-
-const featuredProducts: Product[] = [
-  {
-    id: 1,
-    name: "Product 1",
-    price: 25,
-    image: "/placeholder.svg",
-    colors: ["#E8D5B5", "#8AACB9", "#E2C1B3"],
-  },
-  {
-    id: 2,
-    name: "Product 2",
-    price: 34,
-    image: "/placeholder.svg",
-    colors: ["#E7A4B7", "#EDE3DE", "#CEA997"],
-  },
-  {
-    id: 3,
-    name: "Product 3",
-    price: 33,
-    image: "/placeholder.svg",
-    colors: ["#99B898", "#FECEA8", "#FF847C"],
-  },
-  {
-    id: 4,
-    name: "Product 4",
-    price: 30,
-    image: "/placeholder.svg",
-    colors: ["#2A363B", "#E8B4BC", "#99B898"],
-  },
-  {
-    id: 5,
-    name: "Product 5",
-    price: 28,
-    image: "/placeholder.svg",
-    colors: ["#9B89B3", "#EEE1F8", "#726C80"],
-  },
-  {
-    id: 6,
-    name: "Product 6",
-    price: 26,
-    image: "/placeholder.svg",
-    colors: ["#5EAFD3", "#D3EBF5", "#2D6E8E"],
-  },
-];
 
 const testimonials: Testimonial[] = [
   {
