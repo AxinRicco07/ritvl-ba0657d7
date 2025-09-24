@@ -16,11 +16,31 @@ const AdminLayout: React.FC = () => {
   const { toast } = useToast();
 
   const navItems = [
-    { title: "Dashboard", path: "/admin/dashboard", icon: <LayoutDashboard className="w-4 h-4" /> },
-    { title: "Products", path: "/admin/products", icon: <Package className="w-4 h-4" /> },
-    { title: "Orders", path: "/admin/orders", icon: <ShoppingCart className="w-4 h-4" /> },
-    { title: "Customers", path: "/admin/customers", icon: <Users className="w-4 h-4" /> },
-    { title: "Campaigns", path: "/admin/campaigns", icon: <Megaphone className="w-4 h-4" /> }
+    {
+      title: "Dashboard",
+      path: "/admin/dashboard",
+      icon: <LayoutDashboard className="w-4 h-4" />,
+    },
+    {
+      title: "Products",
+      path: "/admin/products",
+      icon: <Package className="w-4 h-4" />,
+    },
+    {
+      title: "Orders",
+      path: "/admin/orders",
+      icon: <ShoppingCart className="w-4 h-4" />,
+    },
+    {
+      title: "Customers",
+      path: "/admin/customers",
+      icon: <Users className="w-4 h-4" />,
+    },
+    {
+      title: "Campaigns",
+      path: "/admin/campaigns",
+      icon: <Megaphone className="w-4 h-4" />,
+    },
   ];
 
   const handleLogout = () => {
@@ -32,7 +52,7 @@ const AdminLayout: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col font-body h-screen">
       {/* Header */}
       <header className="bg-white shadow-sm z-10">
         <div className="flex items-center justify-between px-6 py-3">
@@ -42,7 +62,11 @@ const AdminLayout: React.FC = () => {
             </NavLink>
             <h2 className="text-sm font-medium text-gray-600">Admin Panel</h2>
           </div>
-          <Button variant="ghost" onClick={handleLogout} className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            onClick={handleLogout}
+            className="flex items-center gap-2"
+          >
             <LogOut className="w-4 h-4" />
             <span>Logout</span>
           </Button>

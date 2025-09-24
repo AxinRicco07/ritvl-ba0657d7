@@ -29,7 +29,7 @@ type CampaignImage = {
 
 // Mock API call — replace with your actual endpoint
 const createCampaign = async (formData: FormData) => {
-  const res = await fetch(`http://localhost:3000/api/campaigns`, {
+  const res = await fetch(`${fetchPrefix}/api/campaigns`, {
     method: "POST",
     body: formData,
     credentials: "include",
@@ -93,6 +93,9 @@ export default function AddNewCampaignPage() {
     }));
 
     setImages((prev) => [...prev, ...newImages]);
+
+    e.target.value = "";
+    e.target.files = null;
   };
 
   // Handle link change
@@ -169,7 +172,7 @@ export default function AddNewCampaignPage() {
   };
 
   return (
-    <div className="p-6 space-y-8 max-w-5xl mx-auto">
+    <div className="p-6 space-y-8 max-w-5xl mx-auto max-h-full overflow-y-auto">
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Add New Campaign</h1>
         <p className="text-gray-500 mt-2">
@@ -186,6 +189,7 @@ export default function AddNewCampaignPage() {
           type="text"
           onChange={(e) => {
             setCampaignName(e.target.value);
+            
           }}
           className="border-gray-300 focus:border-blue-500"
         />

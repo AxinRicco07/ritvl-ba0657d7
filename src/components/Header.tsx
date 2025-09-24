@@ -42,22 +42,20 @@ const Header = () => {
     <header className="py-2 px-4 md:px-8 border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="container max-w-7xl mx-auto">
         <div className="flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="h-20 flex items-center">
-            <img
-              src="/lovable-uploads/8e7016af-d0f3-4dc7-9dae-e425da734d83.png"
-              className="h-full w-auto object-contain"
-              alt="ritvl logo"
-            />
-          </div>
-          <span className="ml-3 inline-block whitespace-nowrap text-2xl font-brittany tracking-tight text-foreground">
-            <strong>Ritvl</strong>
-          </span>
-        </Link>
+          <Link to="/" className="flex items-center gap-2">
+            <div className="h-20 flex items-center">
+              <img
+                src="/lovable-uploads/8e7016af-d0f3-4dc7-9dae-e425da734d83.png"
+                className="h-full w-auto object-contain"
+                alt="ritvl logo"
+              />
+            </div>
+            <span className="ml-3 inline-block whitespace-nowrap text-2xl font-brittany tracking-tight text-foreground">
+              <strong>Ritvl</strong>
+            </span>
+          </Link>
 
-
-
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden font-header text-lg md:text-xl md:flex items-center gap-8">
             <NavLink to="/">Home</NavLink>
             <NavLink to="/products">Products</NavLink>
             <NavLink to="/contact">Contact Us</NavLink>
@@ -66,9 +64,21 @@ const Header = () => {
           </nav>
 
           <div className="hidden md:flex items-center gap-4">
-            <form onSubmit={onSubmitSearch} className="relative flex items-center">
-              <div className={`flex items-center transition-all duration-200 ${isSearchOpen ? 'w-64' : 'w-10'} overflow-hidden border border-border rounded-md bg-background`}>
-                <button type="button" aria-label="Search" onClick={toggleSearch} className="p-2 text-foreground/80 hover:text-foreground">
+            <form
+              onSubmit={onSubmitSearch}
+              className="relative flex items-center"
+            >
+              <div
+                className={`flex items-center transition-all duration-200 ${
+                  isSearchOpen ? "w-64" : "w-10"
+                } overflow-hidden border border-border rounded-md bg-background`}
+              >
+                <button
+                  type="button"
+                  aria-label="Search"
+                  onClick={toggleSearch}
+                  className="p-2 text-foreground/80 hover:text-foreground"
+                >
                   <Search className="h-5 w-5" />
                 </button>
                 <input
@@ -77,10 +87,12 @@ const Header = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Escape') setIsSearchOpen(false);
+                    if (e.key === "Escape") setIsSearchOpen(false);
                   }}
                   placeholder="Search products..."
-                  className={`bg-transparent text-sm outline-none px-2 py-2 ${isSearchOpen ? 'block' : 'hidden'}`}
+                  className={`bg-transparent text-sm outline-none px-2 py-2 ${
+                    isSearchOpen ? "block" : "hidden"
+                  }`}
                   aria-label="Search products"
                 />
               </div>
@@ -140,7 +152,18 @@ const Header = () => {
               </MobileNavLink>
             </nav>
             <div className="flex flex-col gap-3 mt-6 pt-4 border-t border-border">
-              <form onSubmit={(e) => { e.preventDefault(); if (searchTerm.trim()) { navigate(`/products?q=${encodeURIComponent(searchTerm.trim())}`); setIsMenuOpen(false);} }} className="flex items-center gap-2">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (searchTerm.trim()) {
+                    navigate(
+                      `/products?q=${encodeURIComponent(searchTerm.trim())}`
+                    );
+                    setIsMenuOpen(false);
+                  }
+                }}
+                className="flex items-center gap-2"
+              >
                 <div className="flex items-center flex-1 border border-border rounded-md px-2">
                   <Search className="h-4 w-4 text-muted-foreground" />
                   <input
@@ -152,7 +175,9 @@ const Header = () => {
                     aria-label="Search products"
                   />
                 </div>
-                <Button type="submit" size="sm" variant="outline">Search</Button>
+                <Button type="submit" size="sm" variant="outline">
+                  Search
+                </Button>
               </form>
 
               <div className="flex items-center gap-6">

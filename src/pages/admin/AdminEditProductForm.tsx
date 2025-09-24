@@ -13,7 +13,23 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Save, ArrowLeft, FlaskConical, X, Plus, ImageIcon, DollarSign, Package, Tag, List, BarChart, Grid, Link, Check, IndianRupee } from "lucide-react";
+import {
+  Save,
+  ArrowLeft,
+  FlaskConical,
+  X,
+  Plus,
+  ImageIcon,
+  DollarSign,
+  Package,
+  Tag,
+  List,
+  BarChart,
+  Grid,
+  Link,
+  Check,
+  IndianRupee,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { fetchPrefix } from "@/utils/fetch";
 import { Badge } from "@/components/ui/badge";
@@ -29,27 +45,27 @@ const defaultProduct = {
   price: {
     sp: 0,
     mrp: 0,
-    discount: 0
+    discount: 0,
   },
   images: [
     {
       url: "",
       altText: "",
-      isPrimary: false
-    }
+      isPrimary: false,
+    },
   ],
   inventory: {
     quantity: 0,
-    inStock: true
+    inStock: true,
   },
   variants: {
     size: [
       {
-        "label": "",
-        "priceModifier": 0
-      }
+        label: "",
+        priceModifier: 0,
+      },
     ],
-    fragranceStrength: [""]
+    fragranceStrength: [""],
   },
   details: "",
   ingredients: "",
@@ -57,15 +73,15 @@ const defaultProduct = {
   benefits: [""],
   ratings: {
     average: 0,
-    count: 0
+    count: 0,
   },
   packaging: {
     weight: 0,
     dimensions: {
       length: 0,
       width: 0,
-      height: 0
-    }
+      height: 0,
+    },
   },
   inventoryId: "",
   reviews: [],
@@ -98,7 +114,7 @@ interface ProductPrice {
 
 interface ProductRatings {
   average: number;
-  count:  number;
+  count: number;
 }
 
 interface ProductCategory {
@@ -136,10 +152,8 @@ interface Product {
   ingredients: string;
   howToUse: string;
   benefits: string[];
-  ratings: ProductRatings;
   packaging: ProductPackaging;
   inventoryId: string;
-  reviews: any[];
   tags: string[];
   category: ProductCategory;
   relatedProducts: string[];
@@ -156,7 +170,10 @@ const ProductImageUploader: React.FC<{
 
   const handleAddImage = () => {
     if (newImageUrl.trim()) {
-      onChange([...images, { url: newImageUrl.trim(), altText: "", isPrimary: false }]);
+      onChange([
+        ...images,
+        { url: newImageUrl.trim(), altText: "", isPrimary: false },
+      ]);
       setNewImageUrl("");
     }
   };
@@ -168,7 +185,7 @@ const ProductImageUploader: React.FC<{
   const handleSetPrimary = (index: number) => {
     const updatedImages = images.map((img, i) => ({
       ...img,
-      isPrimary: i === index
+      isPrimary: i === index,
     }));
     onChange(updatedImages);
   };
@@ -177,14 +194,19 @@ const ProductImageUploader: React.FC<{
     <div className="space-y-4">
       <div className="flex flex-wrap gap-4">
         {images.map((img, index) => (
-          <div key={index} className="relative group border rounded-lg overflow-hidden">
+          <div
+            key={index}
+            className="relative group border rounded-lg overflow-hidden"
+          >
             <img
               src={img.url}
               alt={img.altText || `Product image ${index + 1}`}
               className="w-24 h-24 object-cover"
             />
             {img.isPrimary && (
-              <Badge className="absolute top-1 left-1 bg-green-600">Primary</Badge>
+              <Badge className="absolute top-1 left-1 bg-green-600">
+                Primary
+              </Badge>
             )}
             <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-200 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
               <Button
@@ -222,14 +244,18 @@ const ProductImageUploader: React.FC<{
           value={newImageUrl}
           onChange={(e) => setNewImageUrl(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') {
+            if (e.key === "Enter") {
               e.preventDefault();
               handleAddImage();
             }
           }}
           className="flex-1"
         />
-        <Button type="button" onClick={handleAddImage} className="flex gap-2 items-center">
+        <Button
+          type="button"
+          onClick={handleAddImage}
+          className="flex gap-2 items-center"
+        >
           <Plus className="h-4 w-4" /> Add Image
         </Button>
       </div>
@@ -248,12 +274,16 @@ const AdminProductEditForm: React.FC = () => {
   const [activeTab, setActiveTab] = useState("basic");
 
   // Fetch product
-  const { data: productData, isFetching, isError } = useQuery<Product>({
+  const {
+    data: productData,
+    isFetching,
+    isError,
+  } = useQuery<Product>({
     queryKey: ["product", id],
     queryFn: async () => {
       if (!id) throw new Error("Product ID is missing");
-      
-      const res = await fetch(`${fetchPrefix}/api/products/${id}`, {
+
+      const res = await fetch(`${fetchPrefix}/api/products/${id}/edit`, {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Failed to fetch product");
@@ -266,34 +296,38 @@ const AdminProductEditForm: React.FC = () => {
   useEffect(() => {
     if (productData) {
       // Ensure all number fields have proper values
+
       const processedData = {
         ...productData,
         price: {
-        sp: Number(productData.price?.sp) || 0,
-        mrp: Number(productData.price?.mrp) || 0,
-        discount: Number(productData.price?.discount) || 0,
-      },
-         inventory: {
-        quantity: 0, // Default value since API doesn't provide quantity
-        inStock: productData.inventory?.inStock !== undefined ? productData.inventory.inStock : true
-      },
+          sp: Number(productData.price?.sp) || 0,
+          mrp: Number(productData.price?.mrp) || 0,
+          discount: Number(productData.price?.discount) || 0,
+        },
+        inventory: {
+          quantity: productData.inventory.quantity, // Default value since API doesn't provide quantity
+          inStock:
+            productData.inventory?.inStock !== undefined
+              ? productData.inventory.inStock
+              : true,
+        },
         variants: {
-        ...productData.variants,
-        size: (productData.variants?.size || []).map(size => ({
-          label: size.label || "",
-          priceModifier: Number(size.priceModifier) || 0,
-        })),
-      },
+          ...productData.variants,
+          size: (productData.variants?.size || []).map((size) => ({
+            label: size.label || "",
+            priceModifier: Number(size.priceModifier) || 0,
+          })),
+        },
         packaging: productData.packaging || {
-        weight: 0,
-        dimensions: {
-          length: 0,
-          width: 0,
-          height: 0
-        }
-      },
+          weight: 0,
+          dimensions: {
+            length: 0,
+            width: 0,
+            height: 0,
+          },
+        },
         // Auto-populate inventoryId with product id
-        inventoryId: productData.id || ""
+        inventoryId: productData.id || "",
       };
       setProduct(processedData as Product);
     }
@@ -320,12 +354,12 @@ const AdminProductEditForm: React.FC = () => {
           discount: Number(updatedProduct.price.discount) || 0,
         },
         images: updatedProduct.images || [],
-         inventory: {
-    quantity: Number(updatedProduct.inventory.quantity) || 0,
-    inStock: Boolean(updatedProduct.inventory.inStock)
-  },
+        inventory: {
+          quantity: Number(updatedProduct.inventory.quantity) || 0,
+          inStock: Boolean(updatedProduct.inventory.inStock),
+        },
         variants: {
-          size: (updatedProduct.variants.size || []).map(size => ({
+          size: (updatedProduct.variants.size || []).map((size) => ({
             label: size.label || "",
             priceModifier: Number(size.priceModifier) || 0,
           })),
@@ -334,22 +368,18 @@ const AdminProductEditForm: React.FC = () => {
         details: updatedProduct.details || "",
         ingredients: updatedProduct.ingredients || "",
         howToUse: updatedProduct.howToUse || "",
-        benefits: Array.isArray(updatedProduct.benefits) 
-          ? updatedProduct.benefits 
+        benefits: Array.isArray(updatedProduct.benefits)
+          ? updatedProduct.benefits
           : [""],
-        ratings: {
-          average: Number(updatedProduct.ratings.average) || 0,
-          count: Number(updatedProduct.ratings.count) || 0,
-        },
         packaging: {
           weight: Number(updatedProduct.packaging.weight) || 0,
           dimensions: {
             length: Number(updatedProduct.packaging.dimensions.length) || 0,
             width: Number(updatedProduct.packaging.dimensions.width) || 0,
-            height: Number(updatedProduct.packaging.dimensions.height) || 0
-          }
+            height: Number(updatedProduct.packaging.dimensions.height) || 0,
+          },
         },
-        inventoryId: updatedProduct.inventoryId || id // Use the product ID as inventory ID
+        inventoryId: updatedProduct.inventoryId || id, // Use the product ID as inventory ID
       };
 
       const res = await fetch(`${fetchPrefix}/api/products/${id}`, {
@@ -358,12 +388,12 @@ const AdminProductEditForm: React.FC = () => {
         body: JSON.stringify(payload),
         credentials: "include",
       });
-      
+
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
         throw new Error(errorData.message || "Failed to update product");
       }
-      
+
       return res.json();
     },
     onSuccess: () => {
@@ -385,17 +415,21 @@ const AdminProductEditForm: React.FC = () => {
   });
 
   // Handlers
-  const handleChange = (field: string, value: any) => {
+  const handleChange = (field: string, value: unknown) => {
     setProduct((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleNestedChange = (parent: string, field: string, value: any) => {
-    setProduct((prev) => ({ 
-      ...prev, 
+  const handleNestedChange = (
+    parent: string,
+    field: string,
+    value: unknown
+  ) => {
+    setProduct((prev) => ({
+      ...prev,
       [parent]: {
-        ...(prev as any)[parent],
-        [field]: value
-      }
+        ...(prev as unknown)[parent],
+        [field]: value,
+      },
     }));
   };
 
@@ -410,7 +444,11 @@ const AdminProductEditForm: React.FC = () => {
     }));
   };
 
-  const handleSizeVariantChange = (index: number, field: keyof SizeVariant, value: string) => {
+  const handleSizeVariantChange = (
+    index: number,
+    field: keyof SizeVariant,
+    value: string
+  ) => {
     const newSizes = [...product.variants.size];
     if (field === "priceModifier") {
       const numValue = value === "" ? 0 : parseFloat(value);
@@ -455,18 +493,30 @@ const AdminProductEditForm: React.FC = () => {
   }
 
   if (isError) {
-    return <div className="p-6 text-red-600">Failed to load product. Please try again.</div>;
+    return (
+      <div className="p-6 text-red-600">
+        Failed to load product. Please try again.
+      </div>
+    );
   }
 
   // Navigation tabs
   const tabs = [
     { id: "basic", label: "Basic Info", icon: <Package className="h-4 w-4" /> },
-    { id: "pricing", label: "Pricing", icon: <IndianRupee className="h-4 w-4" /> },
+    {
+      id: "pricing",
+      label: "Pricing",
+      icon: <IndianRupee className="h-4 w-4" />,
+    },
     { id: "media", label: "Media", icon: <ImageIcon className="h-4 w-4" /> },
     { id: "details", label: "Details", icon: <List className="h-4 w-4" /> },
     { id: "variants", label: "Variants", icon: <Grid className="h-4 w-4" /> },
     { id: "seo", label: "SEO & Tags", icon: <Tag className="h-4 w-4" /> },
-    { id: "inventory", label: "Inventory", icon: <BarChart className="h-4 w-4" /> },
+    {
+      id: "inventory",
+      label: "Inventory",
+      icon: <BarChart className="h-4 w-4" />,
+    },
   ];
 
   return (
@@ -474,7 +524,9 @@ const AdminProductEditForm: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Edit Product</h1>
-          <p className="text-muted-foreground">Update your product information</p>
+          <p className="text-muted-foreground">
+            Update your product information
+          </p>
         </div>
         <Button
           variant="outline"
@@ -493,7 +545,9 @@ const AdminProductEditForm: React.FC = () => {
             <Button
               key={tab.id}
               variant={activeTab === tab.id ? "secondary" : "ghost"}
-              className={`flex items-center gap-2 rounded-none border-b-2 ${activeTab === tab.id ? "border-primary" : "border-transparent"}`}
+              className={`flex items-center gap-2 rounded-none border-b-2 ${
+                activeTab === tab.id ? "border-primary" : "border-transparent"
+              }`}
               onClick={() => setActiveTab(tab.id)}
             >
               {tab.icon}
@@ -507,16 +561,19 @@ const AdminProductEditForm: React.FC = () => {
         <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
           <CardTitle className="flex items-center gap-2">
             <FlaskConical className="h-5 w-5 text-blue-600" />
-            {tabs.find(tab => tab.id === activeTab)?.label || "Product Information"}
+            {tabs.find((tab) => tab.id === activeTab)?.label ||
+              "Product Information"}
           </CardTitle>
           <CardDescription>
             {activeTab === "basic" && "Update basic product information"}
             {activeTab === "pricing" && "Manage pricing and inventory details"}
             {activeTab === "media" && "Upload and manage product images"}
             {activeTab === "details" && "Add detailed product descriptions"}
-            {activeTab === "variants" && "Configure product variants and options"}
+            {activeTab === "variants" &&
+              "Configure product variants and options"}
             {activeTab === "seo" && "Manage SEO metadata and tags"}
-            {activeTab === "inventory" && "Manage inventory and packaging details"}
+            {activeTab === "inventory" &&
+              "Manage inventory and packaging details"}
           </CardDescription>
         </CardHeader>
 
@@ -557,11 +614,15 @@ const AdminProductEditForm: React.FC = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="shortDescription">Short Description *</Label>
+                    <Label htmlFor="shortDescription">
+                      Short Description *
+                    </Label>
                     <Input
                       id="shortDescription"
                       value={product.shortDescription || ""}
-                      onChange={(e) => handleChange("shortDescription", e.target.value)}
+                      onChange={(e) =>
+                        handleChange("shortDescription", e.target.value)
+                      }
                       placeholder="Brief product description"
                     />
                   </div>
@@ -571,7 +632,9 @@ const AdminProductEditForm: React.FC = () => {
                     <Input
                       id="category"
                       value={product.category.name || ""}
-                      onChange={(e) => handleNestedChange("category", "name", e.target.value)}
+                      onChange={(e) =>
+                        handleNestedChange("category", "name", e.target.value)
+                      }
                       placeholder="Product category"
                     />
                   </div>
@@ -581,7 +644,9 @@ const AdminProductEditForm: React.FC = () => {
                     <Input
                       id="productType"
                       value={product.productType || ""}
-                      onChange={(e) => handleChange("productType", e.target.value)}
+                      onChange={(e) =>
+                        handleChange("productType", e.target.value)
+                      }
                       placeholder="e.g., salt, soap, etc."
                     />
                   </div>
@@ -592,7 +657,9 @@ const AdminProductEditForm: React.FC = () => {
                   <Textarea
                     id="description"
                     value={product.description || ""}
-                    onChange={(e) => handleChange("description", e.target.value)}
+                    onChange={(e) =>
+                      handleChange("description", e.target.value)
+                    }
                     placeholder="Detailed product description"
                     rows={4}
                   />
@@ -613,7 +680,9 @@ const AdminProductEditForm: React.FC = () => {
                         type="number"
                         step="0.01"
                         value={product.price.mrp || ""}
-                        onChange={(e) => handlePriceChange("mrp", e.target.value)}
+                        onChange={(e) =>
+                          handlePriceChange("mrp", e.target.value)
+                        }
                         className="pl-9"
                         placeholder="0.00"
                       />
@@ -629,7 +698,9 @@ const AdminProductEditForm: React.FC = () => {
                         type="number"
                         step="0.01"
                         value={product.price.sp || ""}
-                        onChange={(e) => handlePriceChange("sp", e.target.value)}
+                        onChange={(e) =>
+                          handlePriceChange("sp", e.target.value)
+                        }
                         className="pl-9"
                         placeholder="0.00"
                       />
@@ -643,7 +714,9 @@ const AdminProductEditForm: React.FC = () => {
                       type="number"
                       step="0.01"
                       value={product.price.discount || ""}
-                      onChange={(e) => handlePriceChange("discount", e.target.value)}
+                      onChange={(e) =>
+                        handlePriceChange("discount", e.target.value)
+                      }
                       placeholder="0.00"
                     />
                   </div>
@@ -683,7 +756,9 @@ const AdminProductEditForm: React.FC = () => {
                   <Textarea
                     id="ingredients"
                     value={product.ingredients || ""}
-                    onChange={(e) => handleChange("ingredients", e.target.value)}
+                    onChange={(e) =>
+                      handleChange("ingredients", e.target.value)
+                    }
                     placeholder="List of ingredients"
                     rows={3}
                   />
@@ -706,72 +781,103 @@ const AdminProductEditForm: React.FC = () => {
             {activeTab === "variants" && (
               <div className="space-y-6">
                 <div className="space-y-4">
-                    <Label>Size Variants</Label>
-                    {product.variants.size.map((size, index) => (
-                      <div key={index} className="flex gap-4 items-end p-3 border rounded-md">
-                        <div className="flex-1 space-y-2">
-                          <Label>Label</Label>
+                  <Label>Size Variants</Label>
+                  {product.variants.size.map((size, index) => (
+                    <div
+                      key={index}
+                      className="flex gap-4 items-end p-3 border rounded-md"
+                    >
+                      <div className="flex-1 space-y-2">
+                        <Label>Label</Label>
+                        <Input
+                          value={size.label || ""}
+                          onChange={(e) =>
+                            handleSizeVariantChange(
+                              index,
+                              "label",
+                              e.target.value
+                            )
+                          }
+                          placeholder="Size label"
+                        />
+                      </div>
+                      <div className="flex-1 space-y-2">
+                        <Label>Price Modifier ₹</Label>
+                        <div className="relative">
+                          <IndianRupee className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                           <Input
-                            value={size.label || ""}
-                            onChange={(e) => handleSizeVariantChange(index, "label", e.target.value)}
-                            placeholder="Size label"
+                            type="number"
+                            step="0.01"
+                            value={size.priceModifier || ""}
+                            onChange={(e) =>
+                              handleSizeVariantChange(
+                                index,
+                                "priceModifier",
+                                e.target.value
+                              )
+                            }
+                            className="pl-9"
+                            placeholder="0.00"
                           />
                         </div>
-                        <div className="flex-1 space-y-2">
-                          <Label>Price Modifier ₹</Label>
-                          <div className="relative">
-                            <IndianRupee className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                            <Input
-                              type="number"
-                              step="0.01"
-                              value={size.priceModifier || ""}
-                              onChange={(e) => handleSizeVariantChange(index, "priceModifier", e.target.value)}
-                              className="pl-9"
-                              placeholder="0.00"
-                            />
-                          </div>
-                        </div>
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="icon"
-                          onClick={() => {
-                            const newSizes = product.variants.size.filter((_, i) => i !== index);
-                            handleNestedChange("variants", "size", newSizes);
-                          }}
-                          className="mb-2"
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
                       </div>
-                    ))}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => {
-                        const newSizes = [...product.variants.size, { label: "", priceModifier: 0 }];
-                        handleNestedChange("variants", "size", newSizes);
-                      }}
-                      className="flex gap-2 items-center"
-                    >
-                      <Plus className="h-4 w-4" /> Add Size Variant
-                    </Button>
-                  </div>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => {
+                          const newSizes = product.variants.size.filter(
+                            (_, i) => i !== index
+                          );
+                          handleNestedChange("variants", "size", newSizes);
+                        }}
+                        className="mb-2"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      const newSizes = [
+                        ...product.variants.size,
+                        { label: "", priceModifier: 0 },
+                      ];
+                      handleNestedChange("variants", "size", newSizes);
+                    }}
+                    className="flex gap-2 items-center"
+                  >
+                    <Plus className="h-4 w-4" /> Add Size Variant
+                  </Button>
+                </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="fragranceStrength">Fragrance Strength Options</Label>
-                    <Textarea
-                      id="fragranceStrength"
-                      placeholder="Comma separated values (e.g., Light, Medium, Strong)"
-                      value={Array.isArray(product.variants.fragranceStrength) 
-                        ? product.variants.fragranceStrength.join(", ") 
-                        : ""}
-                      onChange={(e) => {
-                        const value = e.target.value.split(",").map((v) => v.trim()).filter(v => v);
-                        handleNestedChange("variants", "fragranceStrength", value);
-                      }}
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="fragranceStrength">
+                    Fragrance Strength Options
+                  </Label>
+                  <Textarea
+                    id="fragranceStrength"
+                    placeholder="Comma separated values (e.g., Light, Medium, Strong)"
+                    value={
+                      Array.isArray(product.variants.fragranceStrength)
+                        ? product.variants.fragranceStrength.join(", ")
+                        : ""
+                    }
+                    onChange={(e) => {
+                      const value = e.target.value
+                        .split(",")
+                        .map((v) => v.trim())
+                        .filter((v) => v);
+                      handleNestedChange(
+                        "variants",
+                        "fragranceStrength",
+                        value
+                      );
+                    }}
+                  />
+                </div>
               </div>
             )}
 
@@ -783,11 +889,16 @@ const AdminProductEditForm: React.FC = () => {
                   <Textarea
                     id="benefits"
                     placeholder="Comma separated benefits"
-                    value={Array.isArray(product.benefits) 
-                      ? product.benefits.join(", ") 
-                      : ""}
+                    value={
+                      Array.isArray(product.benefits)
+                        ? product.benefits.join(", ")
+                        : ""
+                    }
                     onChange={(e) => {
-                      const value = e.target.value.split(",").map((v) => v.trim()).filter(v => v);
+                      const value = e.target.value
+                        .split(",")
+                        .map((v) => v.trim())
+                        .filter((v) => v);
                       handleChange("benefits", value);
                     }}
                   />
@@ -798,26 +909,36 @@ const AdminProductEditForm: React.FC = () => {
                   <Textarea
                     id="tags"
                     placeholder="Comma separated tags for better discoverability"
-                    value={Array.isArray(product.tags) 
-                      ? product.tags.join(", ") 
-                      : ""}
+                    value={
+                      Array.isArray(product.tags) ? product.tags.join(", ") : ""
+                    }
                     onChange={(e) => {
-                      const value = e.target.value.split(",").map((v) => v.trim()).filter(v => v);
+                      const value = e.target.value
+                        .split(",")
+                        .map((v) => v.trim())
+                        .filter((v) => v);
                       handleChange("tags", value);
                     }}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="relatedProducts">Related Products (IDs)</Label>
+                  <Label htmlFor="relatedProducts">
+                    Related Products (IDs)
+                  </Label>
                   <Textarea
                     id="relatedProducts"
                     placeholder="Comma separated product IDs"
-                    value={Array.isArray(product.relatedProducts) 
-                      ? product.relatedProducts.join(", ") 
-                      : ""}
+                    value={
+                      Array.isArray(product.relatedProducts)
+                        ? product.relatedProducts.join(", ")
+                        : ""
+                    }
                     onChange={(e) => {
-                      const value = e.target.value.split(",").map((v) => v.trim()).filter(v => v);
+                      const value = e.target.value
+                        .split(",")
+                        .map((v) => v.trim())
+                        .filter((v) => v);
                       handleChange("relatedProducts", value);
                     }}
                   />
@@ -834,12 +955,25 @@ const AdminProductEditForm: React.FC = () => {
                     <Input
                       id="quantity"
                       type="number"
-                      value={product.inventory.quantity || ""}
+                      value={
+                        product.inventory.quantity === 0
+                          ? ""
+                          : product.inventory.quantity
+                      }
                       onChange={(e) => {
-                        const value = e.target.value === "" ? 0 : parseInt(e.target.value);
-                        handleNestedChange("inventory", "quantity", isNaN(value) ? 0 : value);
+                        const rawValue = e.target.value;
+                        // Allow empty string (user is deleting or hasn't typed yet)
+                        if (rawValue === "") {
+                          handleNestedChange("inventory", "quantity", 0); // or keep as empty? see note below
+                          return;
+                        }
+
+                        const parsed = parseInt(rawValue, 10);
+                        if (!isNaN(parsed)) {
+                          handleNestedChange("inventory", "quantity", parsed);
+                        }
+                        // Optional: if invalid (e.g., "abc"), do nothing or show error
                       }}
-                      placeholder="0"
                     />
                   </div>
 
@@ -849,10 +983,14 @@ const AdminProductEditForm: React.FC = () => {
                       <Switch
                         id="inStock"
                         checked={product.inventory.inStock}
-                        onCheckedChange={(checked) => handleNestedChange("inventory", "inStock", checked)}
+                        onCheckedChange={(checked) =>
+                          handleNestedChange("inventory", "inStock", checked)
+                        }
                       />
                       <Label htmlFor="inStock" className="cursor-pointer">
-                        {product.inventory.inStock ? "In Stock" : "Out of Stock"}
+                        {product.inventory.inStock
+                          ? "In Stock"
+                          : "Out of Stock"}
                       </Label>
                     </div>
                   </div>
@@ -865,8 +1003,15 @@ const AdminProductEditForm: React.FC = () => {
                       step="0.01"
                       value={product.packaging.weight || ""}
                       onChange={(e) => {
-                        const value = e.target.value === "" ? 0 : parseFloat(e.target.value);
-                        handleNestedChange("packaging", "weight", isNaN(value) ? 0 : value);
+                        const value =
+                          e.target.value === ""
+                            ? 0
+                            : parseFloat(e.target.value);
+                        handleNestedChange(
+                          "packaging",
+                          "weight",
+                          isNaN(value) ? 0 : value
+                        );
                       }}
                       placeholder="0.00"
                     />
@@ -893,10 +1038,13 @@ const AdminProductEditForm: React.FC = () => {
                       step="0.01"
                       value={product.packaging.dimensions.length || ""}
                       onChange={(e) => {
-                        const value = e.target.value === "" ? 0 : parseFloat(e.target.value);
+                        const value =
+                          e.target.value === ""
+                            ? 0
+                            : parseFloat(e.target.value);
                         handleNestedChange("packaging", "dimensions", {
                           ...product.packaging.dimensions,
-                          length: isNaN(value) ? 0 : value
+                          length: isNaN(value) ? 0 : value,
                         });
                       }}
                       placeholder="0.00"
@@ -911,10 +1059,13 @@ const AdminProductEditForm: React.FC = () => {
                       step="0.01"
                       value={product.packaging.dimensions.width || ""}
                       onChange={(e) => {
-                        const value = e.target.value === "" ? 0 : parseFloat(e.target.value);
+                        const value =
+                          e.target.value === ""
+                            ? 0
+                            : parseFloat(e.target.value);
                         handleNestedChange("packaging", "dimensions", {
                           ...product.packaging.dimensions,
-                          width: isNaN(value) ? 0 : value
+                          width: isNaN(value) ? 0 : value,
                         });
                       }}
                       placeholder="0.00"
@@ -929,10 +1080,13 @@ const AdminProductEditForm: React.FC = () => {
                       step="0.01"
                       value={product.packaging.dimensions.height || ""}
                       onChange={(e) => {
-                        const value = e.target.value === "" ? 0 : parseFloat(e.target.value);
+                        const value =
+                          e.target.value === ""
+                            ? 0
+                            : parseFloat(e.target.value);
                         handleNestedChange("packaging", "dimensions", {
                           ...product.packaging.dimensions,
-                          height: isNaN(value) ? 0 : value
+                          height: isNaN(value) ? 0 : value,
                         });
                       }}
                       placeholder="0.00"
@@ -945,7 +1099,10 @@ const AdminProductEditForm: React.FC = () => {
 
           <CardFooter className="flex justify-between bg-gradient-to-r from-blue-50 to-indigo-50 border-t px-6 py-4">
             <div className="text-sm text-muted-foreground">
-              Editing: <span className="font-medium">{product.name || "Unnamed Product"}</span>
+              Editing:{" "}
+              <span className="font-medium">
+                {product.name || "Unnamed Product"}
+              </span>
             </div>
             <div className="flex justify-end space-x-4">
               <Button

@@ -50,7 +50,7 @@ const FullPageBannerCarousel: React.FC<FullPageBannerCarouselProps> = ({
                   className="brightness-90" // optional: improve text contrast
                 />
                 {/* Overlay content */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4 z-10">
+                {/* <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4 z-10">
                   <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 drop-shadow-lg">
                     Discover Our Collection
                   </h2>
@@ -65,7 +65,7 @@ const FullPageBannerCarousel: React.FC<FullPageBannerCarouselProps> = ({
                       Shop Now
                     </Button>
                   </Link>
-                </div>
+                </div> */}
               </div>
             </CarouselItem>
           ))}

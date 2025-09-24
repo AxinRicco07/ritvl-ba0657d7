@@ -153,7 +153,7 @@ export default function ProductDetail() {
   if (isProductDetailLoading) return <ProductDetailSkeleton />;
 
   return (
-    <div className="container max-w-7xl mx-auto py-8 px-4 md:px-8">
+    <div className="container font-body max-w-7xl mx-auto py-8 px-4 md:px-8">
       <Link
         to="/products"
         className="flex items-center text-sm mb-6 hover:underline hover:text-primary"
@@ -176,36 +176,37 @@ export default function ProductDetail() {
           </div>
 
           <div className="grid grid-cols-4 gap-2">
-            {product.images.length > 1 && product.images.map((image, index) => (
-              <button
-                key={index}
-                onClick={() => setSelectedImage(index)}
-                className={`rounded-md overflow-hidden border ${
-                  selectedImage === index ? "border-primary" : "border-border"
-                }`}
-              >
-                <AspectRatio ratio={1}>
-                  <img
-                    src={image.url}
-                    alt={image.altText}
-                    className="w-full h-full object-cover"
-                  />
-                </AspectRatio>
-              </button>
-            ))}
+            {product.images.length > 1 &&
+              product.images.map((image, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedImage(index)}
+                  className={`rounded-md overflow-hidden border ${
+                    selectedImage === index ? "border-primary" : "border-border"
+                  }`}
+                >
+                  <AspectRatio ratio={1}>
+                    <img
+                      src={image.url}
+                      alt={image.altText}
+                      className="w-full h-full object-cover"
+                    />
+                  </AspectRatio>
+                </button>
+              ))}
           </div>
         </div>
 
         {/* Product Info */}
         <div>
-          <h1 className="text-3xl font-serif mb-2">{product.name}</h1>
+          <h1 className="text-3xl font-sans mb-2">{product.name}</h1>
 
           <div className="flex items-center gap-2 mb-4">
             <div className="flex">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                className={`h-4 w-4 ${
+                  className={`h-4 w-4 ${
                     i < Math.floor(product.ratings.average)
                       ? "fill-primary text-primary"
                       : "text-gray-300"
@@ -214,16 +215,17 @@ export default function ProductDetail() {
               ))}
             </div>
             <span className="text-sm text-muted-foreground">
-              {Math.round(product.ratings.average * 10)/10} ({product.ratings.count} reviews)
+              {Math.round(product.ratings.average * 10) / 10} (
+              {product.ratings.count} reviews)
             </span>
           </div>
 
-          <div className="flex items-baseline gap-2 mb-6">
-            <span className="text-2xl font-medium">
+          <div className="flex font-sans items-baseline gap-2 mb-6">
+            <span className="text-2xl text-primary font-sans md:text-3xl font-medium">
               {formatINRWithPaisa(product.price.sp * 100)}
             </span>
             {product.price.mrp && (
-              <span className="text-sm text-muted-foreground line-through">
+              <span className="text-sm md:text-base font-sans text-muted-foreground line-through">
                 {formatINRWithPaisa(product.price.mrp * 100)}
               </span>
             )}
@@ -273,40 +275,22 @@ export default function ProductDetail() {
 
       {/* Product Details Tabs */}
       <div className="mt-16">
-        <div className="border-b border-border">
+        <div className="border-b font-header border-border">
           <div className="flex overflow-x-auto space-x-8">
-            <button
-              onClick={() => setProductDetailTab("Product Details")}
-              className={`py-4 px-1 font-medium text-sm ${
-                productDetailTab === "Product Details"
-                  ? "border-b-2 border-primary text-primary"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              Product Details
-            </button>
-
-            <button
-              onClick={() => setProductDetailTab("How to Use")}
-              className={`py-4 px-1 text-sm ${
-                productDetailTab === "How to Use"
-                  ? "border-b-2 border-primary text-primary"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              How to Use
-            </button>
-
-            <button
-              onClick={() => setProductDetailTab("Reviews")}
-              className={`py-4 px-1 text-sm ${
-                productDetailTab === "Reviews"
-                  ? "border-b-2 border-primary text-primary"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              Reviews
-            </button>
+            {(["Product Details", "How to Use", "Reviews"] as const).map(
+              (tab) => (
+                <button
+                  onClick={() => setProductDetailTab(tab)}
+                  className={`py-4 px-1 font-medium  text-lg md:text-xl  ${
+                    productDetailTab === tab
+                      ? "border-b-2 border-primary text-primary"
+                      : "text-muted-foreground hover:text-primary"
+                  }`}
+                >
+                  {tab}
+                </button>
+              )
+            )}
           </div>
         </div>
 
@@ -318,7 +302,7 @@ export default function ProductDetail() {
             }`}
           >
             <p
-              className={`text-muted-foreground mb-4 ${
+              className={`text-muted-foreground text-sm md:text-base leading-loose tracking-wide md:leading-relaxed mb-4 ${
                 productDetailTab !== "Product Details" ? "hidden" : ""
               }`}
             >

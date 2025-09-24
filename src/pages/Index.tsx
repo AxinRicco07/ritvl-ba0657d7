@@ -36,7 +36,7 @@ const fetchProductsData = async (): Promise<{
   bestSellingProducts: HomeProduct[];
   banners: { imageUrl: string; redirectUrl: string; imageOrder: number }[];
 }> => {
-  const res = await fetch(`http://localhost:3000/api/home`, {
+  const res = await fetch(`${fetchPrefix}/api/home`, {
     method: "GET",
   });
   if (!res.ok) {
@@ -68,9 +68,11 @@ const ListProducts = function ({ products }: { products: HomeProduct[] }) {
           </AspectRatio>
         </div>
         <CardContent className="p-4">
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="font-medium">{product.name}</h3>
-            <span className="text-primary">
+          <div className="flex flex-wrap justify-between items-center mb-2">
+            <h3 className="font-medium truncate text-base md:text-lg md:max-w-[90%]">
+              {product.name}
+            </h3>
+            <span className="text-primary font-medium text-xl md:text-2xl whitespace-nowrap">
               {formatINRWithPaisa(product.price.sp * 100)}
             </span>
           </div>
@@ -93,7 +95,7 @@ const ListProducts = function ({ products }: { products: HomeProduct[] }) {
             </div>
             <Button
               size="lg"
-              className="bg-blue-600 hover:bg-blue-500 sparkle-button"
+              className="bg-blue-600 hidden md:block hover:bg-blue-500 sparkle-button text-xs sm:text-sm"
             >
               Buy
             </Button>
@@ -148,7 +150,7 @@ const Index = () => {
   return (
     <main className="overflow-x-hidden">
       {/* Hero Section with Auto-Sliding */}
-      <section className="relative min-h-[80vh] max-h-[80vh] overflow-hidden flex items-center bg-gradient-to-br from-blue-50 to-blue-100">
+      <section className="relative md:min-h-[80vh] max-h-[80vh] overflow-hidden flex items-center bg-gradient-to-br from-blue-50 to-blue-100">
         {!banners || banners.length === 0 ? (
           <div className="container max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-8">
             <div
@@ -220,7 +222,7 @@ const Index = () => {
 
       {/* Featured Products - First Row */}
       <section className="py-4 px-4 md:py-16 bg-gradient-to-b from-white to-blue-50">
-        <div className="container max-w-7xl mx-auto">
+        <div className="md:container max-w-7xl md:mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-8">
             <h2 className="text-2xl md:text-3xl font-display animate-slide-in-left text-blue-900">
               Featured Products
@@ -234,7 +236,7 @@ const Index = () => {
           </div>
 
           {featuredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               <ListProducts products={featuredProducts} />
             </div>
           ) : (
@@ -253,7 +255,7 @@ const Index = () => {
 
       {/* Featured Products - Second Row */}
       <section className="py-4 px-4 md:py-16 bg-gradient-to-b from-blue-50 to-white">
-        <div className="container max-w-7xl mx-auto">
+        <div className="md:container max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between mb-8">
             <h2 className="text-2xl md:text-3xl font-display animate-slide-in-left text-blue-900">
               Bestselling Products
@@ -267,7 +269,7 @@ const Index = () => {
           </div>
 
           {bestSellingProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               <ListProducts products={bestSellingProducts} />
             </div>
           ) : (
