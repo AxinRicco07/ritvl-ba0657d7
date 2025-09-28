@@ -84,50 +84,51 @@ const HeroCarousel = ({ heroImages }: { heroImages: HeroImage[] }) => {
         <div className="flex h-full">
           {heroImages.map((p, index) => (
             <div key={index} className="flex-[0_0_100%] min-w-0 relative">
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70 z-10" />
+              <Link to={p.redirectPath} className="block w-full h-full">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70 z-10" />
 
-              <motion.div
-                className="absolute inset-0 w-full h-full"
-                animate={{
-                  scale: selectedIndex === index ? 1.05 : 1,
-                }}
-                transition={{ duration: 10 }}
-              >
-                <img
-                  src={p.imageUrl}
-                  alt={`Picture of ${p.altText}`}
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
-
-              <div className="absolute bottom-0 left-0 right-0 z-20 p-8 text-center flex flex-col items-center">
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
+                  className="absolute inset-0 w-full h-full"
                   animate={{
-                    opacity: selectedIndex === index ? 1 : 0,
-                    y: selectedIndex === index ? 0 : 20,
+                    scale: selectedIndex === index ? 1.05 : 1,
                   }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                  className="mb-4"
+                  transition={{ duration: 10 }}
                 >
-                  <span className="text-white text-sm font-medium bg-white/20 backdrop-blur-sm px-4 py-1 rounded-full uppercase tracking-wider">
-                    {index === 0 ? "Featured" : "Bestseller"}
-                  </span>
+                  <img
+                    src={p.imageUrl}
+                    alt={`Picture of ${p.altText}`}
+                    className="w-full h-full object-cover"
+                  />
                 </motion.div>
 
-                <motion.h2
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{
-                    opacity: selectedIndex === index ? 1 : 0,
-                    y: selectedIndex === index ? 0 : 30,
-                  }}
-                  transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-                  className="text-white text-3xl lg:max-w-[80%] md:text-2xl lg:text-3xl font-bold max-w-2xl mb-2 md:mb-6 drop-shadow-lg"
-                >
-                  {p.title}
-                </motion.h2>
+                <div className="absolute bottom-0 left-0 right-0 z-20 p-8 text-center flex flex-col items-center">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{
+                      opacity: selectedIndex === index ? 1 : 0,
+                      y: selectedIndex === index ? 0 : 20,
+                    }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="mb-4"
+                  >
+                    <span className="text-white text-sm font-medium bg-white/20 backdrop-blur-sm px-4 py-1 rounded-full uppercase tracking-wider">
+                      {index === 0 ? "Featured" : "Bestseller"}
+                    </span>
+                  </motion.div>
 
-                {/* <motion.div
+                  <motion.h2
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{
+                      opacity: selectedIndex === index ? 1 : 0,
+                      y: selectedIndex === index ? 0 : 30,
+                    }}
+                    transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+                    className="text-white text-3xl lg:max-w-[80%] md:text-2xl lg:text-3xl font-bold max-w-2xl mb-2 md:mb-6 drop-shadow-lg"
+                  >
+                    {p.title}
+                  </motion.h2>
+
+                  {/* <motion.div
                   initial={{ opacity: 0, y: 40 }}
                   animate={{
                     opacity: selectedIndex === index ? 1 : 0,
@@ -146,8 +147,9 @@ const HeroCarousel = ({ heroImages }: { heroImages: HeroImage[] }) => {
                   </Button>
                 </motion.div> */}
 
-                <SaltSparkle />
-              </div>
+                  <SaltSparkle />
+                </div>
+              </Link>
             </div>
           ))}
         </div>

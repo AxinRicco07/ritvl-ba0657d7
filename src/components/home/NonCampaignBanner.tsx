@@ -31,7 +31,7 @@ export default function NonCampaignBanner({
             <h1 className="font-display md:hidden text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center leading-tight tracking-tight font-bold text-blue-900">
               Natural Healing . Pure Joy . Everyday Luxury
             </h1>
-            <h1 className="font-display hidden md:block text-4xl text-left md:text-5xl lg:text-6xl leading-tight tracking-tight font-bold text-blue-900">
+            <h1 className="font-display hidden md:block text-4xl text-left md:text-4xl lg:text-6xl leading-tight tracking-tight font-bold text-blue-900">
               {["Natural Healing.", "Pure Joy.", "Everyday Luxury."].map(
                 (text, index) => (
                   <span key={index} className="block text-reveal">
@@ -49,7 +49,7 @@ export default function NonCampaignBanner({
           </div>
 
           <p
-            className="mt-6 text-xl text-center md:text-left text-blue-800/90 max-w-xl animate-fade-in font-serif italic"
+            className="mt-6 text-md md:text-lg lg:text-xl max-w-sm  mx-auto text-center md:text-left text-blue-800/90 md:max-w-xl lg:max-w-lg lg:mx-0 animate-fade-in font-serif italic"
             style={{ animationDelay: "0.9s" }}
           >
             Experience the therapeutic benefits of our premium bath salts—100%

@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { ShoppingCart, Search, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { MobileSearch } from "./home/MobileSearch";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,8 +41,8 @@ const Header = () => {
   };
 
   return (
-    <header className="py-2 px-4 md:px-8 border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
-      <div className="container max-w-7xl mx-auto">
+    <header className="py-0 md:py-2 px-4 md:px-0 lg:px-8 border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
+      <div className="sm:container max-w-7xl mx-auto">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <div className="h-20 flex items-center">
@@ -50,12 +52,12 @@ const Header = () => {
                 alt="ritvl logo"
               />
             </div>
-            <span className="ml-3 inline-block whitespace-nowrap text-2xl font-brittany tracking-tight text-foreground">
+            <span className="ml-1 inline-block whitespace-nowrap text-2xl font-brittany tracking-tight text-foreground">
               <strong>Ritvl</strong>
             </span>
           </Link>
 
-          <nav className="hidden font-header text-lg md:text-xl md:flex items-center gap-8">
+          <nav className="hidden font-header text-lg md:text-lg lg:text-xl text-center md:flex items-center gap-8">
             <NavLink to="/">Home</NavLink>
             <NavLink to="/products">Products</NavLink>
             <NavLink to="/contact">Contact Us</NavLink>
@@ -63,44 +65,51 @@ const Header = () => {
             <NavLink to="/orders">Order</NavLink>
           </nav>
 
-          <div className="hidden md:flex items-center gap-4">
-            <form
-              onSubmit={onSubmitSearch}
-              className="relative flex items-center"
-            >
-              <div
-                className={`flex items-center transition-all duration-200 ${
-                  isSearchOpen ? "w-64" : "w-10"
-                } overflow-hidden border border-border rounded-md bg-background`}
+          <div className="flex md:flex items-center gap-4">
+            {useIsMobile(1024) ? (
+              <MobileSearch
+                ref={searchInputRef}
+                searchTerm={searchTerm}
+                onSearch={setSearchTerm}
+                onSubmit={onSubmitSearch}
+              />
+            ) : (
+              <form
+                onSubmit={onSubmitSearch}
+                className="relative flex items-center"
               >
-                <button
-                  type="button"
-                  aria-label="Search"
-                  onClick={toggleSearch}
-                  className="p-2 text-foreground/80 hover:text-foreground"
+                <div
+                  className={`flex items-center transition-all duration-200 ${
+                    isSearchOpen ? "w-64" : "w-10"
+                  } overflow-hidden border border-border rounded-md bg-background`}
                 >
-                  <Search className="h-5 w-5" />
-                </button>
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Escape") setIsSearchOpen(false);
-                  }}
-                  placeholder="Search products..."
-                  className={`bg-transparent text-sm outline-none px-2 py-2 ${
-                    isSearchOpen ? "block" : "hidden"
-                  }`}
-                  aria-label="Search products"
-                />
-              </div>
-            </form>
-            {/* <Button variant="ghost" size="icon" aria-label="Account">
-              <User className="h-5 w-5" />
-            </Button> */}
+                  <button
+                    type="button"
+                    aria-label="Search"
+                    onClick={toggleSearch}
+                    className="p-2 text-foreground/80 hover:text-foreground"
+                  >
+                    <Search className="h-5 w-5" />
+                  </button>
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Escape") setIsSearchOpen(false);
+                    }}
+                    placeholder="Search products..."
+                    className={`bg-transparent text-sm outline-none px-2 py-2 ${
+                      isSearchOpen ? "block" : "hidden"
+                    }`}
+                    aria-label="Search products"
+                  />
+                </div>
+              </form>
+            )}
             <Button
+              asChild
               variant="ghost"
               size="icon"
               aria-label="Cart"
@@ -115,21 +124,20 @@ const Header = () => {
                 )}
               </Link>
             </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={toggleMenu}
+              aria-label="Menu"
+            >
+              {isMenuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
+            </Button>
           </div>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={toggleMenu}
-            aria-label="Menu"
-          >
-            {isMenuOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
-          </Button>
         </div>
       </div>
 

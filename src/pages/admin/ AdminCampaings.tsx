@@ -92,6 +92,13 @@ export default function CampaignsPage() {
           {activeCampaign ? (
             <div className="flex items-center justify-between">
               <span>{activeCampaign.name}</span>
+              <Button
+                onClick={() => handleCampaignDelete(activeCampaign.id)}
+                variant="ghost"
+                size="sm"
+              >
+                <Trash2 className="h-4 w-4 text-red-600" />
+              </Button>
             </div>
           ) : (
             <p>No active campaigns at the moment.</p>
