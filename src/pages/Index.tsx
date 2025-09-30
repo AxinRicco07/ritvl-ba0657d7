@@ -247,18 +247,16 @@ const Index = () => {
           <h2 className="text-2xl md:text-3xl font-display text-center mb-4 animate-slide-in-bottom text-blue-900">
             Why <strong className="text-blue-700">Epsom</strong> Salt?
           </h2>
-          <p
-            className="text-center text-blue-800/90 max-w-2xl mx-auto mb-12 animate-slide-in-bottom font-serif text-lg"
-            style={{ animationDelay: "0.2s" }}
-          >
-            Because self-care should be simple, natural, and effective. Epsom
-            salt is packed with magnesium – the mineral your body loves for
-            relaxation, skin glow, and stress relief. Melt away stress in a warm
-            soak Rejuvenate tired muscles after a long day Exfoliate & refresh
-            your skin naturally Bring spa-like calm right into your home With
-            every soak, you’re not just relaxing – you’re recharging mind, body
-            & soul.
-          </p>
+       <p
+  className="text-justify italic text-blue-800/90 max-w-xl mx-auto mb-10 md:mb-12 
+             animate-slide-in-bottom font-serif 
+             text-base sm:text-lg md:text-xl lg:text-2xl 
+             leading-relaxed sm:leading-loose tracking-normal"
+  style={{ animationDelay: "0.2s" }}
+>
+  Because self-care should be simple, natural, and effective. Epsom salt is packed with magnesium – the mineral your body loves for relaxation, skin glow, and stress relief. Melt away stress in a warm soak. Rejuvenate tired muscles after a long day. Exfoliate & refresh your skin naturally. Bring spa-like calm right into your home. With every soak, you’re not just relaxing – you’re recharging mind, body & soul.
+</p>
+
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[0, 1, 2, 3].map((index) => (
