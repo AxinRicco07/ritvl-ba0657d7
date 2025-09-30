@@ -78,8 +78,7 @@ const HeroCarousel = ({ heroImages }: { heroImages: HeroImage[] }) => {
     <div className="relative w-full md:rounded-xl overflow-hidden shadow-lg md:shadow-2xl">
       <div
         ref={emblaRef}
-        className="overflow-hidden h-[40dvh]"
-        // className="overflow-hidden h-[50vh] min-h-[400px] max-h-[600px]"
+        className="overflow-hidden h-[300px] sm:h-[400px] md:h-[600px] lg:h-[700px]"
       >
         <div className="flex h-full">
           {heroImages.map((p, index) => (
@@ -127,25 +126,6 @@ const HeroCarousel = ({ heroImages }: { heroImages: HeroImage[] }) => {
                   >
                     {p.title}
                   </motion.h2>
-
-                  {/* <motion.div
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={{
-                    opacity: selectedIndex === index ? 1 : 0,
-                    y: selectedIndex === index ? 0 : 40,
-                  }}
-                  transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-                  className="mb-6"
-                >
-                  <Button
-                    asChild
-                    variant="secondary"
-                    size="lg"
-                    className="bg-white hidden md:inline-flex text-black hover:bg-white/90 shadow-lg px-8 py-6 rounded-full font-medium"
-                  >
-                    <Link to={p.redirectPath}>Shop Now</Link>
-                  </Button>
-                </motion.div> */}
 
                   <SaltSparkle />
                 </div>
