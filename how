@@ -1,0 +1,13 @@
+[33mcommit ecc0a2a5915e94d9c33d8de18a989656592e07ca[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Coder-Vasen <vasen2353@gmail.com>
+Date:   Sun Sep 28 18:06:42 2025 +0530
+
+    feat(UI): Enhance Header and FullPageBannerCarousel components with responsive design and mobile search functionality
+
+src/components/Header.tsx
+src/components/home/FullPageBannerCarousel.tsx
+src/components/home/HeroCarousel.tsx
+src/components/home/MobileSearch.tsx
+src/components/home/NonCampaignBanner.tsx
+src/hooks/use-mobile.tsx
+src/pages/admin/ AdminCampaings.tsx
