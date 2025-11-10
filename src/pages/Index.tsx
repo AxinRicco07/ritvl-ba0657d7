@@ -395,10 +395,10 @@ const testimonials: Testimonial[] = [
     rating: 5,
   },
   {
-    name: "Michael T.",
-    title: "Home Cook",
+    name: "Swati",
+    title: "Home Maker",
     comment:
-      "The exotic blends are incredible - perfectly balanced and so unique! I've ordered their salt sampler box exclusively ever since.",
+      "I had been experiencing neck pain for the past three days. Today, I tried soaking in warm water with your Epsom salt — and fingers crossed, I finally got relief! It really helped ease the discomfort and relax my muscles. Highly recommended!",
     rating: 5,
   },
   {
