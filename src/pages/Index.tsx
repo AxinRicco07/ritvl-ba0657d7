@@ -56,7 +56,7 @@ const ListProducts = function ({ products }: { products: HomeProduct[] }) {
       style={{ animationDelay: `${0.1 + idx * 0.1}s` }}
     >
       <Card className="product-card border-none shadow-md hover:shadow-lg transition-all duration-300">
-        <div className="overflow-hidden">
+        <div className="overflow-x-hidden bg-[#E6E6FA]">
           <AspectRatio
             ratio={1 / 1}
             className="zoom-hover p-2 bg-slate-100 rounded-t-md"
@@ -98,7 +98,7 @@ const ListProducts = function ({ products }: { products: HomeProduct[] }) {
               size="lg"
               className="bg-blue-600 hidden md:block hover:bg-blue-500 sparkle-button text-xs sm:text-sm"
             >
-              Buy
+              Buy Now
             </Button>
           </div>
         </CardContent>
@@ -388,10 +388,10 @@ interface Testimonial {
 
 const testimonials: Testimonial[] = [
   {
-    name: "Sarah J.",
-    title: "Professional Chef",
+    name: "Gorang",
+    title: "IT Professional",
     comment:
-      "The Himalayan salt flakes that has completely transformed my cooking. The flavor is unmatched, and I love knowing it's ethically sourced.",
+      "Awesome product Must try for leg cramps",
     rating: 5,
   },
   {
@@ -402,10 +402,10 @@ const testimonials: Testimonial[] = [
     rating: 5,
   },
   {
-    name: "Emma R.",
-    title: "Loyal Customer",
+    name: "Arjun",
+    title: "Bank Employee",
     comment:
-      "I received a gift set for my own spa-day and the sea salt soothing bath reduced tension. The packaging is beautiful, and the quality is exceptional.",
+      "After a tough workout, I soak with Epsom salt — it’s honestly the best feeling! My muscles feel relaxed and all the soreness just melts away.",
     rating: 5,
   },
 ];

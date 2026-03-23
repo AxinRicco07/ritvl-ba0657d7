@@ -9,7 +9,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 240 67% 94%;
     --foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
@@ -45,7 +45,8 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background-color: #E6E6FA;
     font-family: "Lora", serif;
   }
 
