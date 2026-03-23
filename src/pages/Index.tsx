@@ -95,8 +95,8 @@ const ListProducts = function ({ products }: { products: HomeProduct[] }) {
               </span>
             </div>
             <Button
-              size="lg"
-              className="bg-blue-600 hidden md:block hover:bg-blue-500 sparkle-button text-xs sm:text-sm"
+              size="sm"
+              className="bg-blue-600 hover:bg-blue-500 sparkle-button text-xs sm:text-sm md:size-default"
             >
               Buy Now
             </Button>
